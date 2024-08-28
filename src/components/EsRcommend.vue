@@ -14,7 +14,7 @@
         <!-- 店舗 1 -->
         <a href="detailpage.html" class="result-link">
             <div class="result-item">
-                <img src="yoshinoya.jpg" alt="Yoshinoya">
+                <img src="../assets/yoshinoya.jpg" alt="Yoshinoya">
                 <div class="details">
                     <h3>XX家</h3>
                     <p>XX区XXXXXXXXXXXXXXXX</p>
@@ -35,7 +35,7 @@
         <!-- 店舗 2 -->
         <a href="detailpage.html" class="result-link">
             <div class="result-item">
-                <img src="oshare.jpg" alt="Oshare">
+                <img src="../assets/oshare.png" alt="Oshare">
                 <div class="details">
                     <h3>おしゃ</h3>
                     <p>XX区XXXXXXXXXXXXXXXX</p>
@@ -57,7 +57,7 @@
         <!-- 店舗 3 -->
         <a href="detailpage.html" class="result-link">
             <div class="result-item">
-                <img src="oshare2.jpg" alt="Oshare 2">
+                <img src="../assets/oshare.png" alt="Oshare 2">
                 <div class="details">
                     <h3>おしゃ2</h3>
                     <p>XX区XXXXXXXXXXXXXXXX</p>
@@ -86,18 +86,135 @@
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
-  h3 {
-    margin: 40px 0 0;
-  }
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-  a {
-    color: #42b983;
-  }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #3a6f3a;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        position: relative;
+    }
+
+    .menu-button {
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .search-container {
+        padding: 20px;
+        background-color: white;
+        margin: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    textarea {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #97e094;
+        border-radius: 10px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        height: 100px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    button {
+        padding: 10px;
+        background-color: #97e094;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    button:hover {
+        background-color: #7ed17e;
+    }
+
+    .recommendations {
+        margin: 20px;
+    }
+
+    .recommendations h2 {
+        margin-bottom: 20px;
+        color: #3a6f3a;
+    }
+
+    .recommendation-item {
+        display: flex;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .recommendation-item img {
+        width: 150px;
+        height: auto;
+    }
+
+    .details {
+        padding: 20px;
+        width: 100%;
+    }
+
+    .details h3 {
+        margin-top: 0;
+    }
+
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .tags span, .tags a {
+        background-color: #97e094;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        text-decoration: none;
+    }
+
+    .tags a {
+        background-color: #7ed17e;
+    }
+
+    .tags a:hover {
+        background-color: #5bb75b;
+    }
   </style>
