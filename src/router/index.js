@@ -4,11 +4,11 @@ import Login from '@/views/login.vue';
 
 const routes = [
   {
-    path : '/',
+    path : '/home',
     component : Home
   },
   {
-    path : '/login',
+    path : '/',
     component : Login
   }
 ];
