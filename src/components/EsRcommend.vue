@@ -12,7 +12,7 @@
         <h2>検索結果（全10件）</h2>
 
         <!-- 店舗 1 -->
-        <a href="detailpage.html" class="result-link">
+        <a href="/shop" class="result-link">
             <div class="result-item">
                 <img src="../assets/yoshinoya.jpg" alt="Yoshinoya">
                 <div class="details">
@@ -33,7 +33,7 @@
         </a>
 
         <!-- 店舗 2 -->
-        <a href="detailpage.html" class="result-link">
+        <a href="/shop" class="result-link">
             <div class="result-item">
                 <img src="../assets/oshare.png" alt="Oshare">
                 <div class="details">
@@ -55,7 +55,7 @@
         </a>
 
         <!-- 店舗 3 -->
-        <a href="detailpage.html" class="result-link">
+        <a href="/shop" class="result-link">
             <div class="result-item">
                 <img src="../assets/oshare.png" alt="Oshare 2">
                 <div class="details">
