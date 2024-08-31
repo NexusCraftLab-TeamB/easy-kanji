@@ -15,8 +15,8 @@
 
       <!-- シェアとこれで決定ボタン -->
       <div class="action-buttons">
-        <button class="share-button">シェア</button>
-        <button class="confirm-button">これで決定</button>
+        <button class="share-button">評価する</button>
+        <button class="confirm-button">評価依頼する</button>
       </div>
 
       <div class="detail-container">
@@ -30,52 +30,12 @@
       </div>
       </div>
 
-      <!-- タグ一覧 -->
-      <div class="tags">
-        <h2 class="heading">タグ</h2>
-        <ul>
-          <div class="tagsA">
-            <span>駅から近い</span>
-              <span>有楽町</span>
-              <span>五人以上</span>
-              <span>和食</span>
-              <span>開発一部</span>
-              <span>2024.3実績</span>
-              <span>開発三部</span>
-              <a href="#" class="more-link">more</a>
-          </div>
-          <!-- 他のタグもここに追加できます -->
-        </ul>
-      </div>
-
-      <!-- レビュー一覧 -->
-      <div class="reviews">
-        <h2 class="heading">レビュー</h2>
-        <ul>
-          <li v-for="review in shop.reviews" :key="review.id">
-            <span class="review-user">{{ review.user }}:</span>
-            <span class="review-comment">{{ review.comment }}</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- 画像一覧 -->
-      <div class="image-gallery">
-        <h3>お店の雰囲気</h3>
-        <div class="image-grid">
-          <img src="../assets/yoshinoyaIn1.jpg" alt="Yoshinoya">
-          <img src="../assets/yoshinoyaIn2.jpg" alt="Yoshinoya2">
-          <img src="../assets/yoshinoyaIn3.jpg" alt="Yoshinoya3">
-          <!--<img v-for="image in shop.images" :key="image.id" :src="image.url" alt="店内の写真" />-->
-        </div>
-      </div>
-    
   </div>
 </template>
 
   <script>
   export default {
-    name: 'ShopView',
+    name: 'ShopCheck',
     data() {
       return {
         shop: {
@@ -85,22 +45,11 @@
           photoUrl: 'https://example.com/cafe-a-photo.jpg',
           usageCount: 15,
           rating: 4.5,
-          reviews: [
-            { id: 1, user: '開発二部', comment: '美味しい料理でした！' },
-            { id: 2, user: 'JASTEM開発三部', comment: 'あまり満足できませんでした。' }
-            // 他のレビューもここに追加できます
-          ],
-          images: [
-            { id: 1, url: 'https://example.com/image1.jpg' },
-            { id: 2, url: 'https://example.com/image2.jpg' },
-            { id: 3, url: 'https://example.com/your-image.jpg' }
-          ]
         }
       };
     },
     methods: {
-      
-
+      // ログイン画面への遷移処理はここに追加
     }
   };
   </script>
