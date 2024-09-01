@@ -1,5 +1,6 @@
 <template>
     <div class="search-conditions">
+        <h1>おすすめ</h1>
         <h2>検索条件</h2>
         <div class="conditions">
             <div><strong>場所：</strong><span class="condition-item">有楽町</span><span class="condition-item">銀座</span></div>
