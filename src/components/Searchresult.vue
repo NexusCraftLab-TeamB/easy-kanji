@@ -1,16 +1,14 @@
 <template>
     <div class="search-conditions">
-        <h1>おすすめ</h1>
         <h2>検索条件</h2>
-        <div class="conditions">
-            <div><strong>場所：</strong><span class="condition-item">有楽町</span><span class="condition-item">銀座</span></div>
-            <div><strong>人数：</strong><span class="condition-item">少人数</span></div>
-            <div><strong>実績：</strong><span class="condition-item">開発一部</span><span class="condition-item">開発三部</span><span class="condition-item">JASTEM開発2部</span></div>
-        </div>
+        <div><strong>場所：</strong><span class="condition-item">{{ location }}</span></div>
+      <div><strong>ジャンル：</strong><span class="condition-item">{{ genre }}</span></div>
+      <div><strong>予算：</strong><span class="condition-item">{{ budget }}</span></div>
+      <div><strong>実績：</strong><span class="condition-item">{{ performance }}</span></div>
     </div>
 
     <div class="search-results">
-        <h2>検索結果（全10件）</h2>
+        <h2>検索結果（全x件）</h2>
 
         <!-- 店舗 1 -->
         <a href="/shop" class="result-link">
@@ -78,9 +76,13 @@
   <script>
 
   export default {
-    name: 'EasyRecomends',
+    name: 'EasySearchResults',
     props: {
-      msg: String
+    location: String,
+    genre: String,
+    budget: String,
+    performance: String,
+    Resultmsg: String
     }
   }
   </script>
@@ -114,7 +116,7 @@
     }
 
     .search-container {
-        padding: 20px;
+        padding: 40px;
         background-color: white;
         margin: 20px;
         border-radius: 10px;
@@ -168,10 +170,13 @@
         margin: 20px;
     }
 
+
+/* 検索結果 */
     .recommendations h2 {
-        margin-bottom: 20px;
-        color: #3a6f3a;
-    }
+    margin-bottom: 20px;
+    color: #3a6f3a;
+    font-size: 20px; /* フォントサイズを大きく */
+}
 
     .recommendation-item {
         display: flex;
@@ -218,4 +223,4 @@
     .tags a:hover {
         background-color: #5bb75b;
     }
-  </style>
+</style> 

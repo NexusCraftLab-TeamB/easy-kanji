@@ -1,81 +1,107 @@
 <template>
-  <div>
-    <h1>お店検索</h1>
-    <!--
-    <button @click="goToLogin">login</button>
-    -->
-    <div class="search-container">
-        <textarea id="searchBox" placeholder="お店の希望を記載してください。（有楽町で和食、５人で部長も参加できる……など）"></textarea>
-        <form id="searchForm">
-            <div class="form-group">
-                <label for="location">場所</label>
-                <select id="location">
-                    <option value="">選択してください</option>
-                    <option value="tokyo">東京</option>
-                    <option value="yurakucho">有楽町</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="genre">ジャンル</label>
-                <select id="genre">
-                    <option value="">選択してください</option>
-                    <option value="japanese">和食</option>
-                    <option value="western">洋食</option>
-                    <option value="chinese">中華</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="budget">予算</label>
-                <select id="budget">
-                    <option value="">選択してください</option>
-                    <option value="3000">~3000円</option>
-                    <option value="5000">~5000円</option>
-                    <option value="10000">~10000円</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="performance">実績</label>
-                <select id="performance">
-                    <option value="">選択してください</option>
-                    <option value="section1">開発一部</option>
-                    <option value="section2">開発二部</option>
-                    <option value="section3">開発三部</option>
-                </select>
-            </div>
-            <button type="submit">検索</button>
-        </form>
+    <div>
+      <h1>お店検索</h1>
+      <!--
+      <button @click="goToLogin">login</button>
+      -->
+      <div class="search-container">
+          <textarea id="searchBox" placeholder="お店の希望を記載してください。（有楽町で和食、５人で部長も参加できる……など）"></textarea>
+          <form id="searchForm" @submit.prevent ="handleSubmit">
+              <div class="form-group">
+                  <label for="location">場所</label>
+                  <select v-model="location" id="location">
+                      <option value="">選択してください</option>
+                      <option value="東京">東京</option>
+                      <option value="有楽町">有楽町</option>
+                      <option value="豊洲">豊洲</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="genre">ジャンル</label>
+                  <select v-model="genre" id="genre">
+                      <option value="">選択してください</option>
+                      <option value="和食">和食</option>
+                      <option value="洋食">洋食</option>
+                      <option value="中華">中華</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="budget">予算</label>
+                  <select v-model="budget" id="budget">
+                      <option value="">選択してください</option>
+                      <option value="〜3000">~3000円</option>
+                      <option value="〜5000">~5000円</option>
+                      <option value="〜10000">~10000円</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="performance">実績</label>
+                  <select v-model="performance" id="performance">
+                      <option value="">選択してください</option>
+                      <option value="開発一部">開発一部</option>
+                      <option value="開発二部">開発二部</option>
+                      <option value="開発三部">開発三部</option>
+                  </select>
+              </div>
+              <button type="submit">検索</button>
+          </form>
+      </div>
     </div>
-  </div>
-
-  <div>
-    <!--
-    コンポーネントの呼び出し？
-    -->
-    <h1>おすすめ</h1>
-
-    <EasyRecomends msg="おすすめ"/>
-
-  </div>
-
-</template>
-
-<script>
-
-import EasyRecomends from '../components/EsRcommend.vue'
-
-export default {
-  name: 'HomeView',
-  methods: {
-    goToLogin() {
-      this.$router.push('/login');
-    }
-  },
-  components:{
-    EasyRecomends
-  } 
-
-}
-</script>
+  
+    <div>
+      <!--
+      コンポーネントの呼び出し？
+      -->
+      
+      <EasyRecomends  v-if="!showResults" msg="おすすめ"/>
+  
+    </div>
+    <div>
+      <EasySearchResults v-if="showResults" 
+        :location="location" 
+        :genre="genre" 
+        :budget="budget" 
+        :performance="performance" 
+        Resultmsg="検索結果"/>
+   </div>
+    
+  </template>
+  
+  <script>
+  
+  import EasyRecomends from '../components/EsRcommend.vue';
+  import EasySearchResults from '../components/Searchresult.vue';
+  
+  export default {
+    name: 'HomeView',
+    data() {
+      return {
+        location: '',
+        genre: '',
+        budget: '',
+        performance: '',
+        showResults: false
+      };
+    },
+    methods: {
+      goToLogin() {
+        this.$router.push('/login');
+      },
+      handleSubmit() {
+        event.preventDefault(); // フォームのデフォルトの送信動作を防ぐ
+        alert('フォームが送信されました！');
+        this.showResults = true;
+      }
+      
+    },
+    components:{
+      EasyRecomends,
+      EasySearchResults
+  
+    } 
+  
+  }
+  </script>
 
 <style scoped>
 /* スタイルをここに追加 */
