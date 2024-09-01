@@ -13,6 +13,7 @@
                     <option value="">選択してください</option>
                     <option value="tokyo">東京</option>
                     <option value="yurakucho">有楽町</option>
+                    <option value="toyosu">豊洲</option>
                 </select>
             </div>
             <div class="form-group">
@@ -57,11 +58,22 @@
 
   </div>
 
+  <div>
+    <!--
+    コンポーネントの呼び出し？
+    -->
+    <h1>検索結果</h1>
+
+    <EasySearchResults Resultmsg="検索結果"/>
+
+  </div>
+  
 </template>
 
 <script>
 
-import EasyRecomends from '../components/EsRcommend.vue'
+import EasyRecomends from '../components/EsRcommend.vue';
+import EasySearchResults from '../components/Searchresult.vue';
 
 export default {
   name: 'HomeView',
@@ -71,7 +83,9 @@ export default {
     }
   },
   components:{
-    EasyRecomends
+    EasyRecomends,
+    EasySearchResults
+
   } 
 
 }
