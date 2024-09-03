@@ -23,3 +23,8 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 # easy-kanji
+
+### vuetify のインストール
+```
+npm install vuetify@next
+```
