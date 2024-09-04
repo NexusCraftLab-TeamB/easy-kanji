@@ -54,7 +54,15 @@
       -->
       
       <EasyRecomends  v-if="!showResults" msg="おすすめ"/>
-  
+      <div>
+    <h2>Current State</h2>
+    <p>Location: {{ location }}</p>
+    <p>Genre: {{ genre }}</p>
+    <p>Budget: {{ budget }}</p>
+    <p>Performance: {{ performance }}</p>
+    <p>Show Results: {{ showResults }}</p>
+  </div>
+
     </div>
     <div>
       <EasySearchResults v-if="showResults" 
@@ -62,37 +70,36 @@
         :genre="genre" 
         :budget="budget" 
         :performance="performance" 
-        Resultmsg="検索結果"/>
+        />
    </div>
     
   </template>
   
   <script>
-  
+  import { mapGetters, mapActions } from 'vuex';
   import EasyRecomends from '../components/EsRcommend.vue';
   import EasySearchResults from '../components/Searchresult.vue';
   
   export default {
     name: 'HomeView',
-    data() {
-      return {
-        location: '',
-        genre: '',
-        budget: '',
-        performance: '',
-        showResults: false
-      };
+    computed: {
+    ...mapGetters(['location', 'genre', 'budget', 'performance', 'showResults'])
     },
     methods: {
-      goToLogin() {
+        goToLogin() {
         this.$router.push('/login');
-      },
-      handleSubmit() {
-        event.preventDefault(); // フォームのデフォルトの送信動作を防ぐ
-        alert('フォームが送信されました！');
-        this.showResults = true;
-      }
-      
+        },
+        ...mapActions(['updateLocation', 'updateGenre', 'updateBudget', 'updatePerformance', 'toggleShowResults']),
+        handleSubmit(event) {
+            event.preventDefault(); // フォームのデフォルトの送信動作を防ぐ
+            // Update Vuex state with form values
+            this.updateLocation(this.location);
+            this.updateGenre(this.genre);
+            this.updateBudget(this.budget);
+            this.updatePerformance(this.performance);
+            // Toggle showResults to true
+            this.toggleShowResults(true)
+        },
     },
     components:{
       EasyRecomends,
