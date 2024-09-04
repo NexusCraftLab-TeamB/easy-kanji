@@ -5,6 +5,7 @@ import Shop from '@/views/shop.vue';
 import ShopCheck from '@/views/shopCheck.vue';
 import ShopShare from '@/views/shopShare.vue';
 import ReviewForm from '../views/ReviewForm.vue';
+import ShopSearch from '../views/shopSearch.vue';
 
 const routes = [
   {
@@ -26,6 +27,10 @@ const routes = [
   {
     path : '/shopShare',
     component : ShopShare
+  },
+  {
+    path : '/shopSearch',
+    component : ShopSearch
   },
   {
     path : '/review',

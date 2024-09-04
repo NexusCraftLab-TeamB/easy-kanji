@@ -108,7 +108,7 @@
       },
       goToSearch() {
         // 検索ページにリダイレクトする
-        this.$router.push("/search"); // Vue Routerを使ってページ遷移
+        this.$router.push("shopSearch"); // Vue Routerを使ってページ遷移
       }
     }
   };
