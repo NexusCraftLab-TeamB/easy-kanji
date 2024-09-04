@@ -4,6 +4,7 @@ import Login from '@/views/login.vue';
 import Shop from '@/views/shop.vue';
 import ShopCheck from '@/views/shopCheck.vue';
 import ReviewForm from '../views/ReviewForm.vue';
+import ShopSearch from '../views/shopSearch.vue';
 
 const routes = [
   {
@@ -25,7 +26,11 @@ const routes = [
   {
     path : '/review',
     component : ReviewForm
-  }
+  },
+  {
+    path : '/shopSearch',
+    component : ShopSearch
+  },
 ];
 
 const router = createRouter({
