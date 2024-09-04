@@ -27,4 +27,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### vuetify のインストール
 ```
 npm install vuetify@next
+
+```
+### axios のインストール
+
+npm install axios
 ```
