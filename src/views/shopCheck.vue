@@ -13,10 +13,10 @@
         </div>
       </div>
 
-      <!-- シェアとこれで決定ボタン -->
+      <!-- 評価ボタン -->
       <div class="action-buttons">
-        <button class="share-button">評価する</button>
-        <button class="confirm-button">評価依頼する</button>
+        <button class="Review-button" @click="goToReview">評価する</button>
+        <button class="RequestReview-button">評価依頼する</button>
       </div>
 
       <div class="detail-container">
@@ -49,7 +49,11 @@
       };
     },
     methods: {
-      // ログイン画面への遷移処理はここに追加
+      // 評価入力画面への遷移
+      goToReview(){
+        this.$router.push("/review"); 
+      }     
+
     }
   };
   </script>
@@ -100,8 +104,8 @@
     gap: 20px; /* 要素間のスペースを20ピクセルに設定 */
 }
   
-.share-button,
-.confirm-button {
+.Review-button,
+.RequestReview-button {
     background-color: #97e094;
     color: #fff;
     border: none;

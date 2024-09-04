@@ -15,8 +15,8 @@
 
       <!-- シェアとこれで決定ボタン -->
       <div class="action-buttons">
-        <button class="share-button">シェア</button>
-        <button class="confirm-button">これで決定</button>
+        <button class="share-button" @click="shareShop">シェア</button>
+        <button class="confirm-button" @click="confirmShop">これで決定</button>
       </div>
 
       <div class="detail-container">
@@ -99,8 +99,14 @@
       };
     },
     methods: {
-      
-
+      confirmShop() {
+        // 店舗決定画面へ遷移する
+        this.$router.push("/shopCheck"); 
+      },
+      shareShop(){
+        // 店舗情報を共有する
+        this.$router.push("/shopShare"); 
+      }
     }
   };
   </script>
@@ -142,14 +148,6 @@
     width: 50%;
     text-align: left;
   }
- 
-  .action-buttons {
-    display: flex;
-    justify-content: center; /* ボタンを中央に寄せる */
-    margin-top: 20px;
-    width: 90%; 
-    gap: 20px; /* 要素間のスペースを20ピクセルに設定 */
-}
   
 .share-button,
 .confirm-button {
@@ -158,6 +156,7 @@
     border: none;
     padding: 15px 80px; /* 内側の余白を増やしてボタンを大きくする */
     font-size: 18px; /* フォントサイズを大きくする */
+    margin-top: 20px;
     border-radius: 5px;
     cursor: pointer;
     margin-right: 10px;
