@@ -16,7 +16,7 @@
       <!-- 評価ボタン -->
       <div class="action-buttons">
         <button class="Review-button" @click="goToReview">評価する</button>
-        <button class="RequestReview-button">評価依頼する</button>
+        <button class="RequestReview-button" @click="shareShop">評価依頼する</button>
       </div>
 
       <div class="detail-container">
@@ -52,8 +52,11 @@
       // 評価入力画面への遷移
       goToReview(){
         this.$router.push("/review"); 
-      }     
-
+      },
+      shareShop(){
+        // 店舗情報を共有する
+        this.$router.push("/shopShare"); 
+      }
     }
   };
   </script>
