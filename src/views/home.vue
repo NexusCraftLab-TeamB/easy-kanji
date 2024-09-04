@@ -9,7 +9,7 @@
           <form id="searchForm" @submit.prevent ="handleSubmit">
               <div class="form-group">
                   <label for="location">場所</label>
-                  <select v-model="location" id="location">
+                  <select v-model= "location" id="location">
                       <option value="">選択してください</option>
                       <option value="東京">東京</option>
                       <option value="有楽町">有楽町</option>
@@ -18,7 +18,7 @@
               </div>
               <div class="form-group">
                   <label for="genre">ジャンル</label>
-                  <select v-model="genre" id="genre">
+                  <select v-model="genre" id="genre" @change="updateGenreInStore">
                       <option value="">選択してください</option>
                       <option value="和食">和食</option>
                       <option value="洋食">洋食</option>
@@ -27,7 +27,7 @@
               </div>
               <div class="form-group">
                   <label for="budget">予算</label>
-                  <select v-model="budget" id="budget">
+                  <select v-model="budget" id="budget" @change="updateBudgetInStore">
                       <option value="">選択してください</option>
                       <option value="〜3000">~3000円</option>
                       <option value="〜5000">~5000円</option>
@@ -36,7 +36,7 @@
               </div>
               <div class="form-group">
                   <label for="performance">実績</label>
-                  <select v-model="performance" id="performance">
+                  <select v-model="performance" id="performance" @change="updatePerformanceInStore">
                       <option value="">選択してください</option>
                       <option value="開発一部">開発一部</option>
                       <option value="開発二部">開発二部</option>
@@ -47,14 +47,7 @@
           </form>
       </div>
     </div>
-  
     <div>
-      <!--
-      コンポーネントの呼び出し？
-      -->
-      
-      <EasyRecomends  v-if="!showResults" msg="おすすめ"/>
-      <div>
     <h2>Current State</h2>
     <p>Location: {{ location }}</p>
     <p>Genre: {{ genre }}</p>
@@ -62,6 +55,13 @@
     <p>Performance: {{ performance }}</p>
     <p>Show Results: {{ showResults }}</p>
   </div>
+    <div>
+      <!--
+      コンポーネントの呼び出し？
+      -->
+      
+      <EasyRecomends  v-if="!showResults" msg="おすすめ"/>
+
 
     </div>
     <div>

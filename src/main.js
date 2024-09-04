@@ -1,6 +1,7 @@
 //main.js
 import { createApp } from 'vue'
-import store from './store'
+import store from './store'; 
+//import store from '@/store/indexStore';
 
 
 

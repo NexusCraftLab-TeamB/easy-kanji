@@ -82,7 +82,8 @@ export default {
   computed: {
     ...mapGetters(['location', 'genre', 'budget', 'performance', 'showResults'])
   }
-}/ // Vuex からデータを取得
+};
+ // Vuex からデータを取得
   
     /*props: {
         location: String,
