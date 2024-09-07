@@ -3,7 +3,6 @@ import Home from '@/views/home.vue';
 import Login from '@/views/login.vue';
 import Shop from '@/views/shop.vue';
 import ShopCheck from '@/views/shopCheck.vue';
-import ShopShare from '@/views/shopShare.vue';
 import ReviewForm from '../views/ReviewForm.vue';
 import ShopSearch from '../views/shopSearch.vue';
 
@@ -23,10 +22,6 @@ const routes = [
   {
     path : '/shopCheck',
     component : ShopCheck
-  },
-  {
-    path : '/shopShare',
-    component : ShopShare
   },
   {
     path : '/shopSearch',
