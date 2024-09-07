@@ -54,22 +54,9 @@ export default {
 </script>
 
 <style>
-  body {
-    margin: 0px;
-  }
-  #app {
-    font-family: Roboto, Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 0px;
-  }
-</style>
-
-<style>
 body {
-  margin: 0px;
+  background-color: #f7f7f7!important;
+
 }
 #app {
   font-family: Roboto, Avenir, Helvetica, Arial, sans-serif;
@@ -78,5 +65,10 @@ body {
   text-align: center;
   color: #2c3e50;
   margin-top: 0px;
+  padding: 0.5rem;
+}
+
+main {
+  background-color: #f7f7f7!important;
 }
 </style>
