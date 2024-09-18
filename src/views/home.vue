@@ -9,7 +9,7 @@
           <form id="searchForm" @submit.prevent ="handleSubmit">
               <div class="form-group">
                   <label for="location">場所</label>
-                  <select v-model="location" id="location">
+                  <select v-model= "location" id="location">
                       <option value="">選択してください</option>
                       <option value="東京">東京</option>
                       <option value="有楽町">有楽町</option>
@@ -18,7 +18,7 @@
               </div>
               <div class="form-group">
                   <label for="genre">ジャンル</label>
-                  <select v-model="genre" id="genre">
+                  <select v-model="genre" id="genre" @change="updateGenreInStore">
                       <option value="">選択してください</option>
                       <option value="和食">和食</option>
                       <option value="洋食">洋食</option>
@@ -27,7 +27,7 @@
               </div>
               <div class="form-group">
                   <label for="budget">予算</label>
-                  <select v-model="budget" id="budget">
+                  <select v-model="budget" id="budget" @change="updateBudgetInStore">
                       <option value="">選択してください</option>
                       <option value="〜3000">~3000円</option>
                       <option value="〜5000">~5000円</option>
@@ -36,7 +36,7 @@
               </div>
               <div class="form-group">
                   <label for="performance">実績</label>
-                  <select v-model="performance" id="performance">
+                  <select v-model="performance" id="performance" @change="updatePerformanceInStore">
                       <option value="">選択してください</option>
                       <option value="開発一部">開発一部</option>
                       <option value="開発二部">開発二部</option>
@@ -47,14 +47,22 @@
           </form>
       </div>
     </div>
-  
+    <div>
+    <h2>Current State</h2>
+    <p>Location: {{ location }}</p>
+    <p>Genre: {{ genre }}</p>
+    <p>Budget: {{ budget }}</p>
+    <p>Performance: {{ performance }}</p>
+    <p>Show Results: {{ showResults }}</p>
+  </div>
     <div>
       <!--
       コンポーネントの呼び出し？
       -->
       
       <EasyRecomends  v-if="!showResults" msg="おすすめ"/>
-  
+
+
     </div>
     <div>
       <EasySearchResults v-if="showResults" 
@@ -62,37 +70,36 @@
         :genre="genre" 
         :budget="budget" 
         :performance="performance" 
-        Resultmsg="検索結果"/>
+        />
    </div>
     
   </template>
   
   <script>
-  
+  import { mapGetters, mapActions } from 'vuex';
   import EasyRecomends from '../components/EsRcommend.vue';
   import EasySearchResults from '../components/Searchresult.vue';
   
   export default {
     name: 'HomeView',
-    data() {
-      return {
-        location: '',
-        genre: '',
-        budget: '',
-        performance: '',
-        showResults: false
-      };
+    computed: {
+    ...mapGetters(['location', 'genre', 'budget', 'performance', 'showResults'])
     },
     methods: {
-      goToLogin() {
+        goToLogin() {
         this.$router.push('/login');
-      },
-      handleSubmit() {
-        event.preventDefault(); // フォームのデフォルトの送信動作を防ぐ
-        alert('フォームが送信されました！');
-        this.showResults = true;
-      }
-      
+        },
+        ...mapActions(['updateLocation', 'updateGenre', 'updateBudget', 'updatePerformance', 'toggleShowResults']),
+        handleSubmit(event) {
+            event.preventDefault(); // フォームのデフォルトの送信動作を防ぐ
+            // Update Vuex state with form values
+            this.updateLocation(this.location);
+            this.updateGenre(this.genre);
+            this.updateBudget(this.budget);
+            this.updatePerformance(this.performance);
+            // Toggle showResults to true
+            this.toggleShowResults(true)
+        },
     },
     components:{
       EasyRecomends,

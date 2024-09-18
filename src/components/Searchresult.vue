@@ -75,16 +75,25 @@
   
   <script>
 
-  export default {
-    name: 'EasySearchResults',
-    props: {
-    location: String,
-    genre: String,
-    budget: String,
-    performance: String,
-    Resultmsg: String
-    }
+import { mapGetters } from 'vuex';
+
+export default {
+  name: 'EasySearchResults',
+  computed: {
+    ...mapGetters(['location', 'genre', 'budget', 'performance', 'showResults'])
   }
+};
+ // Vuex からデータを取得
+  
+    /*props: {
+        location: String,
+        genre: String,
+        budget: String,
+        performance: String,
+        Resultmsg: String
+  }*/
+   
+
   </script>
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
