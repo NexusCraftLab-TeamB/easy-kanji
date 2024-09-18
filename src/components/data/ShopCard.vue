@@ -28,7 +28,7 @@
       <v-card-title>{{ name }}</v-card-title>
 
       <v-card-subtitle>
-        <span class="me-1">{{ address }}</span>
+        <span class="me-1">{{ Adress }}</span>
 
         <v-icon
           color="error"
@@ -108,7 +108,7 @@
         type: String,
         required: true
       },
-      address: {
+      Adress: {
         type: String,
         required: true
       },
