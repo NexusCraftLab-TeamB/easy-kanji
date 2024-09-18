@@ -1,6 +1,6 @@
 <template>
 	<div class="search-conditions">
-		<h1>おすすめ</h1>
+		<h1>{{ msg }}</h1>
 		<h2>検索条件</h2>
 		<div class="conditions">
 				<div><strong>場所：</strong><span class="condition-item">有楽町</span><span class="condition-item">銀座</span></div>
@@ -10,47 +10,39 @@
 	</div>
 
 	<div class="search-results">
-		<h2>検索結果（全10件）</h2>
+		<h2>検索結果（全{{ apiData.length }}件）</h2>
 
-		<!-- 店舗 1 -->
-		<ShopCard
-				link="/shop"
+		<!-- 店舗リストを表示 -->
+		<div v-for="(shop, index) in apiData" :key="index">
+			<ShopCard
+				:link="`/shop`"
 				:image="require('@/assets/yoshinoya.jpg')"
-				name="XX家"
-				address="XX区XXXXXXXXXXXXXXXX"
-				:tags="['駅から近い', '有楽町', '五人以上', '和食', '開発一部', '2024.3実績', '開発三部']"
-		/>
-		<!-- 店舗 2 -->
-		<ShopCard
-				link="/shop"
-				:image="require('@/assets/yoshinoya.jpg')"
-				name="おしゃ"
-				address="XX区XXXXXXXXXXXXXXXX"
-				:tags="['駅から近い', '銀座', '4人', '常務参加あり', '開発一部', '2024.3実績', 'JASTEM開発2部', '少人数']"
-		/>
-		<!-- 店舗 3 -->
-		<ShopCard
-				link="/shop"
-				:image="require('@/assets/yoshinoya.jpg')"
-				name="おしゃ2"
-				address="XX区XXXXXXXXXXXXXXXX"
-				:tags="['駅から近い', '銀座', '10人']"
-		/>
+				:name="shop.Name || '店名未設定'"
+				:Adress="shop.Adress || '住所設定'"
+				:tags="[shop.Genre]"
+			/>
+		</div>
 	</div>
 </template>
 
 <script>
-import ShopCard from './data/ShopCard.vue';
+	import ShopCard from './data/ShopCard.vue';
 
-export default {
-	name: 'EasyRecomends',
-	components: {
-		ShopCard
-	},
-	props: {
-		msg: String
+	export default {
+		props: {
+			apiData: {
+				type: Array,
+				required: true
+			},
+			msg: {
+				type: String,
+				default: "おすすめ"
+			}
+		},
+		components: {
+			ShopCard,
+		}
 	}
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

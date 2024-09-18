@@ -47,61 +47,75 @@
           </form>
       </div>
     </div>
-  
+        <EasyRecommends
+            v-if="!showResults"
+            :apiData="apiData"
+            msg="おすすめ"
+        />
     <div>
-      <!--
-      コンポーネントの呼び出し？
-      -->
-      
-      <EasyRecomends  v-if="!showResults" msg="おすすめ"/>
-  
-    </div>
-    <div>
-      <EasySearchResults v-if="showResults" 
+      <EasySearchResults v-if="showResults"
+				:apidata="apiData"
         :location="location" 
         :genre="genre" 
         :budget="budget" 
         :performance="performance" 
         Resultmsg="検索結果"/>
    </div>
-    
   </template>
   
-  <script>
-  
-  import EasyRecomends from '../components/EsRcommend.vue';
-  import EasySearchResults from '../components/Searchresult.vue';
-  
-  export default {
-    name: 'HomeView',
-    data() {
-      return {
-        location: '',
-        genre: '',
-        budget: '',
-        performance: '',
-        showResults: false
-      };
-    },
-    methods: {
-      goToLogin() {
-        this.$router.push('/login');
-      },
-      handleSubmit() {
-        event.preventDefault(); // フォームのデフォルトの送信動作を防ぐ
-        alert('フォームが送信されました！');
-        this.showResults = true;
-      }
-      
-    },
-    components:{
-      EasyRecomends,
-      EasySearchResults
-  
-    } 
-  
-  }
-  </script>
+<script>
+	import axios from 'axios';
+	import EasyRecommends from '../components/EsRcommend.vue';
+	import EasySearchResults from '../components/Searchresult.vue';
+
+	export default {
+		name: 'HomeView',
+		data() {
+			return {
+				apiData: [],
+				location: '',
+				genre: '',
+				budget: '',
+				performance: '',
+				showResults: false,
+			};
+		},
+		methods: {
+			goToLogin() {
+				this.$router.push('/login');
+			},
+			handleSubmit() {
+				event.preventDefault(); // フォームのデフォルトの送信動作を防ぐ
+				this.fetchData(); // APIを呼び出す
+				alert('フォームが送信されました！');
+				this.showResults = true;
+			},
+			async fetchData() {
+					try {
+							const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home', {
+									params: {
+											location: this.location,
+											genre: this.genre,
+											budget: this.budget,
+											performance: this.performance
+									}
+							});
+							this.apiData = response.data; // APIのレスポンスデータを保存
+							console.log('API response:', this.apiData);
+					} catch (error) {
+							console.error('Error fetching data:', error);
+					}
+			}
+		},
+		mounted() {
+			this.fetchData(); // ページが読み込まれた時にAPI呼び出し
+		},
+		components: {
+			EasyRecommends,
+			EasySearchResults
+		}
+	};
+</script>
 
 <style scoped>
 /* スタイルをここに追加 */
