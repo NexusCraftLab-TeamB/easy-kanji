@@ -17,7 +17,7 @@
 
     <div class="form-group">
       <label for="attribute">属性:</label>
-      <select v-model="attribute" id="attribute">
+      <select v-model="role" id="role">
         <option value="幹事">幹事</option>
         <option value="参加者">参加者</option>
       </select>
@@ -95,13 +95,13 @@ export default {
       try {
         const requestBody = {
           shop_id: '1',  // 必要に応じて修正してください
-          review_id: '2',  // 必要に応じて修正してください
-          userName: this.department,
-          content: this.comment,
-          rating: this.rating,
+          section: this.department,
+          comment: this.comment,
+          rate: this.rating,
+          role: this.role,
         };
 
-        const response = await axios.post('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/dev', requestBody);
+        const response = await axios.post('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/review', requestBody);
         if (response.status === 200) {
           this.showMessage = true;
         }
