@@ -1,72 +1,34 @@
 <template>
-    <div>
-      <h1>お店検索</h1>
-      <!--
-      <button @click="goToLogin">login</button>
-      -->
-      <div class="search-container">
-          <textarea id="searchBox" placeholder="お店の希望を記載してください。（有楽町で和食、５人で部長も参加できる……など）"></textarea>
-          <form id="searchForm" @submit.prevent ="handleSubmit">
-              <div class="form-group">
-                  <label for="location">場所</label>
-                  <select v-model="location" id="location">
-                      <option value="">選択してください</option>
-                      <option value="東京">東京</option>
-                      <option value="有楽町">有楽町</option>
-                      <option value="豊洲">豊洲</option>
-                  </select>
-              </div>
-              <div class="form-group">
-                  <label for="genre">ジャンル</label>
-                  <select v-model="genre" id="genre">
-                      <option value="">選択してください</option>
-                      <option value="和食">和食</option>
-                      <option value="洋食">洋食</option>
-                      <option value="中華">中華</option>
-                  </select>
-              </div>
-              <div class="form-group">
-                  <label for="budget">予算</label>
-                  <select v-model="budget" id="budget">
-                      <option value="">選択してください</option>
-                      <option value="〜3000">~3000円</option>
-                      <option value="〜5000">~5000円</option>
-                      <option value="〜10000">~10000円</option>
-                  </select>
-              </div>
-              <div class="form-group">
-                  <label for="performance">実績</label>
-                  <select v-model="performance" id="performance">
-                      <option value="">選択してください</option>
-                      <option value="開発一部">開発一部</option>
-                      <option value="開発二部">開発二部</option>
-                      <option value="開発三部">開発三部</option>
-                  </select>
-              </div>
-              <button type="submit">検索</button>
-          </form>
-      </div>
+		<ShopSearchForm @submit-data="handleFormData"/>
+
+		<div class="search-conditions">
+			<div v-if="submited">
+				<h2>検索条件</h2>
+				<div class="conditions">
+					<div><strong>場所：</strong><span class="condition-item">{{ location }}</span></div>
+					<div><strong>ジャンル :</strong><span class="condition-item">{{ genre }}</span></div>
+					<div><strong>実績：</strong><span class="condition-item">{{ performance }}</span></div>
+				</div>
+				<h4>検索結果（全{{ apiData.length }}件）</h4>
+			</div>
+			<div v-else>
+				<h2>おすすめ</h2>
+			</div>
+		</div>
+
+		<ShopList
+			:apiData="apiData"
+		/>
+    <div v-if="searchError">
+      <p>検索結果がありません。</p>
     </div>
-        <EasyRecommends
-            v-if="!showResults"
-            :apiData="apiData"
-            msg="おすすめ"
-        />
-    <div>
-      <EasySearchResults v-if="showResults"
-				:apidata="apiData"
-        :location="location" 
-        :genre="genre" 
-        :budget="budget" 
-        :performance="performance" 
-        Resultmsg="検索結果"/>
-   </div>
+
   </template>
   
 <script>
 	import axios from 'axios';
-	import EasyRecommends from '../components/EsRcommend.vue';
-	import EasySearchResults from '../components/Searchresult.vue';
+	import ShopList from '../components/ShopList.vue';
+	import ShopSearchForm from '../components/forms/ShopSearchForm.vue';
 
 	export default {
 		name: 'HomeView',
@@ -77,42 +39,60 @@
 				genre: '',
 				budget: '',
 				performance: '',
-				showResults: false,
+				formData: {},
 			};
 		},
 		methods: {
 			goToLogin() {
 				this.$router.push('/login');
 			},
-			handleSubmit() {
-				event.preventDefault(); // フォームのデフォルトの送信動作を防ぐ
+			// フォームデータを受け取り、APIを呼び出す
+			handleFormData(data) {
+				this.formData = data; // 子コンポーネントから受け取ったデータをセット
+				this.name = data.name; // 店名をセット
+				this.location = data.location; // 場所をセット
+				this.genre = data.genre; // ジャンルをセット
+				this.budget = data.budget; // 予算をセット
+				this.performance = data.performance; // 実績をセット
+				this.submited = true; // データが送信されたことを示すフラグ
 				this.fetchData(); // APIを呼び出す
-				alert('フォームが送信されました！');
-				this.showResults = true;
 			},
+			// APIを呼び出す
 			async fetchData() {
-					try {
-							const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home', {
-									params: {
-											location: this.location,
-											genre: this.genre,
-											budget: this.budget,
-											performance: this.performance
-									}
-							});
-							this.apiData = response.data; // APIのレスポンスデータを保存
-							console.log('API response:', this.apiData);
-					} catch (error) {
-							console.error('Error fetching data:', error);
+				try {
+						// クエリパラメータを作成、空の場合は undefined に設定
+						const params = {
+							name: this.formData.name || undefined,
+							location: this.formData.location || undefined,
+							genre: this.formData.genre || undefined,
+							budget: this.formData.budget || undefined,
+							performance: this.formData.performance || undefined
+						};
+
+						// APIリクエストを送信
+						const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home', { params });
+
+						// レスポンスのデータを保存
+						this.apiData = response.data;
+						this.searchError = false;  // エラーフラグをリセット
+				} catch (error) {
+					// 404エラーの場合に「検索結果がありません」というフラグを設定
+					if (error.response && error.response.status === 404) {
+						this.searchError = true;
+						this.apiData = [];  // 検索結果がないのでデータを空にする
+					} else {
+						console.error('Error fetching data:', error);
 					}
+				}
 			}
 		},
 		mounted() {
 			this.fetchData(); // ページが読み込まれた時にAPI呼び出し
+			this.submited = false;
 		},
 		components: {
-			EasyRecommends,
-			EasySearchResults
+			ShopList,
+			ShopSearchForm
 		}
 	};
 </script>
