@@ -3,31 +3,34 @@
 		<!-- 店舗リストを表示 -->
 		<div v-for="(shop, index) in apiData" :key="index">
 			<ShopCard
-				:link="`/shop`"
+				:link="`/shop/${shop.ShopId}`"
 				:image="require('@/assets/yoshinoya.jpg')"
 				:name="shop.Name || '店名未設定'"
 				:Adress="shop.Adress || '住所未設定'"
 				:tags="[shop.Genre]"
-			/>
+			/>		
 		</div>
 	</div>
 </template>
 
 <script>
-	import ShopCard from './data/ShopCard.vue';
-
-	export default {
-		props: {
-			apiData: {
-				type: Array,
-				required: true
-			},
-		},
-		components: {
-			ShopCard,
-		},
-	}
+import ShopCard from './data/ShopCard.vue';
+export default {
+  props: {
+    apiData: {
+      type: Array,
+      required: true
+    },
+  },
+  methods: {
+},
+  components: {
+    ShopCard,
+  }
+}
 </script>
+
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>

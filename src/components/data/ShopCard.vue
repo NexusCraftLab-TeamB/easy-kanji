@@ -93,8 +93,10 @@
     data: () => ({
       loading: false,
       selection: 1,
+      localName: '',
+      localAdress: '',
+      localTags: []
     }),
-
     props: {
       link: {
         type: String,
@@ -117,7 +119,11 @@
         required: true
       }
     },
-
+    created() {
+      this.localName = this.name;
+      this.localAdress = this.Adress;
+      this.localTags = this.tags;
+    },
     methods: {
       showDetail () {
         this.loading = true
@@ -129,9 +135,16 @@
 
         setTimeout(() => (this.loading = false), 2000)
       },
+      updateShopData(data){
+        console.log(data);
+        this.localName = data.Name || this.localName;
+        this.localAdress = data.Adress || this.localAdress;
+        this.localTags = data.Genre ? [data.Genre] : this.localTags;
+      }
     },
   }
 </script>
+
 
 <style scoped>
   .custom-active-class {
