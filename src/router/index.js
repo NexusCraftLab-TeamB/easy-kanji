@@ -5,31 +5,38 @@ import Shop from '@/views/shop.vue';
 import ShopCheck from '@/views/shopCheck.vue';
 import ReviewForm from '../views/ReviewForm.vue';
 import ShopSearch from '../views/shopSearch.vue';
+import store from '@/store'; // Vuexストアをインポート
+
 
 const routes = [
   {
-    path : '/home',
-    component : Home
+    path: '/home',
+    component: Home
   },
   {
-    path : '/',
-    component : Login
+    path: '/',
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      // ストアの状態をリセット
+      store.commit('resetState');
+      next(); // 次のルートに進む
+    }
   },
   {
-    path : '/shop',
-    component : Shop
+    path: '/shop',
+    component: Shop
   },
   {
-    path : '/shopCheck',
-    component : ShopCheck
+    path: '/shopCheck',
+    component: ShopCheck
   },
   {
-    path : '/shopSearch',
-    component : ShopSearch
+    path: '/shopSearch',
+    component: ShopSearch
   },
   {
-    path : '/review',
-    component : ReviewForm
+    path: '/review',
+    component: ReviewForm
   }
 ];
 

@@ -47,12 +47,21 @@ const store = createStore({
             state.budget = '';
             state.performance = '';
             state.submited = false;
-            state.apiData = [];
             state.searchError = false;
             localStorage.clear();
         }
     },
     actions: {
+        async fetchAllData({ commit }) {
+            try {
+                const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home'); // すべてのデータを取得するエンドポイント
+                commit('setApiData', response.data);
+                commit('setSearchError', false);
+            } catch (error) {
+                console.error('Error fetching all data:', error);
+                commit('setSearchError', true);
+            }
+        },
         async fetchData({ commit }, formData) {
             try {
                 const params = {
@@ -62,8 +71,10 @@ const store = createStore({
                     budget: formData.budget || undefined,
                     performance: formData.performance || undefined,
                 };
-
+                
                 const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home', { params });
+                console.log('API Response:', response.data); // 追加
+                console.log(response)
                 commit('setApiData', response.data);
                 commit('setSearchError', false);
             } catch (error) {

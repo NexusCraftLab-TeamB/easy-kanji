@@ -13,8 +13,13 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'; // mapGettersを削除
+
 export default {
-  name: 'HomeView',
+  name: 'HomeView',   
+   computed: {
+        ...mapState(['apiData', 'location', 'genre', 'budget', 'performance', 'submited', 'searchError']),
+    },
   data() {
     return {
       userId: '',
@@ -28,7 +33,12 @@ export default {
       } else {
         alert("ユーザIDとパスワードを入力してください。");
       }
-    }
+    },
+    ...mapActions(['fetchAllData']), 
+  }
+,
+    mounted() {
+    this.fetchAllData();
   }
 }
 </script>

@@ -33,7 +33,7 @@ export default {
         ...mapState(['apiData', 'location', 'genre', 'budget', 'performance', 'submited', 'searchError']),
     },
     methods: {
-        ...mapActions(['fetchData']),
+        ...mapActions(['fetchData']), 
         handleFormData(data) {
             this.formData = data;
             this.$store.commit('setLocation', data.location);
@@ -42,9 +42,13 @@ export default {
             this.$store.commit('setPerformance', data.performance);
             this.$store.commit('setSubmited', true);
             this.fetchData(data); // APIを呼び出す
+            console.log('Submitted data:', data); // 追加
+
         },
     },
+
     mounted() {
+
         // ストアの状態を使ってAPIを呼び出す
         const formData = {
             name: '', // 必要ならここに値を設定
