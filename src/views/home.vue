@@ -1,101 +1,72 @@
 <template>
-		<ShopSearchForm @submit-data="handleFormData"/>
+    <ShopSearchForm @submit-data="handleFormData"/>
 
-		<div class="search-conditions">
-			<div v-if="submited">
-				<h2>検索条件</h2>
-				<div class="conditions">
-					<div><strong>場所：</strong><span class="condition-item">{{ location }}</span></div>
-					<div><strong>ジャンル :</strong><span class="condition-item">{{ genre }}</span></div>
-					<div><strong>実績：</strong><span class="condition-item">{{ performance }}</span></div>
-				</div>
-				<h4>検索結果（全{{ apiData.length }}件）</h4>
-			</div>
-			<div v-else>
-				<h2>おすすめ</h2>
-			</div>
-		</div>
-
-		<ShopList
-			:apiData="apiData"
-		/>
-    <div v-if="searchError">
-      <p>検索結果がありません。</p>
+    <div class="search-conditions">
+        <div v-if="submited">
+            <h2>検索条件</h2>
+            <div class="conditions">
+                <div><strong>場所：</strong><span class="condition-item">{{ location }}</span></div>
+                <div><strong>ジャンル :</strong><span class="condition-item">{{ genre }}</span></div>
+                <div><strong>実績：</strong><span class="condition-item">{{ performance }}</span></div>
+            </div>
+            <h4>検索結果（全{{ apiData.length }}件）</h4>
+        </div>
+        <div v-else>
+            <h2>おすすめ</h2>
+        </div>
     </div>
 
-  </template>
-  
+    <ShopList :apiData="apiData"/>
+    <div v-if="searchError">
+        <p>検索結果がありません。</p>
+    </div>
+</template>
+
 <script>
-	import axios from 'axios';
-	import ShopList from '../components/ShopList.vue';
-	import ShopSearchForm from '../components/forms/ShopSearchForm.vue';
+import { mapState, mapActions } from 'vuex'; // mapGettersを削除
+import ShopList from '../components/ShopList.vue';
+import ShopSearchForm from '../components/forms/ShopSearchForm.vue';
 
-	export default {
-		name: 'HomeView',
-		data() {
-			return {
-				apiData: [],
-				location: '',
-				genre: '',
-				budget: '',
-				performance: '',
-				formData: {},
-			};
-		},
-		methods: {
-			goToLogin() {
-				this.$router.push('/login');
-			},
-			// フォームデータを受け取り、APIを呼び出す
-			handleFormData(data) {
-				this.formData = data; // 子コンポーネントから受け取ったデータをセット
-				this.name = data.name; // 店名をセット
-				this.location = data.location; // 場所をセット
-				this.genre = data.genre; // ジャンルをセット
-				this.budget = data.budget; // 予算をセット
-				this.performance = data.performance; // 実績をセット
-				this.submited = true; // データが送信されたことを示すフラグ
-				this.fetchData(); // APIを呼び出す
-			},
-			// APIを呼び出す
-			async fetchData() {
-				try {
-						// クエリパラメータを作成、空の場合は undefined に設定
-						const params = {
-							name: this.formData.name || undefined,
-							location: this.formData.location || undefined,
-							genre: this.formData.genre || undefined,
-							budget: this.formData.budget || undefined,
-							performance: this.formData.performance || undefined
-						};
-
-						// APIリクエストを送信
-						const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home', { params });
-
-						// レスポンスのデータを保存
-						this.apiData = response.data;
-						this.searchError = false;  // エラーフラグをリセット
-				} catch (error) {
-					// 404エラーの場合に「検索結果がありません」というフラグを設定
-					if (error.response && error.response.status === 404) {
-						this.searchError = true;
-						this.apiData = [];  // 検索結果がないのでデータを空にする
-					} else {
-						console.error('Error fetching data:', error);
-					}
-				}
-			}
-		},
-		mounted() {
-			this.fetchData(); // ページが読み込まれた時にAPI呼び出し
-			this.submited = false;
-		},
-		components: {
-			ShopList,
-			ShopSearchForm
-		}
-	};
+export default {
+    name: 'HomeView',
+    computed: {
+        ...mapState(['apiData', 'location', 'genre', 'budget', 'performance', 'submited', 'searchError']),
+    },
+    methods: {
+        ...mapActions(['fetchData']),
+        handleFormData(data) {
+            this.formData = data;
+            this.$store.commit('setLocation', data.location);
+            this.$store.commit('setGenre', data.genre);
+            this.$store.commit('setBudget', data.budget);
+            this.$store.commit('setPerformance', data.performance);
+            this.$store.commit('setSubmited', true);
+            this.fetchData(data); // APIを呼び出す
+        },
+    },
+    mounted() {
+        // ストアの状態を使ってAPIを呼び出す
+        const formData = {
+            name: '', // 必要ならここに値を設定
+            location: this.location,
+            genre: this.genre,
+            budget: this.budget,
+            performance: this.performance,
+        };
+        
+        // APIを呼び出し
+        if (this.submited) {
+            this.fetchData(formData);
+        }
+    
+    },
+    components: {
+        ShopList,
+        ShopSearchForm
+    }
+};
 </script>
+
 
 <style scoped>
 /* スタイルをここに追加 */

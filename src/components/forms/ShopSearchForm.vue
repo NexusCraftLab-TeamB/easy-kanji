@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <h1>お店検索</h1>
     <v-container>
       <v-sheet
@@ -27,7 +26,7 @@
           ></v-text-field>
 
           <v-select
-            v-model="location"
+            v-model="localLocation"
             :items="locations"
             label="場所"
             outlined
@@ -35,7 +34,7 @@
           ></v-select>
   
           <v-select
-            v-model="genre"
+            v-model="localGenre"
             :items="genres"
             label="ジャンル"
             outlined
@@ -43,7 +42,7 @@
           ></v-select>
 
           <v-slider
-            v-model="budgets"
+            v-model="localBudget"
             color="green-darken-1"
             track-color="green"
             :min="0"
@@ -57,7 +56,7 @@
           ></v-slider>
   
           <v-select
-            v-model="performance"
+            v-model="localPerformance"
             :items="performances"
             label="実績"
             outlined
@@ -68,7 +67,6 @@
             検索
           </v-btn>
   
-          <!-- エラーメッセージ表示 -->
           <v-alert
             v-if="errorMessage"
             variant="outlined"
@@ -85,45 +83,75 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex';
+
 export default {
   data() {
     return {
-      searchQuery: "", // テキストエリアのデータバインディング
-      name: "", // 店名
-      location: "", // 場所の選択
-      genre: "", // ジャンルの選択
-      budget: "", // 予算の選択
-      performance: "", // 実績の選択
-      locations: ["東京", "有楽町", "豊洲"], // 場所の選択肢
-      genres: ["和食", "洋食", "中華"], // ジャンルの選択肢
-      performances: ["開発一部", "開発二部", "開発三部"], // 実績の選択肢
-      errorMessage: "", // エラーメッセージ
-      budgets: [1000, 3000],
+      searchQuery: "",
+      name: "",
+      localLocation: "",
+      localGenre: "",
+      localBudget: 0,
+      localPerformance: "",
+      locations: ["東京", "有楽町", "豊洲"],
+      genres: ["和食", "洋食", "中華"],
+      performances: ["開発一部", "開発二部", "開発三部"],
+      errorMessage: "",
       tickLabels: {
           0: '指定なし',
           5000: '5000円',
           10000: '10000円',
-        },
+      },
     };
   },
+  computed: {
+    ...mapState(['location', 'genre', 'budget', 'performance']),
+  },
   methods: {
+    ...mapMutations(['setLocation', 'setGenre', 'setBudget', 'setPerformance']),
+    ...mapActions(['fetchData']),
     handleSubmit() {
-      // すべての項目が空の場合のバリデーション
-      if (!this.searchQuery && !this.name && !this.location && !this.genre && !this.budget && !this.performance) {
+      if (!this.searchQuery && !this.name && !this.localLocation && !this.localGenre && !this.localBudget && !this.localPerformance) {
         this.errorMessage = "検索条件を指定してください";
       } else {
-        this.errorMessage = ""; // エラーメッセージをリセット
-        // フォームデータを親コンポーネントに渡す
+        this.errorMessage = "";
+        this.setLocation(this.localLocation);
+        this.setGenre(this.localGenre);
+        this.setBudget(this.localBudget);
+        this.setPerformance(this.localPerformance);
+        
         this.$emit("submit-data", {
           searchQuery: this.searchQuery,
           name: this.name,
-          location: this.location,
-          genre: this.genre,
-          budget: this.budget,
-          performance: this.performance,
+          location: this.localLocation,
+          genre: this.localGenre,
+          budget: this.localBudget,
+          performance: this.localPerformance,
         });
       }
     },
   },
+  mounted() {
+    // Vuexからの状態をローカルデータに設定
+    this.localLocation = this.location;
+    this.localGenre = this.genre;
+    this.localBudget = this.budget;
+    this.localPerformance = this.performance;
+
+    // APIを呼び出すためのデータを準備
+    const formData = {
+      name: this.name,
+      location: this.localLocation,
+      genre: this.localGenre,
+      budget: this.localBudget,
+      performance: this.localPerformance,
+    };
+    
+    // fetchDataアクションを呼び出す
+    if (this.localLocation || this.localGenre || this.localBudget || this.localPerformance) {
+      this.fetchData(formData);
+    }
+  }
 };
 </script>
