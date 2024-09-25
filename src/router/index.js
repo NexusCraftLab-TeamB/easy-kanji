@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/home.vue';
 import Login from '@/views/login.vue';
 import Shop from '@/views/shop.vue';
-import ShopCheck from '@/views/shopCheck.vue';
 import ReviewForm from '../views/ReviewForm.vue';
 import ShopSearch from '../views/shopSearch.vue';
 
@@ -16,12 +15,10 @@ const routes = [
     component : Login
   },
   {
-    path : '/shop',
-    component : Shop
-  },
-  {
-    path : '/shopCheck',
-    component : ShopCheck
+    path: '/shop/:ShopId',
+    name: 'Shop',
+    component: Shop,
+    props: true
   },
   {
     path : '/shopSearch',
