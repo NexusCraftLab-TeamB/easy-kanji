@@ -6,6 +6,12 @@
       <img src="@/assets/your_image_path_here.jpg" alt="お店の写真">
     </div>
 
+    <!-- お店の名前を表示 -->
+  
+    <div class="shop-name" style="font-weight: bold; color: black;">
+      {{ shopName }}  <strong>のレビューを登録</strong> <!-- ここでお店の名前を表示 -->
+    </div>
+
     <div class="form-group">
       <label for="department">利用部門:</label>
       <select v-model="department" id="department">
@@ -73,12 +79,13 @@ export default {
   data() {
     return {
       department: "開発一部",
-      attribute: "幹事",
+      role: "幹事",
       rating: "5",
       comment: "",
       newTag: "",
       tags: [],
       showMessage: false,
+      shopName: "",  // お店の名前を保存するプロパティを追加
     };
   },
   methods: {
@@ -91,10 +98,28 @@ export default {
     removeTag(index) {
       this.tags.splice(index, 1);
     },
+    async fetchShopName() {
+      const shopId = this.$route.query.shop_id;  // クエリパラメータからshop_idを取得
+      try {
+        const response = await axios.get(`https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop?shop_id=${shopId}`);
+        
+        // API レスポンスをログに出力
+        console.log("Shop Items:", response.data.shop_items);
+        
+        // shop_itemsが空でないか確認
+        if (response.data.shop_items.length > 0) {
+          this.shopName = response.data.shop_items[0].Name;  // お店の名前を取得（プロパティ名を修正）
+        } else {
+          console.error('No shop items found for the provided shop_id');
+        }
+      } catch (error) {
+        console.error('Error fetching shop name:', error);
+      }
+    },
     async submitReview() {
       try {
         const requestBody = {
-          shop_id: '1',  // 必要に応じて修正してください
+          shop_id: this.$route.query.shop_id,  // shop_idをクエリパラメータから取得
           section: this.department,
           comment: this.comment,
           rate: this.rating,
@@ -113,7 +138,7 @@ export default {
       this.$forceUpdate();
       this.showMessage = false;
       this.department = "開発一部";
-      this.attribute = "幹事";
+      this.role = "幹事";
       this.rating = "5";
       this.comment = "";
       this.newTag = "";
@@ -122,6 +147,9 @@ export default {
     goToSearch() {
       this.$router.push("shopSearch");
     }
+  },
+  mounted() {
+    this.fetchShopName();  // コンポーネントがマウントされたときにお店の名前を取得
   }
 };
 </script>
@@ -152,6 +180,13 @@ export default {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
+}
+
+.shop-name {
+  font-size: 18px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #007bff;  /* お店の名前を強調 */
 }
 
 .form-group {
