@@ -136,6 +136,7 @@
             :user="review.Role"
             :department="review.Section"
             :comment="review.Comment"
+            :rating="review.Rate"
           />
         </v-col>
       </v-row>
