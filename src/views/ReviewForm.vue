@@ -18,6 +18,9 @@
         <option value="開発一部">開発一部</option>
         <option value="開発二部">開発二部</option>
         <option value="開発三部">開発三部</option>
+        <option value="開発四部">開発四部</option>
+        <option value="開発五部">開発五部</option>
+        
       </select>
     </div>
 
@@ -145,7 +148,7 @@ export default {
       this.tags = [];
     },
     goToSearch() {
-      this.$router.push("shopSearch");
+      this.$router.push("home");
     }
   },
   mounted() {
