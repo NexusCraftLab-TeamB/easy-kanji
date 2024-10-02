@@ -1,49 +1,35 @@
 <template>
-  <v-card
-    class="mx-auto"
-    :title= user
-    :subtitle= department
-  >
-    <v-rating
-      :model-value="4.5"
-      color="amber"
-      density="compact"
-      size="small"
-      half-increments
-      readonly
-      align="start"
-    ></v-rating>
-
-    <v-card-text>{{ comment }}</v-card-text>
+  <v-card>
+    <v-card-title>
+      <div>
+        <span>{{ user }}</span>
+        <span>{{ department }}</span>
+      </div>
+    </v-card-title>
+    <v-card-subtitle>
+      <v-rating
+        :model-value="rating"
+        color="amber"
+        density="compact"
+        size="small"
+        half-increments
+        readonly
+      ></v-rating>
+    </v-card-subtitle>
+    <v-card-text>
+      <p>{{ comment }}</p>
+    </v-card-text>
   </v-card>
 </template>
 
 <script>
-  export default{
-    name: 'ReviewCard',
-
-    props: {
-      user: {
-        type: String,
-        required: true
-      },
-      department: {
-        type: String,
-        required: true
-      },
-      comment: {
-        type: String,
-        required: true
-      }
-    }
+export default {
+  name: 'ReviewCard',
+  props: {
+    user: String,
+    department: String,
+    comment: String,
+    rating: Number
   }
+};
 </script>
-
-<style scoped>
-  .v-card-item {
-    padding-bottom: 0rem!important;
-  }
-  .v-card-text {
-    padding: 0.5rem!important;
-  }
-</style>

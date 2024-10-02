@@ -36,15 +36,15 @@ export default {
   data: () => ({
     drawer: false,
     items: [
-      { title: 'ホーム' },
-      { title: '店舗評価/登録' },
-      { title: 'ログアウト' }
+      { title: 'ホーム', route: '/home' },
+      { title: '店舗評価/登録', route: '/review' },
+      { title: 'ログアウト', route: '/' }
     ]
   }),
   methods: {
     onItemClick(item) {
       console.log(item.title);
-      // 必要に応じて他の処理を追加
+      this.$router.push(item.route);
     },
     redirectToHome() {
       this.$router.push('/');
@@ -56,7 +56,6 @@ export default {
 <style>
 body {
   background-color: #f7f7f7!important;
-
 }
 #app {
   font-family: Roboto, Avenir, Helvetica, Arial, sans-serif;
