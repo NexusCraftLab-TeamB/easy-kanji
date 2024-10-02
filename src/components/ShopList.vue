@@ -2,7 +2,6 @@
 	<div class="search-results">
 		<!-- 店舗リストを表示 -->
 		<div v-for="(shop, index) in apiData" :key="index">
-			<p>{{ shop }}</p>
 			<ShopCard
 				:link="`/shop/${shop.ShopId}`"
 				:image="shop.Photo ? shop.Photo : require('@/assets/yoshinoya.jpg')" 
