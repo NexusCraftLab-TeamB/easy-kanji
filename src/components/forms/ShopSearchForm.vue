@@ -29,6 +29,8 @@
           <v-select
             v-model="location"
             :items="locations"
+            item-title="name"
+            item-value="code"
             label="場所"
             outlined
             clearable
@@ -37,25 +39,23 @@
           <v-select
             v-model="genre"
             :items="genres"
+            item-title="name"
+            item-value="code"
             label="ジャンル"
             outlined
             clearable
           ></v-select>
 
-          <v-slider
-            v-model="budgets"
-            color="green-darken-1"
-            track-color="green"
-            :min="0"
-            :max="10000"
-            step="1000"
-            :ticks="tickLabels"
-            show-ticks="always"
-            thumb-label="always"
-            tick-size="3"
+          <v-select
+            v-model="budget"
+            :items="budgets"
+            item-title="name"
+            item-value="code"
             label="予算"
-          ></v-slider>
-  
+            outlined
+            clearable
+          ></v-select>
+
           <v-select
             v-model="performance"
             :items="performances"
@@ -85,25 +85,25 @@
 </template>
 
 <script>
+import { locations } from '@/constants/locations';
+import { genres } from '@/constants/genres';
+import { budgets } from '@/constants/budgets';
+import { performances } from '@/constants/performances';
+
 export default {
   data() {
     return {
       searchQuery: "", // テキストエリアのデータバインディング
       name: "", // 店名
-      location: "", // 場所の選択
       genre: "", // ジャンルの選択
       budget: "", // 予算の選択
       performance: "", // 実績の選択
-      locations: ["東京", "有楽町", "豊洲"], // 場所の選択肢
-      genres: ["和食", "洋食", "中華"], // ジャンルの選択肢
-      performances: ["開発一部", "開発二部", "開発三部"], // 実績の選択肢
+      location: "", // 場所の選択
+      locations: locations, // 場所の選択肢
+      genres: genres, // ジャンルの選択肢
+      performances: performances, // 実績の選択肢
       errorMessage: "", // エラーメッセージ
-      budgets: [1000, 3000],
-      tickLabels: {
-          0: '指定なし',
-          5000: '5000円',
-          10000: '10000円',
-        },
+      budgets: budgets, // 予算の選択肢
     };
   },
   methods: {
