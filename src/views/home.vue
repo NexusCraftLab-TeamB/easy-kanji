@@ -5,8 +5,8 @@
 			<div v-if="submited">
 				<h2>検索条件</h2>
 				<div class="conditions">
-					<div><strong>場所：</strong><span class="condition-item">{{ location }}</span></div>
-					<div><strong>ジャンル :</strong><span class="condition-item">{{ genre }}</span></div>
+					<div><strong>場所：</strong><span class="condition-item">{{ locationName }}</span></div>
+					<div><strong>ジャンル :</strong><span class="condition-item">{{ genreName }}</span></div>
 					<div><strong>実績：</strong><span class="condition-item">{{ performance }}</span></div>
 				</div>
 				<h4>検索結果（全{{ apiData.length }}件）</h4>
@@ -19,8 +19,8 @@
 		<ShopList
 			:apiData="apiData"
 		/>
-    <div v-if="searchError">
-      <p>検索結果がありません。</p>
+		<div v-if="searchError || apiData.length === 0">
+			<p>検索結果がありません。</p>
     </div>
 
   </template>
@@ -29,6 +29,8 @@
 	import axios from 'axios';
 	import ShopList from '../components/ShopList.vue';
 	import ShopSearchForm from '../components/forms/ShopSearchForm.vue';
+	import { locations } from '@/constants/locations.js';
+	import { genres } from '@/constants/genres.js';
 
 	export default {
 		name: 'HomeView',
@@ -75,7 +77,7 @@
 						// レスポンスのデータを保存
 						this.apiData = response.data;
 						this.searchError = false;  // エラーフラグをリセット
-						console.log(this.apiData)
+						console.log(this.apiData);
 				} catch (error) {
 					// 404エラーの場合に「検索結果がありません」というフラグを設定
 					if (error.response && error.response.status === 404) {
@@ -90,6 +92,18 @@
 		mounted() {
 			this.fetchData(); // ページが読み込まれた時にAPI呼び出し
 			this.submited = false;
+		},
+		computed: {
+			// 検索値（areaコード）から場所の名前へ変換する
+			locationName() {
+				const location = locations.find(loc => loc.code === this.location);
+				return location ? location.name : '-';
+			},
+			// 検索値（ジャンルコード）から場所の名前へ変換する
+			genreName() {
+				const genre = genres.find(gen => gen.code === this.genre);
+				return genre ? genre.name : '-';
+			}
 		},
 		components: {
 			ShopList,
