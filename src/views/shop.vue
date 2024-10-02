@@ -25,21 +25,23 @@
 
           <!-- 評価 -->
           <v-row
-            class="mx-0 justify-center"
+          class="mx-0 justify-center"
           >
-            <v-rating
-              :model-value="shop.rating"
-              color="amber"
-              density="compact"
-              size="small"
-              half-increments
-              readonly
-            ></v-rating>
+          <v-rating
+            :model-value="shop.shop_items[0].Rate"
+            color="amber"
+            density="compact"
+            size="small"
+            half-increments
+            readonly
+          ></v-rating>
 
-            <div class="text-grey ms-2">
-              {{ this.shop.shop_items[0].Rate }} ({{ this.shop.review_items.length }})
-            </div>
-          </v-row>
+          <div class="text-grey ms-2">
+            {{ this.shop.shop_items[0].Rate }} ({{ shop.review_items.length }})
+          </div>
+        </v-row>
+
+
 
           <!-- 店舗情報 -->
           <v-row align="center" justify="center" class="py-3">
@@ -134,6 +136,7 @@
             :user="review.Role"
             :department="review.Section"
             :comment="review.Comment"
+            :rating="review.Rate"
           />
         </v-col>
       </v-row>
@@ -146,7 +149,6 @@
         <img src="../assets/yoshinoyaIn1.jpg" alt="Yoshinoya">
         <img src="../assets/yoshinoyaIn2.jpg" alt="Yoshinoya2">
         <img src="../assets/yoshinoyaIn3.jpg" alt="Yoshinoya3">
-        <!--<img v-for="image in shop.images" :key="image.id" :src="image.url" alt="店内の写真" />-->
       </div>
     </div>
   </div>
@@ -196,23 +198,24 @@ export default {
     }
   },
   methods: {
-
     // 評価入力画面への遷移
-    goToReview(){
-      this.$router.push("/review"); 
+    goToReview() {
+      this.$router.push({ 
+        path: "/review", 
+        query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
+      }); 
     },
-    shareShop(){
+    shareShop() {
       // 現在のURLをクリップボードにコピーする
       navigator.clipboard.writeText(window.location.href);
       // クリップボードにコピーしましたというアラートを表示する
       alert('URLをコピーしました!');
-    }
+    },
   }
 };
 </script>
 
 <style scoped>
-
   .shop-container {
     display: flex;
     flex-direction: column;
@@ -222,7 +225,7 @@ export default {
     height: 100vh; /* ビューポートの高さを100%に設定 */
     margin: 0; /* 外側の余白をなくす */
     padding: 0; /* 内側の余白をなくす */
-    }
+  }
   
   .shop-details {
     background-color: #f2f9e9; /* 背景色 */
@@ -239,8 +242,8 @@ export default {
     background-color: #f2f9e9; /* 背景色 */
   }
   .shop-detailsA img {
-  max-width: 90%; /* 画像の最大幅を親要素の幅に合わせる */
-  height: auto; /* 縦横比を維持して高さを自動調整 */
+    max-width: 90%; /* 画像の最大幅を親要素の幅に合わせる */
+    height: auto; /* 縦横比を維持して高さを自動調整 */
   }
 
   .shop-detailsB {
@@ -251,16 +254,16 @@ export default {
   
   .share-button,
   .confirm-button {
-      background-color: #97e094;
-      color: #fff;
-      border: none;
-      padding: 15px 80px; /* 内側の余白を増やしてボタンを大きくする */
-      font-size: 18px; /* フォントサイズを大きくする */
-      margin-top: 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-right: 10px;
-      transition: background-color 0.3s;
+    background-color: #97e094;
+    color: #fff;
+    border: none;
+    padding: 15px 80px; /* 内側の余白を増やしてボタンを大きくする */
+    font-size: 18px; /* フォントサイズを大きくする */
+    margin-top: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s;
   }
 
   .share-button:hover,
@@ -280,91 +283,30 @@ export default {
   }
 
   .tagsA span {
-      background-color: #7ed17e;
+    background-color: #7ed17e;
   }
 
   .tagsA span:hover {
-    background-color: #5bb75b;
-  }
-
-  .tagsItems{
-    padding: 1px 9px; /* 内側の余白を増やしてボタンを大きくする */
-  }
-
-  .heading {
-    align-items: center; /* 横線を上下中央 */
-    display: flex; /* 文字と横線を横並び */
-    justify-content: center; /* 文字を中央寄せ */
-  }
-
-  .heading::before,
-  .heading::after {
-    background-color: #3bc778; /* 横線の色 */
-    border-radius: 5px; /* 横線の両端を丸く */
-    content: "";
-    height: 10px; /* 横線の高さ */
-    width: 300px; /* 横線の長さ */
-  }
-
-  .heading::before {
-    margin-right: 15px; /* 文字との余白 */
-  }
-  .heading::after {
-    margin-left: 15px; /* 文字との余白 */
-  }
-
-  h2 {
-    color: #333;
-    font-size: 30px;
-    font-weight: 700;
-    margin-top: 60px;
-  }
-  .label {
-    font-weight: bold;
-    color: #333;
-  }
-
-  .value {
-    color: #007bff;
+    background-color: #5ebd5e;
   }
 
   .reviews {
-    max-width: 700px;
-  }
-
-  .review-container {
-    margin-top: 20px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-
-  .review-user {
-    font-weight: bold;
-    color: #333;
-  }
-
-  .review-comment {
-    color: #555;
+    margin-top: 50px;
   }
 
   .image-gallery {
-    margin-top: 20px;
+    margin-top: 50px;
   }
 
   .image-grid {
-    display: center; /* 子要素を横並びにする */
-    gap: 100px; /* 画像間のスペースを設定 */
-    /*grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));*/
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
   }
 
   .image-grid img {
-    max-width: 30%;
+    width: 100%;
     height: auto;
-  }
-
-  .custom-active-class {
-    background-color: #2E7D32 !important;
-    color: white !important;
+    border-radius: 8px;
   }
 </style>

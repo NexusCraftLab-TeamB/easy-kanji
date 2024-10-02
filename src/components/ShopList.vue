@@ -4,10 +4,11 @@
 		<div v-for="(shop, index) in apiData" :key="index">
 			<ShopCard
 				:link="`/shop/${shop.ShopId}`"
-				:image="require('@/assets/yoshinoya.jpg')"
+				:image="shop.Photo ? shop.Photo : require('@/assets/yoshinoya.jpg')" 
 				:name="shop.Name || '店名未設定'"
 				:Adress="shop.Adress || '住所未設定'"
 				:tags="[shop.Genre]"
+				:Rate="shop.Rate"
 			/>		
 		</div>
 	</div>

@@ -36,6 +36,7 @@
           size="small"
         ></v-icon>
       </v-card-subtitle>
+      
     </v-card-item>
 
     <v-card-text>
@@ -45,7 +46,7 @@
         class="mx-0"
       >
         <v-rating
-          :model-value="4.5"
+          :model-value="Rate"
           color="amber"
           density="compact"
           size="small"
@@ -54,7 +55,7 @@
         ></v-rating>
 
         <div class="text-grey ms-4">
-          4.5 (413)
+          {{ Rate }}
         </div>
       </v-row>
     </v-card-text>
@@ -65,7 +66,7 @@
         :mandatory="false"
       >
         <v-chip
-            v-for="(tag, index) in tags"
+            v-for="(tag, index) in localTags"
             :key="index"
             class="ma-1 custom-active-class"
             color="green" 
@@ -95,7 +96,8 @@
       selection: 1,
       localName: '',
       localAdress: '',
-      localTags: []
+      localTags: [],
+      localRate: 0,
     }),
     props: {
       link: {
@@ -114,24 +116,30 @@
         type: String,
         required: true
       },
+      Rate: {
+        type: Number,
+        required: true
+      },
       tags: {
         type: Array,
         required: true
       }
-    },
+      },
     created() {
       this.localName = this.name;
       this.localAdress = this.Adress;
       this.localTags = this.tags;
+      this.localRate = this.Rate;
     },
     methods: {
       showDetail () {
         this.loading = true
 
-        // /shopへ遷移
-        setTimeout(() => {
-          this.$router.push(this.link)
-        }, 1000)
+    // /shopへ遷移
+    setTimeout(() => {
+      window.open(this.link, '_blank');
+    }, 1000);
+
 
         setTimeout(() => (this.loading = false), 2000)
       },
@@ -140,6 +148,7 @@
         this.localName = data.Name || this.localName;
         this.localAdress = data.Adress || this.localAdress;
         this.localTags = data.Genre ? [data.Genre] : this.localTags;
+        this.localRate = data.Rate || this.localRate;
       }
     },
   }
