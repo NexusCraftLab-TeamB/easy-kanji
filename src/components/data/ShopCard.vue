@@ -128,10 +128,11 @@
       showDetail () {
         this.loading = true
 
-        // /shopへ遷移
-        setTimeout(() => {
-          this.$router.push(this.link)
-        }, 1000)
+    // /shopへ遷移
+    setTimeout(() => {
+      window.open(this.link, '_blank');
+    }, 1000);
+
 
         setTimeout(() => (this.loading = false), 2000)
       },
