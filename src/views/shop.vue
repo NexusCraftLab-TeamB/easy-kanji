@@ -25,21 +25,23 @@
 
           <!-- 評価 -->
           <v-row
-            class="mx-0 justify-center"
+          class="mx-0 justify-center"
           >
-            <v-rating
-              :model-value="shop.rating"
-              color="amber"
-              density="compact"
-              size="small"
-              half-increments
-              readonly
-            ></v-rating>
+          <v-rating
+            :model-value="shop.shop_items[0].Rate"
+            color="amber"
+            density="compact"
+            size="small"
+            half-increments
+            readonly
+          ></v-rating>
 
-            <div class="text-grey ms-2">
-              {{ this.shop.shop_items[0].Rate }} ({{ this.shop.review_items.length }})
-            </div>
-          </v-row>
+          <div class="text-grey ms-2">
+            {{ this.shop.shop_items[0].Rate }} ({{ shop.review_items.length }})
+          </div>
+        </v-row>
+
+
 
           <!-- 店舗情報 -->
           <v-row align="center" justify="center" class="py-3">
@@ -207,7 +209,7 @@ export default {
       navigator.clipboard.writeText(window.location.href);
       // クリップボードにコピーしましたというアラートを表示する
       alert('URLをコピーしました!');
-    }
+    },
   }
 };
 </script>

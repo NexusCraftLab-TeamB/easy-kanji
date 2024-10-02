@@ -8,6 +8,7 @@
 				:name="shop.Name || '店名未設定'"
 				:Adress="shop.Adress || '住所未設定'"
 				:tags="[shop.Genre]"
+				:Rate="shop.Rate"
 			/>		
 		</div>
 	</div>
