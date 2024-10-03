@@ -9,64 +9,58 @@
         max-width="800"
       >
         <v-img
-          height="500"
-          :src="require('@/assets/yoshinoya.jpg')"
-          :alt="shop.name"
+          max-height="350"
+          :src="this.shop.shop_items[0].Photo ? this.shop.shop_items[0].Photo : require('@/assets/yoshinoya.jpg')"
+          :alt="this.shop.shop_items[0].Name"
           cover
         ></v-img>
 
         <v-card-item>
           <!-- 店名 -->
           <v-card-title>
-            <h1 class="mt-0 py-2">
+            <h1 class="mt-0 py-2 text-wrap">
               {{ this.shop.shop_items[0].Name }}
             </h1>
           </v-card-title>
 
           <!-- 評価 -->
           <v-row
-          class="mx-0 justify-center"
+          class="mx-0 justify-center align-center"
           >
-          <v-rating
-            :model-value="shop.shop_items[0].Rate"
-            color="amber"
-            density="compact"
-            size="small"
-            half-increments
-            readonly
-          ></v-rating>
+            <v-rating
+              :model-value="shop.shop_items[0].Rate"
+              color="amber"
+              density="compact"
+              size="small"
+              class="pb-1"
+              half-increments
+              readonly
+            ></v-rating>
 
-          <div class="text-grey ms-2">
-            {{ this.shop.shop_items[0].Rate }} ({{ shop.review_items.length }})
-          </div>
-        </v-row>
-
-
+            <div class="text-grey ms-2">
+              {{ this.shop.shop_items[0].Rate }} ({{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件' }})
+            </div>
+          </v-row>
 
           <!-- 店舗情報 -->
           <v-row align="center" justify="center" class="py-3">
-            <v-card-subtitle>
+            <!-- 住所 -->
+            <v-card-subtitle class="mx-1">
               <v-icon
                 icon="mdi-map-marker"
                 size="small"
                 class="me-1 pb-1"
               ></v-icon>
               <span class="me-1">{{ this.shop.shop_items[0].Adress }}</span>
-  
             </v-card-subtitle>
-            <v-card-subtitle>
-              <v-icon
-                icon="mdi-phone"
+            <!-- ホットペッパーリンク -->
+            <v-card-subtitle class="mx-1">
+               <v-icon
+                icon="mdi-link"
                 size="small"
                 class="me-1 pb-1"
-              ></v-icon>
-              <span class="me-1">{{ this.shop.shop_items[0].PhoneNumber }}</span>
-  
-              <v-icon
-                color="error"
-                icon="mdi-fire-circle"
-                size="small"
-              ></v-icon>
+               ></v-icon>
+              <a :href="this.shop.shop_items[0].urls" target="_blank" rel="noopener noreferrer" class="me-1">ホットペッパーグルメで見る</a>
             </v-card-subtitle>
           </v-row>
         </v-card-item>
@@ -75,16 +69,14 @@
         <!-- タグ一覧 -->
         <div class="px-4 mb-2">
           <v-chip-group
-          column
-          :mandatory="false"
+            :mandatory="false"
+            :center-active="true"
           >
             <v-chip
-              v-for="tag in this.shop.tag_items" :key="tag.id"
+              v-for="tag in this.shop.tag_items" :key="tag.TagName"
               class="ma-1 custom-active-class"
-              color="green"
               variant="flat"
-              text-color="green"
-              >          
+            >
               {{ tag.TagName }}
             </v-chip>
           </v-chip-group>
@@ -128,10 +120,10 @@
     </div>
 
     <!-- レビュー一覧 -->
-    <div class="review-container">
+    <div class="review-container w-100">
       <h2 class="heading">レビュー</h2>
       <v-row align="center" justify="center" dense class="reviews">
-        <v-col cols="12" sm="6" md="4" lg="3" v-for="review in this.shop.review_items" :key="review.id">
+        <v-col cols="11" v-for="review in this.shop.review_items" :key="review.id">
           <ReviewCard
             :user="review.Role"
             :department="review.Section"
@@ -188,20 +180,18 @@ export default {
       });
       console.log('API Response:', response.data); // デバッグ用のコンソールログ
       this.shop = response.data;
-      console.log('Shop Rating:', this.shop.shop_items[0].Rate); // デバッグ用のコンソールログ
-      console.log('Shop Usage Count:', this.shop.usageCount); // デバッグ用のコンソールログ
+      console.log('Shop Data:', this.shop);
     } catch (error) {
         console.error('Error fetching shop data:', error);
     } finally {
         this.loading = false;
-        console.log('Loading state:', this.loading); // デバッグ用のコンソールログ
     }
   },
   methods: {
     // 評価入力画面への遷移
     goToReview() {
       this.$router.push({ 
-        path: "/review", 
+        path: "/review",
         query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
       }); 
     },
@@ -276,22 +266,8 @@ export default {
     margin-top: 20px;
   }
 
-  .tagsA {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .tagsA span {
-    background-color: #7ed17e;
-  }
-
-  .tagsA span:hover {
-    background-color: #5ebd5e;
-  }
-
   .reviews {
-    margin-top: 50px;
+    margin-top: 10px;
   }
 
   .image-gallery {
@@ -308,5 +284,10 @@ export default {
     width: 100%;
     height: auto;
     border-radius: 8px;
+  }
+
+  .custom-active-class {
+    background-color: #2E7D32 !important;
+    color: white !important;
   }
 </style>

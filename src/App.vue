@@ -21,7 +21,7 @@
     <v-app-bar app color="green">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title class="text-start" @click="redirectToHome">イージー幹事</v-toolbar-title>
+      <v-toolbar-title class="text-start cursor-pointer" @click="redirectToHome">イージー幹事</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
@@ -47,7 +47,7 @@ export default {
       this.$router.push(item.route);
     },
     redirectToHome() {
-      this.$router.push('/');
+      this.$router.push('/home');
     }
   }
 };
