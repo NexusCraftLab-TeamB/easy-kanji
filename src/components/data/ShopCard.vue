@@ -26,8 +26,13 @@
 
     <v-card-item>
       <v-card-title>{{ name }}</v-card-title>
-
+      
       <v-card-subtitle>
+        <v-icon
+          icon="mdi-map-marker"
+          size="small"
+          class="me-1 pb-1"
+        ></v-icon>
         <span class="me-1">{{ Adress }}</span>
 
         <v-icon
@@ -39,26 +44,33 @@
       
     </v-card-item>
 
-    <v-card-text>
-      <v-row
-        align="center"
-        justify="center"
-        class="mx-0"
-      >
-        <v-rating
-          :model-value="Rate"
-          color="amber"
-          density="compact"
-          size="small"
-          half-increments
-          readonly
-        ></v-rating>
-
-        <div class="text-grey ms-4">
-          {{ Rate }}
-        </div>
-      </v-row>
-    </v-card-text>
+    <div v-if="Rate === '登録なしの店'" >
+      <div class="text-grey ms-4">
+        <span>利用実績なし</span>
+      </div>
+    </div>
+    <div v-else>
+      <v-card-text>
+        <v-row
+          align="center"
+          justify="center"
+          class="mx-0"
+        >
+          <v-rating
+            :model-value="Rate"
+            color="amber"
+            density="compact"
+            size="small"
+            half-increments
+            readonly
+          ></v-rating>
+  
+          <div class="text-grey ms-4">
+            <span>{{ Rate }}</span>
+          </div>
+        </v-row>
+      </v-card-text>
+    </div>
 
     <div class="px-4 mb-2">
       <v-chip-group
