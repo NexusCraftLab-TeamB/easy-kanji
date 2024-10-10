@@ -11,10 +11,6 @@ const routes = [
     name:Home,
     component : Home
   },
-  /*{
-    path : '/',
-    component : Login
-  },*/
   {
     path: '/shop/:ShopId',
     name: 'Shop',

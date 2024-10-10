@@ -181,7 +181,7 @@ export default {
       this.tags = [];
     },
     goToSearch() {
-      this.$router.push("home");
+      this.$router.push("/");
     },
   },
   computed: {
