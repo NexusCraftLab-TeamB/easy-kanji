@@ -1,6 +1,5 @@
 <template>
   <div v-if="!loading" class="shop-container">
-    
     <div class="w-100">
       <v-card
         :disabled="loading"
@@ -24,9 +23,7 @@
           </v-card-title>
 
           <!-- 評価 -->
-          <v-row
-          class="mx-0 justify-center align-center"
-          >
+          <v-row class="mx-0 justify-center align-center">
             <v-rating
               :model-value="shop.shop_items[0].Rate"
               color="amber"
@@ -65,7 +62,6 @@
           </v-row>
         </v-card-item>
 
-        
         <!-- タグ一覧 -->
         <div class="px-4 mb-2">
           <v-chip-group
@@ -119,19 +115,72 @@
       </v-card>
     </div>
 
-    <!-- レビュー一覧 -->
     <div class="review-container w-100">
       <h2 class="heading">レビュー</h2>
-      <v-row align="center" justify="center" dense class="reviews">
-        <v-col cols="11" v-for="review in this.shop.review_items" :key="review.id">
-          <ReviewCard
-            :user="review.Role"
-            :department="review.Section"
-            :comment="review.Comment"
-            :rating="review.Rate"
-          />
-        </v-col>
-      </v-row>
+
+    <!-- フィルター用UI -->
+    <v-row class="mb-4 filter-container" align="center" justify="center">
+      <!-- ユーザーフィルター -->
+      <v-col cols="12" md="3">
+        <v-combobox
+          v-model="filters.user"
+          :items="['幹事', '参加者']"
+          label="ユーザー"
+          multiple
+          chips
+          clearable
+          dense
+          outlined
+        ></v-combobox>
+      </v-col>
+      
+      <!-- 部署フィルター -->
+      <v-col cols="12" md="3">
+        <v-combobox
+          v-model="filters.department"
+          :items="departments"
+          label="部署"
+          multiple
+          chips
+          clearable
+          dense
+          outlined
+        ></v-combobox>
+      </v-col>
+
+      <!-- 評価フィルター -->
+      <v-col cols="12" md="3">
+        <v-combobox
+          v-model="filters.rating"
+          :items="[1, 2, 3, 4, 5]"
+          label="評価"
+          multiple
+          chips
+          clearable
+          dense
+          outlined
+        ></v-combobox>
+      </v-col>
+    </v-row>
+
+    <!-- レビュー一覧 -->
+    
+
+      <template v-if="filteredReviews.length > 0">
+        <v-row align="center" justify="center" dense class="reviews">
+          <v-col cols="11" v-for="review in filteredReviews" :key="review.id">
+            <ReviewCard
+              :user="review.Role"
+              :department="review.Section"
+              :comment="review.Comment"
+              :rating="review.Rate"
+            />
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <p class="no-reviews-message">レビューがありませんでした。</p>
+      </template>
     </div>
 
     <!-- 画像一覧 -->
@@ -171,14 +220,23 @@ export default {
     return {
       shop: {},
       loading: true,
-     };
+      filters: {
+        user: [],
+        department: [],
+        rating: []
+      },
+      departments: [
+        '開発一部', '開発二部', '開発三部', '開発四部', '開発五部', '開発六部',
+        'JASTEM開発一部', 'JASTEM開発二部', 'JASTEM開発三部', '系統センター開発部'
+      ],
+    };
   },
   async beforeMount() {
     try {
       const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
-        params: { shop_id: this.ShopId } // shop_idを適切に設定してください
+        params: { shop_id: this.ShopId } 
       });
-      console.log('API Response:', response.data); // デバッグ用のコンソールログ
+      console.log('API Response:', response.data); 
       this.shop = response.data;
       console.log('Shop Data:', this.shop);
     } catch (error) {
@@ -187,107 +245,72 @@ export default {
         this.loading = false;
     }
   },
+  computed: {
+    filteredReviews() {
+      return this.shop.review_items.filter(review => {
+        const userMatch = this.filters.user.length ? this.filters.user.includes(review.Role) : true;
+        const departmentMatch = this.filters.department.length ? this.filters.department.includes(review.Section) : true;
+        const ratingMatch = this.filters.rating.length ? this.filters.rating.includes(review.Rate) : true;
+        return userMatch && departmentMatch && ratingMatch;
+      });
+    },
+  },
   methods: {
-    // 評価入力画面への遷移
     goToReview() {
-      this.$router.push({ 
-        path: "/review",
-        query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
-      }); 
+      this.$router.push({ path: '/review_input', query: { shop_id: this.ShopId } });
     },
     shareShop() {
-      // 現在のURLをクリップボードにコピーする
-      navigator.clipboard.writeText(window.location.href);
-      // クリップボードにコピーしましたというアラートを表示する
-      alert('URLをコピーしました!');
-    },
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => { 
+        alert('URLがクリップボードにコピーされました！');
+      }).catch(() => { // ここでerrを使用せず、catchを使う
+        alert('URLのコピーに失敗しました');
+      });
+
+    }
   }
 };
 </script>
 
 <style scoped>
-  .shop-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 100%; /* ビューポートの幅を100%に設定 */
-    height: 100vh; /* ビューポートの高さを100%に設定 */
-    margin: 0; /* 外側の余白をなくす */
-    padding: 0; /* 内側の余白をなくす */
-  }
-  
-  .shop-details {
-    background-color: #f2f9e9; /* 背景色 */
-    background-size: 90% 90%; /* 幅と高さを90%に設定 */
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 15px;
-    width: 90%; 
-  }
-  .shop-detailsA {
-    float: left;
-    width: 50%;
-    box-sizing: border-box; /* パディングとボーダーを含めたサイズを指定 */
-    background-color: #f2f9e9; /* 背景色 */
-  }
-  .shop-detailsA img {
-    max-width: 90%; /* 画像の最大幅を親要素の幅に合わせる */
-    height: auto; /* 縦横比を維持して高さを自動調整 */
-  }
+.filter-container {
+  background-color: #f7f7f7; /* ここを全体の背景色に合わせて変更 */
+  padding: 20px;
+  border-radius: 10px;
+}
 
-  .shop-detailsB {
-    float: right;
-    width: 50%;
-    text-align: left;
-  }
-  
-  .share-button,
-  .confirm-button {
-    background-color: #97e094;
-    color: #fff;
-    border: none;
-    padding: 15px 80px; /* 内側の余白を増やしてボタンを大きくする */
-    font-size: 18px; /* フォントサイズを大きくする */
-    margin-top: 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
-    transition: background-color 0.3s;
-  }
+.review-container {
+  margin-top: 20px;
+}
 
-  .share-button:hover,
-  .confirm-button:hover {
-    background-color: #72ac70;
-  }
+.heading {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-  .detail-item {
-    display: flex;
-    margin-top: 20px;
-  }
+.no-reviews-message {
+  text-align: center;
+  font-size: 18px;
+  color: #777;
+}
 
-  .reviews {
-    margin-top: 10px;
-  }
+.image-gallery {
+  margin: 40px 0;
+  text-align: center;
+}
 
-  .image-gallery {
-    margin-top: 50px;
-  }
+.image-grid {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
 
-  .image-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
-  }
-
-  .image-grid img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-  }
-
-  .custom-active-class {
-    background-color: #2E7D32 !important;
-    color: white !important;
-  }
+.image-grid img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
 </style>
