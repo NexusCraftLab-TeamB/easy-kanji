@@ -3,8 +3,8 @@
     :disabled="loading"
     :loading="loading"
     :variant="variant"
-    class="mx-auto my-8"
-    max-width="600"
+    class="mx-auto my-8 d-flex"
+    max-width="800"
     hover
     @click="showDetail"
   >
@@ -18,86 +18,89 @@
     </template>
 
     <v-img
-      height= "250"
-      :src= "image"
-      :alt= "name"
+      :width="200"
+      :height="200"
+      :max-width="200"
+      aspect-ratio="1/1"
+      :src="image"
+      :alt="name"
       cover
     ></v-img>
 
-    <v-card-item>
-      <v-card-title>{{ name }}</v-card-title>
-      
-      <v-card-subtitle>
-        <v-icon
-          icon="mdi-map-marker"
-          size="small"
-          class="me-1 pb-1"
-        ></v-icon>
-        <span class="me-1">{{ Adress }}</span>
+    <div class="d-flex flex-column justify-content-between flex-grow-1">
+      <v-card-item>
+        <v-card-title class="my-2 font-weight-bold">{{ name }}</v-card-title>
+        
+        <v-card-subtitle>
+          <div>
+            <!-- 住所 -->
+            <v-icon
+              icon="mdi-map-marker"
+              size="small"
+              class="me-1 pb-1"
+            ></v-icon>
+            <span class="me-1">{{ Adress }}</span>
+          </div>
 
-        <v-icon
-          color="error"
-          icon="mdi-fire-circle"
-          size="small"
-        ></v-icon>
-      </v-card-subtitle>
-      
-    </v-card-item>
+          <div class="py-2">
+            <!-- ジャンル -->
+            <v-icon
+              icon="mdi-silverware-fork-knife"
+              size="small"
+              class="me-1 pb-1"
+            ></v-icon>
+            <span class="">{{ genre }}</span>
+          </div>
+        </v-card-subtitle>
+        
+      </v-card-item>
 
-    <div v-if="Rate === '登録なしの店'" >
-      <div class="text-grey ms-4">
-        <span>利用実績なし</span>
+      <div v-if="Rate === '登録なしの店'" >
+        <div class="text-grey ms-4">
+          <span>利用実績なし</span>
+        </div>
+      </div>
+      <div v-else>
+        <v-card-text>
+          <v-row
+            align="center"
+            justify="center"
+            class="mx-0"
+          >
+            <v-rating
+              :model-value="Rate"
+              color="amber"
+              density="compact"
+              size="normal"
+              half-increments
+              readonly
+            ></v-rating>
+    
+            <div class="text-black font-weight-bold ms-4">
+              <span>{{ Rate }}</span>
+            </div>
+          </v-row>
+        </v-card-text>
+      </div>
+
+      <div class="px-4 mb-2">
+        <v-chip-group
+          column
+          :mandatory="false"
+        >
+          <v-chip
+              v-for="(tag, index) in localTags"
+              :key="index"
+              class="ma-1 custom-active-class"
+              color="green"
+              variant="flat"
+              text-color="green"
+            >
+              {{ tag }}
+          </v-chip>
+        </v-chip-group>
       </div>
     </div>
-    <div v-else>
-      <v-card-text>
-        <v-row
-          align="center"
-          justify="center"
-          class="mx-0"
-        >
-          <v-rating
-            :model-value="Rate"
-            color="amber"
-            density="compact"
-            size="small"
-            half-increments
-            readonly
-          ></v-rating>
-  
-          <div class="text-grey ms-4">
-            <span>{{ Rate }}</span>
-          </div>
-        </v-row>
-      </v-card-text>
-    </div>
-
-    <div class="px-4 mb-2">
-      <v-chip-group
-        column
-        :mandatory="false"
-      >
-        <v-chip
-            v-for="(tag, index) in localTags"
-            :key="index"
-            class="ma-1 custom-active-class"
-            color="green" 
-            variant="flat"
-            text-color="green"
-          >
-            {{ tag }}
-        </v-chip>
-      </v-chip-group>
-    </div>
-
-    <v-card-actions>
-      <v-btn
-        color="green"
-        text="詳細を見る"
-        block
-        border
-      ></v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -125,6 +128,10 @@
         required: true
       },
       Adress: {
+        type: String,
+        required: true
+      },
+      genre: {
         type: String,
         required: true
       },
