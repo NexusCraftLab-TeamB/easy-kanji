@@ -20,7 +20,8 @@
 
 		<ShopList
 			:apiData="apiData"
-		/>
+	
+			/>
 		<div v-if="searchError || apiData.length === 0">
 			<p>検索結果がありません。</p>
     </div>
@@ -59,9 +60,6 @@
 				this.currentImageIndex = (this.currentImageIndex + 1) % this.backgroundImages.length;
 				const newImageUrl = this.backgroundImages[this.currentImageIndex];
 				document.querySelector('.bg-home').style.backgroundImage = `url(${newImageUrl})`;
-			},
-			goToLogin() {
-				this.$router.push('/login');
 			},
 			// フォームデータを受け取り、APIを呼び出す
 			handleFormData(data) {

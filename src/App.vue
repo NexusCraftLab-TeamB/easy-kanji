@@ -36,9 +36,9 @@ export default {
   data: () => ({
     drawer: false,
     items: [
-      { title: 'ホーム', route: '/home' },
+      { title: 'ホーム', route: '/' },
       { title: '店舗評価/登録', route: '/review' },
-      { title: 'ログアウト', route: '/' }
+      //{ title: 'ログアウト', route: '/' }
     ]
   }),
   methods: {
@@ -47,7 +47,7 @@ export default {
       this.$router.push(item.route);
     },
     redirectToHome() {
-      this.$router.push('/home');
+      this.$router.push('/');
     }
   }
 };
