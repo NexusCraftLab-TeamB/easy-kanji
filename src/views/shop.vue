@@ -1,15 +1,16 @@
 <template>
   <div v-if="!loading" class="shop-container">
     
-    <div class="w-100">
+    <div class="w-100 pt-3">
       <v-card
         :disabled="loading"
         :loading="loading"
-        class="mx-auto my-12"
-        max-width="800"
+        class="mx-auto mb-6"
+        max-width="600"
       >
         <v-img
-          max-height="350"
+          max-height="600"
+          max-width="600"
           :src="this.shop.shop_items[0].Photo ? this.shop.shop_items[0].Photo : require('@/assets/yoshinoya.jpg')"
           :alt="this.shop.shop_items[0].Name"
           cover
@@ -17,21 +18,21 @@
 
         <v-card-item>
           <!-- 店名 -->
-          <v-card-title>
-            <h1 class="mt-0 py-2 text-wrap">
+          <v-card-title class="pa-2">
+            <h1 class="font-weight-bold mt-0 text-wrap text-h5">
               {{ this.shop.shop_items[0].Name }}
             </h1>
           </v-card-title>
 
           <!-- 評価 -->
           <v-row
-          class="mx-0 justify-center align-center"
+           class="my-1 mx-0 justify-center align-center"
           >
             <v-rating
               :model-value="shop.shop_items[0].Rate"
               color="amber"
               density="compact"
-              size="small"
+              size="normal"
               class="pb-1"
               half-increments
               readonly
@@ -42,8 +43,18 @@
             </div>
           </v-row>
 
+          <!-- ジャンル -->
+          <v-card-subtitle class="py-4" color="grey-darken-2">
+            <v-icon
+              icon="mdi-silverware-fork-knife"
+              size="small"
+              class="me-1 pb-1"
+            ></v-icon>
+            <span class="">{{ this.shop.shop_items[0].Genre }}</span>
+          </v-card-subtitle>
+
           <!-- 店舗情報 -->
-          <v-row align="center" justify="center" class="py-3">
+          <v-row align="center" justify="center" class="pt-1 pb-2">
             <!-- 住所 -->
             <v-card-subtitle class="mx-1">
               <v-icon
@@ -65,24 +76,44 @@
           </v-row>
         </v-card-item>
 
-        
-        <!-- タグ一覧 -->
-        <div class="px-4 mb-2">
-          <v-chip-group
-            :mandatory="false"
-            :center-active="true"
-          >
-            <v-chip
-              v-for="tag in this.shop.tag_items" :key="tag.TagName"
-              class="ma-1 custom-active-class"
-              variant="flat"
-            >
-              {{ tag.TagName }}
-            </v-chip>
-          </v-chip-group>
-        </div>
-
         <v-divider class="mx-4 mb-1"></v-divider>
+
+        <template v-if="shop.review_items.length !== 0">
+          <!-- タグ一覧 -->
+          <v-card-subtitle class="my-1">タグ</v-card-subtitle>
+          <div class="px-4 mb-2">
+            <v-chip-group
+              :mandatory="false"
+              :center-active="true"
+            >
+              <v-chip
+                v-for="tag in this.shop.tag_items" :key="tag.TagName"
+                class="ma-1 custom-active-class"
+                variant="flat"
+              >
+                {{ tag.TagName }}
+              </v-chip>
+            </v-chip-group>
+          </div>
+          
+          <!-- 実績部署一覧 -->
+          <v-divider class="mx-4 mb-1"></v-divider>
+          <v-card-subtitle class="my-1">利用実績</v-card-subtitle>
+          <div class="px-4 mb-2">
+            <v-chip-group
+              :mandatory="false"
+              :center-active="true"
+            >
+              <v-chip
+                v-for="(section, index) in uniqueSections" :key="index"
+                class="ma-1"
+                variant="outlined"
+              >
+                {{ section }}
+              </v-chip>
+            </v-chip-group>
+          </div>
+        </template>
 
         <div class="py-5">
           <v-row justify="center">
@@ -134,15 +165,6 @@
       </v-row>
     </div>
 
-    <!-- 画像一覧 -->
-    <div class="image-gallery">
-      <h3>お店の雰囲気</h3>
-      <div class="image-grid">
-        <img src="../assets/yoshinoyaIn1.jpg" alt="Yoshinoya">
-        <img src="../assets/yoshinoyaIn2.jpg" alt="Yoshinoya2">
-        <img src="../assets/yoshinoyaIn3.jpg" alt="Yoshinoya3">
-      </div>
-    </div>
   </div>
   <div v-else>
     <v-progress-circular
@@ -153,56 +175,67 @@
 </template>
 
 <script>
-import axios from 'axios';
-import ReviewCard from '../components/data/ReviewCard.vue';
+  import axios from 'axios';
+  import ReviewCard from '../components/data/ReviewCard.vue';
 
-export default {
-  name: 'ShopView',
-  components: {
-    ReviewCard,
-  },
-  props: {
-    ShopId: {
-      type: String,
-      required: true
-    }
-  },
-  data() {
-    return {
-      shop: {},
-      loading: true,
-     };
-  },
-  async beforeMount() {
-    try {
-      const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
-        params: { shop_id: this.ShopId } // shop_idを適切に設定してください
-      });
-      console.log('API Response:', response.data); // デバッグ用のコンソールログ
-      this.shop = response.data;
-      console.log('Shop Data:', this.shop);
-    } catch (error) {
-        console.error('Error fetching shop data:', error);
-    } finally {
-        this.loading = false;
-    }
-  },
-  methods: {
-    // 評価入力画面への遷移
-    goToReview() {
-      this.$router.push({ 
-        path: "/review",
-        query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
-      }); 
+  export default {
+    name: 'ShopView',
+    components: {
+      ReviewCard,
     },
-    shareShop() {
-      // 現在のURLをクリップボードにコピーする
-      navigator.clipboard.writeText(window.location.href);
-      // クリップボードにコピーしましたというアラートを表示する
-      alert('URLをコピーしました!');
+    props: {
+      ShopId: {
+        type: String,
+        required: true
+      }
     },
-  }
-};
+    data() {
+      return {
+        shop: {
+          shop_items: [],
+          review_items: [],
+          tag_items: []
+        },
+        loading: true,
+      };
+    },
+    async beforeMount() {
+      try {
+        const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
+          params: { shop_id: this.ShopId }
+        });
+        console.log('API Response:', response.data); // デバッグ用のコンソールログ
+        this.shop = response.data;
+        console.log('Shop Data:', this.shop);
+      } catch (error) {
+          console.error('Error fetching shop data:', error);
+      } finally {
+          this.loading = false;
+      }
+    },
+    methods: {
+      // 評価入力画面への遷移
+      goToReview() {
+        this.$router.push({ 
+          path: "/review",
+          query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
+        }); 
+      },
+      shareShop() {
+        // 現在のURLをクリップボードにコピーする
+        navigator.clipboard.writeText(window.location.href);
+        // クリップボードにコピーしましたというアラートを表示する
+        alert('URLをコピーしました!');
+      },
+    },
+    computed: {
+      // レビュー部署の一覧を取得
+      uniqueSections() {
+        const sections = this.shop.review_items.map(review => review.Section);
+        return [...new Set(sections)];
+      }
+    }
+  };
 </script>
 
 <style scoped>
@@ -287,7 +320,7 @@ export default {
   }
 
   .custom-active-class {
-    background-color: #2E7D32 !important;
-    color: white !important;
+    background-color: #FFC107 !important;
+    color: black !important;
   }
 </style>

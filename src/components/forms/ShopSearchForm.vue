@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div style="padding-top: 120px;">
 
-    <h1>お店検索</h1>
     <v-container>
       <v-sheet
         :elevation="2"

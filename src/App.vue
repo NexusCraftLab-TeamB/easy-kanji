@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire" class="mt-10">
+  <v-app id="inspire">
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -64,7 +64,7 @@ body {
   text-align: center;
   color: #2c3e50;
   margin-top: 0px;
-  padding: 0.5rem;
+  padding: 0rem;
 }
 
 main {

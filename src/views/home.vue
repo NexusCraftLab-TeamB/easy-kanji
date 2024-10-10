@@ -1,5 +1,7 @@
 <template>
-		<ShopSearchForm @submit-data="handleFormData"/>
+		<div class="bg-home">
+			<ShopSearchForm @submit-data="handleFormData"/>
+		</div>
 
 		<div class="search-conditions">
 			<div v-if="submited">
@@ -42,9 +44,22 @@
 				budget: '',
 				performance: '',
 				formData: {},
+				currentImageIndex: 0,
+        backgroundImages: [
+					require('@/assets/home-image01.jpg'),
+					require('@/assets/home-image02.jpg'),
+					require('@/assets/home-image03.jpg')
+        ],
+				intervalId: null
 			};
 		},
 		methods: {
+			// バックグラウンド画像を変更
+			changeBackgroundImage() {
+				this.currentImageIndex = (this.currentImageIndex + 1) % this.backgroundImages.length;
+				const newImageUrl = this.backgroundImages[this.currentImageIndex];
+				document.querySelector('.bg-home').style.backgroundImage = `url(${newImageUrl})`;
+			},
 			goToLogin() {
 				this.$router.push('/login');
 			},
@@ -92,6 +107,11 @@
 		mounted() {
 			this.fetchData(); // ページが読み込まれた時にAPI呼び出し
 			this.submited = false;
+			this.changeBackgroundImage(); // 初期画像を設定
+			this.intervalId = setInterval(this.changeBackgroundImage, 5000); // 5秒ごとに画像を変更
+		},
+		beforeUnmount() {
+			clearInterval(this.intervalId); // コンポーネントが破棄される前にインターバルをクリア
 		},
 		computed: {
 			// 検索値（areaコード）から場所の名前へ変換する
@@ -229,5 +249,14 @@ button:hover {
 
 .tags a:hover {
     background-color: #5bb75b;
+}
+
+/* 背景画像 */
+.bg-home {
+  background-size: cover;
+  background-position: center;
+  transition: background-image 2s ease-in-out;
+  height: 95vh;
+	margin-bottom: 30px;
 }
 </style>
