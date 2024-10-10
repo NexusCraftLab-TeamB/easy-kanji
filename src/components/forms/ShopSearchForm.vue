@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-top: 120px;">
+  <div class="pt-10">
 
     <v-container>
       <v-sheet
