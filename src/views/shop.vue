@@ -257,19 +257,23 @@ export default {
   },
   methods: {
     goToReview() {
-      this.$router.push({ path: '/review_input', query: { shop_id: this.ShopId } });
+      this.$router.push({ path: '/review', query: { shop_id: this.ShopId } });
     },
+    
     shareShop() {
-      const url = window.location.href;
-      navigator.clipboard.writeText(url).then(() => { 
-        alert('URLがクリップボードにコピーされました！');
-      }).catch(() => { // ここでerrを使用せず、catchを使う
-        alert('URLのコピーに失敗しました');
-      });
+    // 現在のURLをクリップボードにコピーする
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      // クリップボードにコピーしましたというアラートを表示する
+      alert('URLをコピーしました!');
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+    });
+  }
+    
 
     }
   }
-};
+;
 </script>
 
 <style scoped>
