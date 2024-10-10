@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div class="pt-10">
 
-    <h1>お店検索</h1>
     <v-container>
       <v-sheet
         :elevation="2"
