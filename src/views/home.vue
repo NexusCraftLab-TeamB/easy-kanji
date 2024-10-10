@@ -18,7 +18,8 @@
 
 		<ShopList
 			:apiData="apiData"
-		/>
+	
+			/>
 		<div v-if="searchError || apiData.length === 0">
 			<p>検索結果がありません。</p>
     </div>
@@ -45,9 +46,9 @@
 			};
 		},
 		methods: {
-			goToLogin() {
+			/*goToLogin() {
 				this.$router.push('/login');
-			},
+			},*/
 			// フォームデータを受け取り、APIを呼び出す
 			handleFormData(data) {
 				this.formData = data; // 子コンポーネントから受け取ったデータをセット
