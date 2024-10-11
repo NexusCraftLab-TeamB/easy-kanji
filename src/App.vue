@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire" class="mt-10">
+  <v-app id="inspire">
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -21,7 +21,7 @@
     <v-app-bar app color="green">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title class="text-start" @click="redirectToHome">イージー幹事</v-toolbar-title>
+      <v-toolbar-title class="text-start cursor-pointer" @click="redirectToHome">イージー幹事</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
@@ -36,9 +36,9 @@ export default {
   data: () => ({
     drawer: false,
     items: [
-      { title: 'ホーム', route: '/home' },
+      { title: 'ホーム', route: '/' },
       { title: '店舗評価/登録', route: '/review' },
-      { title: 'ログアウト', route: '/' }
+      //{ title: 'ログアウト', route: '/' }
     ]
   }),
   methods: {
@@ -64,7 +64,7 @@ body {
   text-align: center;
   color: #2c3e50;
   margin-top: 0px;
-  padding: 0.5rem;
+  padding: 0rem;
 }
 
 main {

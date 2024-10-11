@@ -1,18 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/home.vue';
-import Login from '@/views/login.vue';
+//import Login from '@/views/login.vue';
 import Shop from '@/views/shop.vue';
 import ReviewForm from '../views/ReviewForm.vue';
 import ShopSearch from '../views/shopSearch.vue';
 
 const routes = [
   {
-    path : '/home',
-    component : Home
-  },
-  {
     path : '/',
-    component : Login
+    name:Home,
+    component : Home
   },
   {
     path: '/shop/:ShopId',
