@@ -164,6 +164,7 @@
                 :department="review.Section"
                 :comment="review.Comment"
                 :rating="review.Rate"
+                :date="review.ReviewDate"
               />
             </v-col>
           </v-row>

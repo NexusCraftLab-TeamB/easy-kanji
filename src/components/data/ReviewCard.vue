@@ -9,6 +9,7 @@
         </v-avatar>
         <p>{{ user }}</p>
         <span class="text-subtitle-2 text--secondary ps-2 pb-1 text-grey">{{ department }}</span>
+        <span class="text-subtitle-2 text--secondary ps-2 pb-1 text-grey">{{ formattedDate ? formattedDate : '' }}</span>
       </div>
       <div class="review-rate">
         <v-rating
@@ -53,6 +54,25 @@
       rating: {
         type: Number,
         required: true
+      },
+      date : {
+        type: Number,
+        required: true,
+        default: 0
+      }
+    },
+    computed: {
+      formattedDate() {
+        const dateStr = String(this.date); // 数値の場合に文字列に変換
+        if (dateStr.length !== 8) {
+          return '2024/10/01'; // レビュー登録日が設定されていないレビューは仮で2024/10/1とする
+        }
+
+        const year = dateStr.slice(0, 4);
+        const month = dateStr.slice(4, 6);
+        const day = dateStr.slice(6, 8);
+
+        return `${year}/${month}/${day}`;
       }
     }
   }
