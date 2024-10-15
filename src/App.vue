@@ -27,7 +27,11 @@
     <v-main>
       <router-view />
     </v-main>
+    <v-footer
+      class="pt-10"
+    />
   </v-app>
+
 </template>
 
 <script>
@@ -68,6 +72,10 @@ body {
 }
 
 main {
+  background-color: #f7f7f7!important;
+}
+
+footer {
   background-color: #f7f7f7!important;
 }
 </style>
