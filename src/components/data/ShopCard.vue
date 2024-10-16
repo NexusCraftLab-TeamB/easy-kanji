@@ -3,7 +3,7 @@
     :disabled="loading"
     :loading="loading"
     :variant="variant"
-    class="mx-auto my-8 d-flex"
+    class="mx-auto my-4 d-flex"
     max-width="800"
     hover
     @click="showDetail"
