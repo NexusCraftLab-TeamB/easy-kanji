@@ -154,8 +154,10 @@
         <h2 class="heading">レビュー</h2>
 
         <!-- 感情分析結果 -->
-        <div class="v-col-10 mb-2 mx-auto pt-0">
-          <v-card-subtitle class="mt-1 mb-2">みんなの気持ち</v-card-subtitle>
+        <div class="mb-2 mx-auto pt-0 emotion-results">
+          <v-card-subtitle class="mt-1">＼  <span class="font-weight-bold">{{ satisfactionComments[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>  ／</v-card-subtitle>
+          <span class="large-emoji">{{ satisfactionEmojis[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>
+
           <div class="sentiment-bar">
             <div class="positive-bar" :style="{ width: positivePoint + '%' }"></div>
             <div class="negative-bar" :style="{ width: negativePoint + '%' }"></div>
@@ -222,6 +224,7 @@
           'JASTEM開発一部', 'JASTEM開発二部', 'JASTEM開発三部', '系統センター開発部'
         ],
         satisfactionEmojis: ['😈','😡','😒','😅','😐','🙂','😀','😊','🥰','😍'],
+        satisfactionComments: ['...','怒','う〜ん','微妙','普通かな','良いかも','良いね！','おすすめ！','また行きたい！','最高！！'],
         emoPoint: 0,
       };
     },
@@ -321,16 +324,22 @@
   }
 
   .large-emoji {
-    font-size: 1.6em; /* 必要に応じてサイズを調整 */
+    font-size: 1.5em; /* 必要に応じてサイズを調整 */
     padding: 5px; /* パディングを追加 */
+    margin-bottom: 0.3rem;
     border-radius: 5px; /* 角を丸くする */
   }
 
   /* 感情分析グラフ */
+  .emotion-results {
+    max-width: 800px;
+  }
+
   .sentiment-bar {
     display: flex;
-    width: 100%;
+    width: 80%;
     height: 30px;
+    margin: 0 auto;
     background-color: #e0e0e0;
     border-radius: 15px;
     overflow: hidden;
@@ -349,16 +358,19 @@
   .percentage-labels {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
+    width: 80%;
+    margin: 10px auto 0px auto;
   }
 
   .positive-label {
     color: #4caf50;
     font-weight: bold;
+    font-size: 0.8em;
   }
 
   .negative-label {
     color: #f44336;
     font-weight: bold;
+    font-size: 0.8em;
   }
 </style>
