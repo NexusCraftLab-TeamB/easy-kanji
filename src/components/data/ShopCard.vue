@@ -2,8 +2,7 @@
   <v-card
     :disabled="loading"
     :loading="loading"
-    :variant="variant"
-    class="mx-auto my-8 d-flex"
+    class="mx-auto my-4 d-flex"
     max-width="800"
     hover
     @click="showDetail"
@@ -76,8 +75,9 @@
               readonly
             ></v-rating>
     
-            <div class="text-black font-weight-bold ms-4">
-              <span>{{ Rate }}</span>
+            <div class="ms-4">
+              <span class="font-weight-bold text-black">{{ formattedRate }}</span>
+              <span class="ps-2 text-grey">({{ reviewCount }})</span>
             </div>
           </v-row>
         </v-card-text>
@@ -141,9 +141,14 @@
       },
       tags: {
         type: Array,
-        required: true
-      }
+        required: true,
+        default: () => []  // デフォルト値として空の配列を設定
       },
+      reviewCount: {
+        type: Number,
+        required: false
+      },
+    },
     created() {
       this.localName = this.name;
       this.localAdress = this.Adress;
@@ -154,11 +159,10 @@
       showDetail () {
         this.loading = true
 
-    // /shopへ遷移
-    setTimeout(() => {
-      window.open(this.link, '_blank');
-    }, 1000);
-
+        // /shopへ遷移
+        setTimeout(() => {
+          window.open(this.link, '_blank');
+        }, 1000);
 
         setTimeout(() => (this.loading = false), 2000)
       },
@@ -170,6 +174,11 @@
         this.localRate = data.Rate || this.localRate;
       }
     },
+    computed: {
+      formattedRate() {
+        return (Math.round(this.Rate * 10) / 10).toFixed(1); // 四捨五入して表示
+      }
+    }
   }
 </script>
 

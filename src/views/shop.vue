@@ -152,11 +152,58 @@
     <template v-if="shop.review_items.length !== 0">
       <div class="review-container w-100">
         <h2 class="heading">レビュー</h2>
-  
 
-  
+        <!-- 感情分析結果 -->
+        <div class="mb-2 mx-auto pt-0 emotion-results">
+          <v-card-subtitle class="mt-1">＼  <span class="font-weight-bold">{{ satisfactionComments[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>  ／</v-card-subtitle>
+          <span class="large-emoji">{{ satisfactionEmojis[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>
+
+          <div class="sentiment-bar">
+            <div class="positive-bar" :style="{ width: positivePoint + '%' }"></div>
+            <div class="negative-bar" :style="{ width: negativePoint + '%' }"></div>
+          </div>
+          <div class="percentage-labels">
+            <span class="positive-label">{{ positivePoint }}% ポジティブ</span>
+            <span class="negative-label">{{ negativePoint }}% ネガティブ</span>
+          </div>
+        </div>
+
+        <!-- <v-container fluid>
+          <v-row justify="space-between" align="center" gutter="16"> -->
+            <!-- ユーザーフィルタ -->
+            <!-- <v-select
+              v-model="userFilter"
+              :items="['幹事', '参加者']"
+              label="ユーザータイプ"
+              clearable
+              class="tight-spacing"
+            ></v-select> -->
+
+            <!-- 部署フィルタ -->
+            <!-- <v-select
+              v-model="departmentFilter"
+              :items="uniqueSections"
+              label="部署"
+              clearable
+              class="tight-spacing"
+            ></v-select> -->
+
+            <!-- 評価フィルタ -->
+            <!-- <v-slider
+              v-model="ratingFilter"
+              :min="0"
+              :max="5"
+              step="0.5"
+              ticks
+              class="tight-spacing"
+              label="評価"
+              thumb-label
+              style="max-width: 300px;" 
+            ></v-slider>
+          </v-row>
+         </v-container> -->
+
         <!-- レビュー一覧 -->
-        <!-- <template v-if="filteredReviews.length > 0"> -->
           <v-row align="center" justify="center" dense class="reviews">
             <v-col cols="11" v-for="review in shop.review_items" :key="review.id">
               <ReviewCard
@@ -164,6 +211,7 @@
                 :department="review.Section"
                 :comment="review.Comment"
                 :rating="review.Rate"
+                :date="review.ReviewDate"
               />
             </v-col>
           </v-row>
@@ -210,6 +258,12 @@
           '開発一部', '開発二部', '開発三部', '開発四部', '開発五部', '開発六部',
           'JASTEM開発一部', 'JASTEM開発二部', 'JASTEM開発三部', '系統センター開発部'
         ],
+        satisfactionEmojis: ['😈','😡','😒','😅','😐','🙂','😀','😊','🥰','😍'],
+        satisfactionComments: ['...','怒','う〜ん','微妙','普通かな','良いかも','良いね！','おすすめ！','また行きたい！','最高！！'],
+        emoPoint: 0,
+        userFilter: null, // ユーザーフィルタの初期値
+        departmentFilter: null, // 部署フィルタの初期値
+        ratingFilter: 0 // 評価フィルタの初期値
       };
     },
     async beforeMount() {
@@ -220,6 +274,8 @@
         console.log('API Response:', response.data); // デバッグ用のコンソールログ
         this.shop = response.data;
         console.log('Shop Data:', this.shop);
+        this.positivePoint = Math.round(this.shop.shop_items[0].positive_percentage);
+        this.negativePoint = Math.round(this.shop.shop_items[0].negative_percentage);
       } catch (error) {
           console.error('Error fetching shop data:', error);
       } finally {
@@ -266,6 +322,11 @@
     border-radius: 10px;
   }
 
+  .shop-container {
+  max-width: 800px;
+  margin: 0 auto;
+  }
+
   .review-container {
     margin-top: 20px;
   }
@@ -274,7 +335,7 @@
     font-size: 24px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
   }
 
   .no-reviews-message {
@@ -294,14 +355,74 @@
     gap: 15px;
   }
 
-    .image-grid img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
+  .image-grid img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
 
-    .custom-active-class {
+  .custom-active-class {
+    background-color: #FFC107 !important;
+    color: black !important;
+  }
+
+  .large-emoji {
+    font-size: 1.5em; /* 必要に応じてサイズを調整 */
+    padding: 5px; /* パディングを追加 */
+    margin-bottom: 0.3rem;
+    border-radius: 5px; /* 角を丸くする */
+  }
+
+  /* 感情分析グラフ */
+  .emotion-results {
+    max-width: 800px;
+  }
+
+  .sentiment-bar {
+    display: flex;
+    width: 80%;
+    height: 30px;
+    margin: 0 auto;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .positive-bar {
+    background-color: #4caf50; /* 緑色 */
+    height: 100%;
+  }
+
+  .negative-bar {
+    background-color: #f44336; /* 赤色 */
+    height: 100%;
+  }
+
+  .percentage-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 10px auto 0px auto;
+  }
+
+  .v-select, .v-slider {
+    margin-bottom: 0; /* 各フィルタの下の余白を取り除く */
+  }
+  
+  .custom-active-class {
       background-color: #FFC107 !important;
       color: black !important;
-    }
+  }
+
+  .positive-label {
+    color: #4caf50;
+    font-weight: bold;
+    font-size: 0.8em;
+  }
+
+  .negative-label {
+    color: #f44336;
+    font-weight: bold;
+    font-size: 0.8em;
+  }
 </style>

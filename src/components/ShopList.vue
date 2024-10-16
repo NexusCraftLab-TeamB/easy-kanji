@@ -10,7 +10,8 @@
 				:tags="shop.tags"
 				:genre="shop.Genre"
 				:Rate="shop.Rate"
-			/>		
+				:reviewCount="shop.review_count"
+			/>
 		</div>
 	</div>
 </template>
