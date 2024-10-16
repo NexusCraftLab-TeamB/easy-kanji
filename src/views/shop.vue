@@ -77,7 +77,7 @@
 
         <v-divider class="mx-4 mb-1"></v-divider>
 
-        <template v-if="shop.review_items.length !== 0">
+        <div v-if="shop.review_items.length !== 0">
           <!-- タグ一覧 -->
           <v-card-subtitle class="my-1">タグ</v-card-subtitle>
           <div class="px-4 mb-2">
@@ -112,7 +112,7 @@
               </v-chip>
             </v-chip-group>
           </div>
-        </template>
+        </div>
 
         <div class="py-5">
           <v-row justify="center">
@@ -149,16 +149,49 @@
       </v-card>
     </div>
 
-    <template v-if="shop.review_items.length !== 0">
+    <div v-if="shop.review_items.length !== 0">
       <div class="review-container w-100">
         <h2 class="heading">レビュー</h2>
   
+        <v-container fluid>
+          <v-row justify="space-between" align="center" gutter="16">
+            <!-- ユーザーフィルタ -->
+            <v-select
+              v-model="userFilter"
+              :items="['幹事', '参加者']"
+              label="ユーザータイプ"
+              clearable
+              class="tight-spacing"
+            ></v-select>
 
-  
+            <!-- 部署フィルタ -->
+            <v-select
+              v-model="departmentFilter"
+              :items="uniqueSections"
+              label="部署"
+              clearable
+              class="tight-spacing"
+            ></v-select>
+
+            <!-- 評価フィルタ -->
+            <v-slider
+              v-model="ratingFilter"
+              :min="0"
+              :max="5"
+              step="0.5"
+              ticks
+              class="tight-spacing"
+              label="評価"
+              thumb-label
+              style="max-width: 300px;" 
+            ></v-slider>
+          </v-row>
+        </v-container>
+
         <!-- レビュー一覧 -->
-        <!-- <template v-if="filteredReviews.length > 0"> -->
+        <div v-if="filteredReviews.length > 0">
           <v-row align="center" justify="center" dense class="reviews">
-            <v-col cols="11" v-for="review in shop.review_items" :key="review.id">
+            <v-col cols="11" v-for="review in filteredReviews" :key="review.id">
               <ReviewCard
                 :user="review.Role"
                 :department="review.Section"
@@ -168,13 +201,13 @@
               />
             </v-col>
           </v-row>
-        <!-- </template> -->
-        <!-- <template v-else>
+        </div>
+        <div v-else>
           <p class="no-reviews-message">レビューがありませんでした。</p>
-        </template> -->
+        </div>
       </div>
-    </template>
-
+    </div>
+  
   </div>
   <div v-else>
     <v-progress-circular
@@ -185,106 +218,119 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import ReviewCard from '../components/data/ReviewCard.vue';
+import axios from 'axios';
+import ReviewCard from '../components/data/ReviewCard.vue';
 
-  export default {
-    name: 'ShopView',
-    components: {
-      ReviewCard,
-    },
-    props: {
-      ShopId: {
-        type: String,
-        required: true
-      }
-    },
-    data() {
-      return {
-        shop: {
-          shop_items: [],
-          review_items: [],
-          tag_items: []
-        },
-        loading: true,
-        departments: [
-          '開発一部', '開発二部', '開発三部', '開発四部', '開発五部', '開発六部',
-          'JASTEM開発一部', 'JASTEM開発二部', 'JASTEM開発三部', '系統センター開発部'
-        ],
-      };
-    },
-    async beforeMount() {
-      try {
-        const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
-          params: { shop_id: this.ShopId }
-        });
-        console.log('API Response:', response.data); // デバッグ用のコンソールログ
-        this.shop = response.data;
-        console.log('Shop Data:', this.shop);
-      } catch (error) {
-          console.error('Error fetching shop data:', error);
-      } finally {
-          this.loading = false;
-      }
-    },
-    methods: {
-      // 評価入力画面への遷移
-      goToReview() {
+export default {
+  name: 'ShopView',
+  components: {
+    ReviewCard,
+  },
+  props: {
+    ShopId: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      shop: {
+        shop_items: [],
+        review_items: [],
+        tag_items: []
+      },
+      loading: true,
+      departments: [
+        '開発一部', '開発二部', '開発三部', '開発四部', '開発五部', '開発六部',
+        'JASTEM開発一部', 'JASTEM開発二部', 'JASTEM開発三部', '系統センター開発部'
+      ],
+      userFilter: null, // ユーザーフィルタの初期値
+      departmentFilter: null, // 部署フィルタの初期値
+      ratingFilter: 0 // 評価フィルタの初期値
+    };
+  },
+  async beforeMount() {
+    try {
+      const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
+        params: { shop_id: this.ShopId }
+      });
+      console.log('API Response:', response.data);
+      this.shop = response.data;
+      console.log('Shop Data:', this.shop);
+    } catch (error) {
+      console.error('Error fetching shop data:', error);
+    } finally {
+      this.loading = false;
+    }
+  },
+  methods: {
+// 評価入力画面への遷移
+goToReview() {
         this.$router.push({ 
           path: "/review",
           query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
-        }); 
-      },
-      shareShop() {
+      });
+    },
+    shareShop() {
         // 現在のURLをクリップボードにコピーする
         navigator.clipboard.writeText(window.location.href);
         // クリップボードにコピーしましたというアラートを表示する
         alert('URLをコピーしました!');
       },
+  },
+  computed: {
+    // レビュー部署の一覧を取得
+    uniqueSections() {
+      const sections = this.shop.review_items.map(review => review.Section);
+      return [...new Set(sections)];
     },
-    computed: {
-      // レビュー部署の一覧を取得
-      uniqueSections() {
-        const sections = this.shop.review_items.map(review => review.Section);
-        return [...new Set(sections)];
-      },
-      // filteredReviews() {
-      //   return this.shop.review_items.filter(review => {
-      //     const userMatch = this.filters.user.length ? this.filters.user.includes(review.Role) : true;
-      //     const departmentMatch = this.filters.department.length ? this.filters.department.includes(review.Section) : true;
-      //     const ratingMatch = this.filters.rating.length ? this.filters.rating.includes(review.Rate) : true;
-      //     return userMatch && departmentMatch && ratingMatch;
-      //   });
-      // },
-    },
-  };
+    filteredReviews() {
+      return this.shop.review_items.filter(review => {
+        const matchesUser = this.userFilter ? review.Role === this.userFilter : true;
+        const matchesDepartment = this.departmentFilter ? review.Section === this.departmentFilter : true;
+        const matchesRating = review.Rate >= this.ratingFilter;
+        return matchesUser && matchesDepartment && matchesRating;
+      });
+    }
+  }
+};
 </script>
 
 <style scoped>
-  .filter-container {
+.filter-container {
     background-color: #f7f7f7; /* ここを全体の背景色に合わせて変更 */
     padding: 20px;
     border-radius: 10px;
   }
 
-  .review-container {
-    margin-top: 20px;
-  }
 
-  .heading {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-  }
+.shop-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
 
-  .no-reviews-message {
-    text-align: center;
-    font-size: 18px;
-    color: #777;
-  }
+.review-container {
+  margin-top: 20px;
+}
 
-  .image-gallery {
+.heading {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.no-reviews-message {
+  text-align: center;
+  font-size: 18px;
+  color: grey;
+}
+
+/* フィルタの間隔を調整 */
+.tight-spacing {
+  margin-right: 16px; /* フィルタ間の間隔を均一に設定 */
+}
+.image-gallery {
     margin: 40px 0;
     text-align: center;
   }
@@ -301,8 +347,12 @@
       border-radius: 8px;
     }
 
-    .custom-active-class {
+.v-select, .v-slider {
+  margin-bottom: 0; /* 各フィルタの下の余白を取り除く */
+}
+.custom-active-class {
       background-color: #FFC107 !important;
       color: black !important;
     }
 </style>
+
