@@ -168,28 +168,28 @@
           </div>
         </div>
 
-        <v-container fluid>
-          <v-row justify="space-between" align="center" gutter="16">
+        <!-- <v-container fluid>
+          <v-row justify="space-between" align="center" gutter="16"> -->
             <!-- ユーザーフィルタ -->
-            <v-select
+            <!-- <v-select
               v-model="userFilter"
               :items="['幹事', '参加者']"
               label="ユーザータイプ"
               clearable
               class="tight-spacing"
-            ></v-select>
+            ></v-select> -->
 
             <!-- 部署フィルタ -->
-            <v-select
+            <!-- <v-select
               v-model="departmentFilter"
               :items="uniqueSections"
               label="部署"
               clearable
               class="tight-spacing"
-            ></v-select>
+            ></v-select> -->
 
             <!-- 評価フィルタ -->
-            <v-slider
+            <!-- <v-slider
               v-model="ratingFilter"
               :min="0"
               :max="5"
@@ -201,7 +201,7 @@
               style="max-width: 300px;" 
             ></v-slider>
           </v-row>
-        </v-container>
+         </v-container> -->
 
         <!-- レビュー一覧 -->
           <v-row align="center" justify="center" dense class="reviews">
