@@ -99,6 +99,7 @@
 							budget: this.formData.budget || undefined,
 							performance: this.formData.performance || undefined
 						};
+						
 
 						// APIリクエストを送信
 						const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home', { params });
