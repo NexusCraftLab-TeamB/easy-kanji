@@ -166,6 +166,41 @@
           </div>
         </div>
 
+        <v-container fluid>
+          <v-row justify="space-between" align="center" gutter="16">
+            <!-- ユーザーフィルタ -->
+            <v-select
+              v-model="userFilter"
+              :items="['幹事', '参加者']"
+              label="ユーザータイプ"
+              clearable
+              class="tight-spacing"
+            ></v-select>
+
+            <!-- 部署フィルタ -->
+            <v-select
+              v-model="departmentFilter"
+              :items="uniqueSections"
+              label="部署"
+              clearable
+              class="tight-spacing"
+            ></v-select>
+
+            <!-- 評価フィルタ -->
+            <v-slider
+              v-model="ratingFilter"
+              :min="0"
+              :max="5"
+              step="0.5"
+              ticks
+              class="tight-spacing"
+              label="評価"
+              thumb-label
+              style="max-width: 300px;" 
+            ></v-slider>
+          </v-row>
+        </v-container>
+
         <!-- レビュー一覧 -->
           <v-row align="center" justify="center" dense class="reviews">
             <v-col cols="11" v-for="review in shop.review_items" :key="review.id">
@@ -223,6 +258,9 @@
         ],
         satisfactionEmojis: ['😈','😡','😒','😅','😐','🙂','😀','😊','🥰','😍'],
         emoPoint: 0,
+        userFilter: null, // ユーザーフィルタの初期値
+        departmentFilter: null, // 部署フィルタの初期値
+        ratingFilter: 0 // 評価フィルタの初期値
       };
     },
     async beforeMount() {
@@ -279,6 +317,11 @@
     background-color: #f7f7f7; /* ここを全体の背景色に合わせて変更 */
     padding: 20px;
     border-radius: 10px;
+  }
+
+  .shop-container {
+  max-width: 800px;
+  margin: 0 auto;
   }
 
   .review-container {
@@ -350,6 +393,15 @@
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
+  }
+
+  .v-select, .v-slider {
+    margin-bottom: 0; /* 各フィルタの下の余白を取り除く */
+  }
+  
+  .custom-active-class {
+      background-color: #FFC107 !important;
+      color: black !important;
   }
 
   .positive-label {
