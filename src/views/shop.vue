@@ -310,8 +310,11 @@ export default {
   },
     // レビュー登録画面へ遷移するメソッド
     goToReview() {
-      this.$router.push({ name: 'Review', params: { shopId: this.ShopId } });
-    }
+        this.$router.push({ 
+          path: "/review",
+          query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
+        }); 
+      }
   }
 };
 </script>
