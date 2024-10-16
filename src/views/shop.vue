@@ -152,11 +152,21 @@
     <template v-if="shop.review_items.length !== 0">
       <div class="review-container w-100">
         <h2 class="heading">レビュー</h2>
-  
 
-  
+        <!-- 感情分析結果 -->
+        <div class="v-col-10 mb-2 mx-auto pt-0">
+          <v-card-subtitle class="mt-1 mb-2">みんなの気持ち</v-card-subtitle>
+          <div class="sentiment-bar">
+            <div class="positive-bar" :style="{ width: positivePoint + '%' }"></div>
+            <div class="negative-bar" :style="{ width: negativePoint + '%' }"></div>
+          </div>
+          <div class="percentage-labels">
+            <span class="positive-label">{{ positivePoint }}% ポジティブ</span>
+            <span class="negative-label">{{ negativePoint }}% ネガティブ</span>
+          </div>
+        </div>
+
         <!-- レビュー一覧 -->
-        <!-- <template v-if="filteredReviews.length > 0"> -->
           <v-row align="center" justify="center" dense class="reviews">
             <v-col cols="11" v-for="review in shop.review_items" :key="review.id">
               <ReviewCard
@@ -211,6 +221,8 @@
           '開発一部', '開発二部', '開発三部', '開発四部', '開発五部', '開発六部',
           'JASTEM開発一部', 'JASTEM開発二部', 'JASTEM開発三部', '系統センター開発部'
         ],
+        satisfactionEmojis: ['😈','😡','😒','😅','😐','🙂','😀','😊','🥰','😍'],
+        emoPoint: 0,
       };
     },
     async beforeMount() {
@@ -221,6 +233,8 @@
         console.log('API Response:', response.data); // デバッグ用のコンソールログ
         this.shop = response.data;
         console.log('Shop Data:', this.shop);
+        this.positivePoint = Math.round(this.shop.shop_items[0].positive_percentage);
+        this.negativePoint = Math.round(this.shop.shop_items[0].negative_percentage);
       } catch (error) {
           console.error('Error fetching shop data:', error);
       } finally {
@@ -275,7 +289,7 @@
     font-size: 24px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
   }
 
   .no-reviews-message {
@@ -295,14 +309,56 @@
     gap: 15px;
   }
 
-    .image-grid img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
+  .image-grid img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
 
-    .custom-active-class {
-      background-color: #FFC107 !important;
-      color: black !important;
-    }
+  .custom-active-class {
+    background-color: #FFC107 !important;
+    color: black !important;
+  }
+
+  .large-emoji {
+    font-size: 1.6em; /* 必要に応じてサイズを調整 */
+    padding: 5px; /* パディングを追加 */
+    border-radius: 5px; /* 角を丸くする */
+  }
+
+  /* 感情分析グラフ */
+  .sentiment-bar {
+    display: flex;
+    width: 100%;
+    height: 30px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .positive-bar {
+    background-color: #4caf50; /* 緑色 */
+    height: 100%;
+  }
+
+  .negative-bar {
+    background-color: #f44336; /* 赤色 */
+    height: 100%;
+  }
+
+  .percentage-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .positive-label {
+    color: #4caf50;
+    font-weight: bold;
+  }
+
+  .negative-label {
+    color: #f44336;
+    font-weight: bold;
+  }
 </style>
