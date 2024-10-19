@@ -37,24 +37,16 @@
 <script>
 export default {
   name: 'App',
-  data: () => ({
-    drawer: false,
-    items: [
-      { title: 'ホーム', route: '/' },
-      { title: '店舗評価/登録', route: '/review' },
-      //{ title: 'ログアウト', route: '/' }
-    ]
-  }),
-  methods: {
-    onItemClick(item) {
-      console.log(item.title);
-      this.$router.push(item.route);
-    },
-    redirectToHome() {
-      this.$router.push('/');
-    }
-  }
-};
+  data() {
+    return {
+      drawer: false,
+      items: [
+        { title: 'ホーム', route: '/' },
+        { title: '店舗評価/登録', route: '/review' },
+      ],
+    };
+  },
+}
 </script>
 
 <style>
@@ -69,6 +61,34 @@ body {
   color: #2c3e50;
   margin-top: 0px;
   padding: 0rem;
+}
+
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 1200px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 992px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 12px;
+  }
 }
 
 main {
