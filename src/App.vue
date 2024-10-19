@@ -46,6 +46,15 @@ export default {
       ],
     };
   },
+  methods: {
+    onItemClick(item) {
+      console.log(item.title);
+      this.$router.push(item.route);
+    },
+    redirectToHome() {
+      this.$router.push('/');
+    }
+  }
 }
 </script>
 
