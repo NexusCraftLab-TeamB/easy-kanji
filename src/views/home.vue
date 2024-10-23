@@ -1,11 +1,15 @@
 <template>
-	<div class="bg-home">
-		<ShopSearchForm @submit-data="handleFormData"/>
-	</div>
+  <div class="bg-home">
+		<img :src="require('@/assets/easy-kanji-logo.png')" alt="logo">
+		<ShopSearchForm @submit-data="handleFormData" class="centered-form"/>
+  </div>
 
 	<div class="search-conditions">
 		<div v-if="submited" class="mx-5">
-			<h3>検索条件</h3>
+			<div class="d-flex align-end justify-center ps-3">
+				<h2 class="mt-3">検索結果</h2>
+				<span class="mb-1">（{{ apiData.length }}件)</span>
+			</div>
 			<div class="conditions">
 				<div class="chip-group">
 					<div class="chip" v-if="locationName">
@@ -26,7 +30,6 @@
 					</div>
 				</div>
 			</div>
-			<h4 class="my-4">検索結果（全{{ apiData.length }}件）</h4>
 		</div>
 		<div v-else>
 			<h2>おすすめ</h2>
@@ -153,17 +156,6 @@
 </script>
 
 <style scoped>
-	/* スタイルをここに追加 */
-	.menu-button {
-			position: absolute;
-			left: 15px;
-			top: 15px;
-			background: none;
-			border: none;
-			color: white;
-			font-size: 20px;
-			cursor: pointer;
-	}
 
 	.search-container {
 			padding: 20px;
@@ -276,8 +268,46 @@
 		background-size: cover;
 		background-position: center;
 		transition: background-image 2s ease-in-out;
-		height: 95vh;
 		margin-bottom: 30px;
+		position: relative;
+		width: 100%;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	/* オーバーレイ */
+	.bg-home::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.4); /* 背景を薄暗くする */
+		z-index: 1;
+	}
+
+	.bg-home > * {
+		position: relative;
+		z-index: 2; /* オーバーレイの上に表示 */
+	}
+
+	.bg-home img {
+		z-index: 10;
+		position: absolute; /* 位置を絶対配置に設定 */
+		top: 0; /* ヘッダーの位置に配置 */
+		height: auto; /* 高さを自動調整 */
+		max-height: 50px;
+		margin-top: 15px;
+	}
+
+	/* 検索フォーム */
+	.centered-form {
+		position: absolute;
+		z-index: 10;
+		width: 95%; /* 必要に応じて調整 */
 	}
 
 	/* 検索結果のチップ */
