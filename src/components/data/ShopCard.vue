@@ -33,17 +33,17 @@
               {{ name }}
             </div>
             
-            <v-card-subtitle>
+            <v-card-subtitle class="py-1">
               <div class="d-none d-md-block">
-                <!-- 住所 -->
+                <!-- アクセス -->
                 <v-icon
-                  icon="mdi-map-marker"
+                  icon="mdi-train"
                   size="small"
                   class="me-1 pb-1"
                 ></v-icon>
-                <span class="me-1">{{ Adress }}</span>
+                <span class="">{{ mobile_access }}</span>
               </div>
-    
+
               <div class="py-1">
                 <!-- ジャンル -->
                 <v-icon
@@ -120,6 +120,10 @@
       Adress: {
         type: String,
         required: true
+      },
+      mobile_access: {
+        type: String,
+        required: false
       },
       genre: {
         type: String,
