@@ -40,13 +40,18 @@
           </v-row>
 
           <!-- ジャンル -->
-          <v-card-subtitle class="py-4" color="grey-darken-2">
+          <v-card-subtitle class="py-1" color="grey-darken-2">
             <v-icon icon="mdi-silverware-fork-knife" size="small" class="me-1 pb-1"></v-icon>
             <span>{{ shop.shop_items[0].Genre }}</span>
           </v-card-subtitle>
 
+          <!-- アクセス -->
+           <v-card-subtitle class="py-1" color="grey-darken-2">
+            <v-icon icon="mdi-train" size="small" class="me-1 pb-1"></v-icon>
+            <span>{{ shop.shop_items[0].mobile_access }}</span>
+          </v-card-subtitle>
+
           <!-- 店舗情報 -->
-          <v-row align="center" justify="center" class="pt-1 pb-2">
             <!-- 住所 -->
             <v-card-subtitle class="mx-1">
               <v-icon icon="mdi-map-marker" size="small" class="me-1 pb-1"></v-icon>
@@ -57,7 +62,6 @@
               <v-icon icon="mdi-link" size="small" class="me-1 pb-1"></v-icon>
               <a :href="shop.shop_items[0].urls" target="_blank" rel="noopener noreferrer" class="me-1">ホットペッパーグルメで見る</a>
             </v-card-subtitle>
-          </v-row>
         </v-card-item>
 
         <v-divider class="mx-4 mb-1"></v-divider>
