@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loading" class="shop-container">  
+  <div v-if="!loading" class="shop-container">
     <div class="w-100 pt-3">
       <v-card
         :disabled="loading"
@@ -10,8 +10,8 @@
         <v-img
           max-height="600"
           max-width="600"
-          :src="this.shop.shop_items[0].Photo ? this.shop.shop_items[0].Photo : require('@/assets/yoshinoya.jpg')"
-          :alt="this.shop.shop_items[0].Name"
+          :src="shop.shop_items[0].Photo || require('@/assets/yoshinoya.jpg')"
+          :alt="shop.shop_items[0].Name"
           cover
         ></v-img>
 
@@ -19,14 +19,11 @@
           <!-- 店名 -->
           <v-card-title class="pa-2">
             <h1 class="font-weight-bold mt-0 text-wrap text-h5">
-              {{ this.shop.shop_items[0].Name }}
+              {{ shop.shop_items[0].Name }}
             </h1>
           </v-card-title>
 
-          <!-- 評価 -->
-          <v-row
-           class="my-1 mx-0 justify-center align-center"
-          >
+          <v-row class="my-1 mx-0 justify-center align-center">
             <v-rating
               :model-value="shop.shop_items[0].Rate"
               color="amber"
@@ -38,55 +35,46 @@
             ></v-rating>
 
             <div class="text-grey ms-2">
-              {{ this.shop.shop_items[0].Rate }} ({{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件' }})
+              {{ shop.shop_items[0].Rate }} ({{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件' }})
             </div>
           </v-row>
 
           <!-- ジャンル -->
-          <v-card-subtitle class="py-4" color="grey-darken-2">
-            <v-icon
-              icon="mdi-silverware-fork-knife"
-              size="small"
-              class="me-1 pb-1"
-            ></v-icon>
-            <span class="">{{ this.shop.shop_items[0].Genre }}</span>
+          <v-card-subtitle class="py-1" color="grey-darken-2">
+            <v-icon icon="mdi-silverware-fork-knife" size="small" class="me-1 pb-1"></v-icon>
+            <span>{{ shop.shop_items[0].Genre }}</span>
+          </v-card-subtitle>
+
+          <!-- アクセス -->
+           <v-card-subtitle class="py-1" color="grey-darken-2">
+            <v-icon icon="mdi-train" size="small" class="me-1 pb-1"></v-icon>
+            <span>{{ shop.shop_items[0].mobile_access }}</span>
           </v-card-subtitle>
 
           <!-- 店舗情報 -->
-          <v-row align="center" justify="center" class="pt-1 pb-2">
             <!-- 住所 -->
             <v-card-subtitle class="mx-1">
-              <v-icon
-                icon="mdi-map-marker"
-                size="small"
-                class="me-1 pb-1"
-              ></v-icon>
-              <span class="me-1">{{ this.shop.shop_items[0].Adress }}</span>
+              <v-icon icon="mdi-map-marker" size="small" class="me-1 pb-1"></v-icon>
+              <span class="me-1">{{ shop.shop_items[0].Adress }}</span>
             </v-card-subtitle>
             <!-- ホットペッパーリンク -->
             <v-card-subtitle class="mx-1">
-               <v-icon
-                icon="mdi-link"
-                size="small"
-                class="me-1 pb-1"
-               ></v-icon>
-              <a :href="this.shop.shop_items[0].urls" target="_blank" rel="noopener noreferrer" class="me-1">ホットペッパーグルメで見る</a>
+              <v-icon icon="mdi-link" size="small" class="me-1 pb-1"></v-icon>
+              <a :href="shop.shop_items[0].urls" target="_blank" rel="noopener noreferrer" class="me-1">ホットペッパーグルメで見る</a>
             </v-card-subtitle>
-          </v-row>
         </v-card-item>
 
         <v-divider class="mx-4 mb-1"></v-divider>
 
+        <!-- レビューセクション -->
         <template v-if="shop.review_items.length !== 0">
           <!-- タグ一覧 -->
           <v-card-subtitle class="my-1">タグ</v-card-subtitle>
           <div class="px-4 mb-2">
-            <v-chip-group
-              :mandatory="false"
-              :center-active="true"
-            >
+            <v-chip-group :mandatory="false" :center-active="true">
               <v-chip
-                v-for="tag in this.shop.tag_items" :key="tag.TagName"
+                v-for="tag in shop.tag_items" 
+                :key="tag.TagName"
                 class="ma-1 custom-active-class"
                 variant="flat"
               >
@@ -94,17 +82,15 @@
               </v-chip>
             </v-chip-group>
           </div>
-          
+
           <!-- 実績部署一覧 -->
           <v-divider class="mx-4 mb-1"></v-divider>
           <v-card-subtitle class="my-1">利用実績</v-card-subtitle>
           <div class="px-4 mb-2">
-            <v-chip-group
-              :mandatory="false"
-              :center-active="true"
-            >
+            <v-chip-group :mandatory="false" :center-active="true">
               <v-chip
-                v-for="(section, index) in uniqueSections" :key="index"
+                v-for="(section, index) in uniqueSections" 
+                :key="index"
                 class="ma-1"
                 variant="outlined"
               >
@@ -114,6 +100,7 @@
           </div>
         </template>
 
+        <!-- ボタンセクション -->
         <div class="py-5">
           <v-row justify="center">
             <v-col cols="10" md="8">
@@ -149,6 +136,7 @@
       </v-card>
     </div>
 
+    <!-- レビュー表示 -->
     <template v-if="shop.review_items.length !== 0">
       <div class="review-container w-100">
         <h2 class="heading">レビュー</h2>
@@ -157,7 +145,6 @@
         <div class="mb-2 mx-auto pt-0 emotion-results">
           <v-card-subtitle class="mt-1">＼  <span class="font-weight-bold">{{ satisfactionComments[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>  ／</v-card-subtitle>
           <span class="large-emoji">{{ satisfactionEmojis[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>
-
           <div class="sentiment-bar">
             <div class="positive-bar" :style="{ width: positivePoint + '%' }"></div>
             <div class="negative-bar" :style="{ width: negativePoint + '%' }"></div>
@@ -168,28 +155,31 @@
           </div>
         </div>
 
-        <!-- <v-container fluid>
-          <v-row justify="space-between" align="center" gutter="16"> -->
+        <!-- フィルタ -->
+        <v-container fluid>
+          <v-row justify="space-between" align="center" gutter="16">
             <!-- ユーザーフィルタ -->
-            <!-- <v-select
+            <v-select
               v-model="userFilter"
               :items="['幹事', '参加者']"
               label="ユーザータイプ"
               clearable
               class="tight-spacing"
-            ></v-select> -->
+              style="width: 150px;"
+            ></v-select>
 
             <!-- 部署フィルタ -->
-            <!-- <v-select
+            <v-select
               v-model="departmentFilter"
               :items="uniqueSections"
               label="部署"
               clearable
               class="tight-spacing"
-            ></v-select> -->
+              style="width: 150px;"
+            ></v-select>
 
             <!-- 評価フィルタ -->
-            <!-- <v-slider
+            <v-slider
               v-model="ratingFilter"
               :min="0"
               :max="5"
@@ -198,121 +188,139 @@
               class="tight-spacing"
               label="評価"
               thumb-label
-              style="max-width: 300px;" 
+              style="max-width: 300px;"
             ></v-slider>
           </v-row>
-         </v-container> -->
+        </v-container>
 
-        <!-- レビュー一覧 -->
-          <v-row align="center" justify="center" dense class="reviews">
-            <v-col cols="11" v-for="review in shop.review_items" :key="review.id">
-              <ReviewCard
-                :user="review.Role"
-                :department="review.Section"
-                :comment="review.Comment"
-                :rating="review.Rate"
-                :date="review.ReviewDate"
-              />
-            </v-col>
-          </v-row>
-        <!-- </template> -->
-        <!-- <template v-else>
-          <p class="no-reviews-message">レビューがありませんでした。</p>
-        </template> -->
+        <!-- フィルタリングされたレビュー一覧 -->
+        <v-row align="center" justify="center" dense class="reviews">
+          <v-col cols="11" v-for="review in filteredReviews" :key="review.id">
+            <ReviewCard
+              :user="review.Role"
+              :department="review.Section"
+              :comment="review.Comment"
+              :rating="review.Rate"
+              :date="review.ReviewDate"
+            />
+          </v-col>
+        </v-row>
+
       </div>
     </template>
 
+    <template v-else>
+      <p class="no-reviews-message">レビューがありませんでした。</p>
+    </template>
   </div>
+
+  <!-- ローディングインジケーター -->
   <div v-else>
-    <v-progress-circular
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
+    <v-progress-circular indeterminate color="primary"></v-progress-circular>
   </div>
 </template>
 
 <script>
-  import axios from 'axios';
-  import ReviewCard from '../components/data/ReviewCard.vue';
+import axios from 'axios';
+import ReviewCard from '../components/data/ReviewCard.vue';
 
-  export default {
-    name: 'ShopView',
-    components: {
-      ReviewCard,
-    },
-    props: {
-      ShopId: {
-        type: String,
-        required: true
-      }
-    },
-    data() {
-      return {
-        shop: {
-          shop_items: [],
-          review_items: [],
-          tag_items: []
-        },
-        loading: true,
-        departments: [
+export default {
+  name: 'ShopView',
+  components: {
+    ReviewCard,
+  },
+  props: {
+    ShopId: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      shop: {
+        shop_items: [],
+        review_items: [],
+        tag_items: []
+      },
+      loading: true,
+      departments: [
           '開発一部', '開発二部', '開発三部', '開発四部', '開発五部', '開発六部',
           'JASTEM開発一部', 'JASTEM開発二部', 'JASTEM開発三部', '系統センター開発部'
         ],
-        satisfactionEmojis: ['😈','😡','😒','😅','😐','🙂','😀','😊','🥰','😍'],
-        satisfactionComments: ['...','怒','う〜ん','微妙','普通かな','良いかも','良いね！','おすすめ！','また行きたい！','最高！！'],
-        emoPoint: 0,
-        userFilter: null, // ユーザーフィルタの初期値
-        departmentFilter: null, // 部署フィルタの初期値
-        ratingFilter: 0 // 評価フィルタの初期値
-      };
-    },
-    async beforeMount() {
-      try {
-        const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
-          params: { shop_id: this.ShopId }
+      satisfactionEmojis: ['😈','😡','😒','😅','😐','🙂','😀','😊','🥰','😍'],
+      satisfactionComments: ['...','怒','う〜ん','微妙','普通かな','良いかも','良いね！','おすすめ！','また行きたい！','最高！！'],
+      emoPoint: 0,
+      userFilter: null,
+      departmentFilter: null,
+      ratingFilter: 0,
+      positivePoint: 0,
+      negativePoint: 0
+    };
+  },
+  async created() {
+    // ショップデータを取得
+    try {
+      const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
+        params: { shop_id: this.ShopId }
+      });
+      this.shop = response.data;
+      this.positivePoint = Math.round(this.shop.shop_items[0].positive_percentage);
+      this.negativePoint = Math.round(this.shop.shop_items[0].negative_percentage);
+    } catch (error) {
+      console.error('Error fetching shop data:', error);
+    } finally {
+      this.loading = false; // ローディング状態を更新
+    }
+  },
+  computed: {
+    // ユニークな部署を取得
+    uniqueSections() {
+      const sections = this.shop.review_items.map(review => review.Section);
+        return [...new Set(sections)];
+      },
+    // フィルタリングされたレビューを取得
+    filteredReviews() {
+      return this.shop.review_items.filter(review => {
+        const userMatch = !this.userFilter || review.Role === this.userFilter;
+        const departmentMatch = !this.departmentFilter || review.Section === this.departmentFilter;
+        const ratingMatch = review.Rate >= this.ratingFilter;
+        return userMatch && departmentMatch && ratingMatch;
+      });
+    }
+  },
+  methods: {
+    // ショップをシェアするメソッド
+    shareShop() {
+      const url = `https://example.com/shop/${this.ShopId}`;
+
+    // Clipboard APIのサポートを確認
+      if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(() => {
+          alert('ショップのURLをコピーしました！');
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+          alert('URLのコピーに失敗しました。');
         });
-        console.log('API Response:', response.data); // デバッグ用のコンソールログ
-        this.shop = response.data;
-        console.log('Shop Data:', this.shop);
-        this.positivePoint = Math.round(this.shop.shop_items[0].positive_percentage);
-        this.negativePoint = Math.round(this.shop.shop_items[0].negative_percentage);
-      } catch (error) {
-          console.error('Error fetching shop data:', error);
-      } finally {
-          this.loading = false;
-      }
-    },
-    methods: {
-      // 評価入力画面への遷移
-      goToReview() {
+      } else {
+    // 代替手段: テキストボックスを使って手動コピーを促す
+    const input = document.createElement('input');
+    input.value = url;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
+    alert('ショップのURLをコピーしました！');
+    }
+  },
+    // レビュー登録画面へ遷移するメソッド
+    goToReview() {
         this.$router.push({ 
           path: "/review",
           query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
         }); 
-      },
-      shareShop() {
-        // 現在のURLをクリップボードにコピーする
-        navigator.clipboard.writeText(window.location.href);
-        // クリップボードにコピーしましたというアラートを表示する
-        alert('URLをコピーしました!');
-      },
-    },
-    computed: {
-      // レビュー部署の一覧を取得
-      uniqueSections() {
-        const sections = this.shop.review_items.map(review => review.Section);
-        return [...new Set(sections)];
-      },
-      // filteredReviews() {
-      //   return this.shop.review_items.filter(review => {
-      //     const userMatch = this.filters.user.length ? this.filters.user.includes(review.Role) : true;
-      //     const departmentMatch = this.filters.department.length ? this.filters.department.includes(review.Section) : true;
-      //     const ratingMatch = this.filters.rating.length ? this.filters.rating.includes(review.Rate) : true;
-      //     return userMatch && departmentMatch && ratingMatch;
-      //   });
-      // },
-    },
-  };
+      }
+  }
+};
 </script>
 
 <style scoped>
@@ -323,10 +331,10 @@
   }
 
   .shop-container {
-  max-width: 800px;
-  margin: 0 auto;
+    max-width: 800px;
+    margin: auto;
   }
-
+  
   .review-container {
     margin-top: 20px;
   }
@@ -340,8 +348,9 @@
 
   .no-reviews-message {
     text-align: center;
+    margin-top: 20px;
     font-size: 18px;
-    color: #777;
+    color: grey; 
   }
 
   .image-gallery {
@@ -377,7 +386,6 @@
   .emotion-results {
     max-width: 800px;
   }
-
   .sentiment-bar {
     display: flex;
     width: 80%;
@@ -425,4 +433,5 @@
     font-weight: bold;
     font-size: 0.8em;
   }
+  
 </style>

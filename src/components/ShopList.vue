@@ -1,19 +1,26 @@
 <template>
-	<div class="search-results">
-		<!-- 店舗リストを表示 -->
-		<div v-for="(shop, index) in apiData" :key="index">
-			<ShopCard
-				:link="`/shop/${shop.ShopId}`"
-				:image="shop.Photo ? shop.Photo : require('@/assets/yoshinoya.jpg')"
-				:name="shop.Name || '店名未設定'"
-				:Adress="shop.Adress || '住所未設定'"
-				:tags="shop.tags"
-				:genre="shop.Genre"
-				:Rate="shop.Rate"
-				:reviewCount="shop.review_count"
-			/>
-		</div>
-	</div>
+	<v-container>
+		<v-row align="center" justify="center">
+			<v-col cols="12">
+				<div class="search-results">
+					<!-- 店舗リストを表示 -->
+					<div v-for="(shop, index) in apiData" :key="index">
+						<ShopCard
+							:link="`/shop/${shop.ShopId}`"
+							:image="shop.Photo ? shop.Photo : require('@/assets/yoshinoya.jpg')"
+							:name="shop.Name || '店名未設定'"
+							:Adress="shop.Adress || '住所未設定'"
+							:mobile_access="shop.mobile_access || '未登録'"
+							:tags="shop.tags"
+							:genre="shop.Genre"
+							:Rate="shop.Rate"
+							:reviewCount="shop.review_count"
+						/>
+					</div>
+				</div>
+			</v-col>
+		</v-row>
+	</v-container>
 </template>
 
 <script>
