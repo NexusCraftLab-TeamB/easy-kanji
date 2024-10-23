@@ -1,28 +1,5 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-    >
-    <v-list>
-      <v-list-item
-        v-for="item in items"
-        :key="item.title"
-        @click="onItemClick(item)"
-      >
-        <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-      <!--  -->
-    </v-navigation-drawer>
-
-    <v-app-bar app color="green">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title class="text-start cursor-pointer" @click="redirectToHome">イージー幹事</v-toolbar-title>
-    </v-app-bar>
 
     <v-main>
       <router-view />
