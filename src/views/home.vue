@@ -12,6 +12,14 @@
 			</div>
 			<div class="conditions">
 				<div class="chip-group">
+					<div class="chip" v-if="keyword">
+						<v-icon class="chip-icon" color="black">mdi-magnify</v-icon>
+						<strong>{{ keyword }}</strong>
+					</div>
+					<div class="chip" v-if="name">
+						<v-icon class="chip-icon" color="black">mdi-storefront</v-icon>
+						<span>店名：</span><strong>{{ name }}</strong>
+					</div>
 					<div class="chip" v-if="locationName">
 						<v-icon class="chip-icon" color="black">mdi-map-marker</v-icon>
 						<span>場所：</span><strong>{{ locationName }}</strong>
@@ -27,6 +35,10 @@
 					<div class="chip" v-if="performance">
 						<v-icon class="chip-icon" color="black">mdi-star</v-icon>
 						<span>実績：</span><strong>{{ performance }}</strong>
+					</div>
+					<div class="chip" v-if="peopleNum">
+						<v-icon class="chip-icon" color="black">mdi-account-multiple</v-icon>
+						<span>人数：</span><strong>{{ `${peopleNum}人以上` }} </strong>
 					</div>
 				</div>
 			</div>
@@ -58,35 +70,48 @@
 		data() {
 			return {
 				apiData: [],
+				keyword: '',
+				name: '',
 				location: '',
 				genre: '',
 				budget: '',
 				performance: '',
+				peopleNum: '',
 				formData: {},
 				currentImageIndex: 0,
-        backgroundImages: [
+				backgroundImages: [
 					require('@/assets/home-image01.jpg'),
 					require('@/assets/home-image02.jpg'),
-					require('@/assets/home-image03.jpg')
-        ],
+					require('@/assets/home-image03.jpg'),
+					require('@/assets/home-image04.jpg'),
+					require('@/assets/home-image05.jpg'),
+					require('@/assets/home-image06.jpg'),
+					require('@/assets/home-image07.jpg'),
+					require('@/assets/home-image08.jpg'),
+					require('@/assets/home-image09.jpg')
+				],
 				intervalId: null
 			};
 		},
 		methods: {
 			// バックグラウンド画像を変更
 			changeBackgroundImage() {
-				this.currentImageIndex = (this.currentImageIndex + 1) % this.backgroundImages.length;
+				// ランダムなインデックスを生成
+				const randomIndex = Math.floor(Math.random() * this.backgroundImages.length);
+				this.currentImageIndex = randomIndex;
 				const newImageUrl = this.backgroundImages[this.currentImageIndex];
 				document.querySelector('.bg-home').style.backgroundImage = `url(${newImageUrl})`;
 			},
 			// フォームデータを受け取り、APIを呼び出す
 			handleFormData(data) {
 				this.formData = data; // 子コンポーネントから受け取ったデータをセット
+				this.keyword = data.keyword; // キーワードをセット
 				this.name = data.name; // 店名をセット
 				this.location = data.location; // 場所をセット
 				this.genre = data.genre; // ジャンルをセット
 				this.budget = data.budget; // 予算をセット
 				this.performance = data.performance; // 実績をセット
+				this.peopleNum = data.peopleNum; // 人数をセット
 				this.submited = true; // データが送信されたことを示すフラグ
 				this.fetchData(); // APIを呼び出す
 			},
@@ -95,15 +120,15 @@
 				try {
 						// クエリパラメータを作成、空の場合は undefined に設定
 						const params = {
-							searchQuery: this.formData.searchQuery || undefined,
+							keyword: this.formData.keyword || undefined,
 							name: this.formData.name || undefined,
 							location: this.formData.location || undefined,
 							genre: this.formData.genre || undefined,
 							budget: this.formData.budget || undefined,
-							performance: this.formData.performance || undefined
+							performance: this.formData.performance || undefined,
+							PeopleNum: this.formData.peopleNum || undefined
 						};
 						
-
 						// APIリクエストを送信
 						const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home', { params });
 
@@ -127,6 +152,7 @@
 			this.submited = false;
 			this.changeBackgroundImage(); // 初期画像を設定
 			this.intervalId = setInterval(this.changeBackgroundImage, 5000); // 5秒ごとに画像を変更
+			document.title = 'Easy Kanji'; // タイトルを設定
 		},
 		beforeUnmount() {
 			clearInterval(this.intervalId); // コンポーネントが破棄される前にインターバルをクリア

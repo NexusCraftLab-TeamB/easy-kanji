@@ -7,7 +7,7 @@
 					<div v-for="(shop, index) in apiData" :key="index">
 						<ShopCard
 							:link="`/shop/${shop.ShopId}`"
-							:image="shop.Photo ? shop.Photo : require('@/assets/yoshinoya.jpg')"
+							:image="shop.Photo ? shop.Photo : require('@/assets/nophoto.jpg')"
 							:name="shop.Name || '店名未設定'"
 							:Adress="shop.Adress || '住所未設定'"
 							:mobile_access="shop.mobile_access || '未登録'"

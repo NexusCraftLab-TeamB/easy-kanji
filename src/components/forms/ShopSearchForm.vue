@@ -15,7 +15,7 @@
       <form @submit.prevent="handleKeywordSubmit" class="search-form" id="keyword-form">
         <div class="input-group">
           <v-icon icon="mdi-magnify" size="small" class="input-icon"></v-icon>
-          <input type="text" id="keyword" name="keyword" class="search-input" v-model="keyword" placeholder="キーワードを入力" ref="keywordSelect" :class="{'selected': keyword !== ''}">
+          <input type="text" id="keyword" name="keyword" class="search-input" v-model="keyword" placeholder="銀座で飲み放題" ref="keywordSelect" :class="{'selected': keyword !== ''}">
           <button type="button" class="clear-icon" @click="clearSelection('keyword')">
             <v-icon icon="mdi-close-circle" size="small"></v-icon>
           </button>
@@ -105,6 +105,20 @@
               <v-icon icon="mdi-close-circle" size="small"></v-icon>
             </button>
           </div>
+
+          <!-- 人数 -->
+          <div class="input-group">
+            <v-icon icon="mdi-account-multiple" size="small" class="input-icon"></v-icon>
+            <select id="peopleNum" name="peopleNum" class="search-input" v-model="peopleNum" ref="peopleNumSelect" :class="{'selected': peopleNum !== ''}">
+              <option value="" disabled selected>人数</option>
+              <option v-for="peopleNum in peopleNums" :key="peopleNum" :value="peopleNum">
+                {{ `${peopleNum}人以上` }}
+              </option>
+            </select>
+            <button type="button" class="clear-icon" @click="clearSelection('peopleNum')">
+              <v-icon icon="mdi-close-circle" size="small"></v-icon>
+            </button>
+          </div>
         </div>
 
         <!-- 検索ボタン -->
@@ -141,10 +155,12 @@ export default {
       genre: "",
       budget: "",
       performance: "",
+      peopleNum: "",
       location: "",
       locations: locations,
       genres: genres,
       performances: performances,
+      peopleNums: [5, 10, 15, 20, 25, 30],
       errorMessage: "",
       budgets: budgets,
       loading: false,
@@ -165,17 +181,17 @@ export default {
     },
     // カテゴリ検索フォームが送信されたときの処理
     handleSubmit() {
-      if (!this.searchQuery && !this.shopName && !this.location && !this.genre && !this.budget && !this.performance) {
+      if ( !this.shopName && !this.location && !this.genre && !this.budget && !this.performance && !this.peopleNum) {
         this.errorMessage = "検索条件を指定してください";
       } else {
         this.errorMessage = "";
         this.$emit("submit-data", {
-          searchQuery: this.searchQuery,
           name: this.shopName,
           location: this.location,
           genre: this.genre,
           budget: this.budget,
           performance: this.performance,
+          peopleNum: this.peopleNum,
         });
       }
     },
@@ -246,6 +262,13 @@ export default {
         this.$refs.performanceSelect.classList.remove('selected');
       }
     },
+    peopleNum(newVal) {
+      if (newVal !== '') {
+        this.$refs.peopleNumSelect.classList.add('selected');
+      } else {
+        this.$refs.peopleNumSelect.classList.remove('selected');
+      }
+    },
   },
 };
 </script>
@@ -257,7 +280,6 @@ export default {
   --background-color: #f8f9fa;
   --text-color: #212529;
   --border-radius: 2rem;
-  --input-padding: 10px 40px 10px 40px;
 }
 
 .search-form-container {
@@ -280,7 +302,7 @@ export default {
 
 .tab-content {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   height: 400px; /* 固定の高さを設定 */
   overflow-y: auto; /* スクロール可能にする */
 }
@@ -341,7 +363,7 @@ export default {
 
 .search-input {
   width: 100%;
-  padding: 10px 40px;
+  padding: 10px 35px;
   border: 1px solid #ced4da;
   border-radius: var(--border-radius);
   background-color: #fff;
