@@ -4,9 +4,17 @@
     <v-main>
       <router-view />
     </v-main>
-    <v-footer
-      class="pt-10"
-    />
+    <v-footer class="pt-10"/>
+    <template v-if="$route.path === '/'">
+      <button v-if="showScrollButton" @click="scrollToTop" class="scroll-to-top">
+        ▲
+      </button>
+    </template>
+    <template v-else>
+      <button @click="redirectToHome" class="scroll-to-top">
+        <v-icon>mdi-home</v-icon>
+      </button>
+    </template>
   </v-app>
 
 </template>
@@ -17,6 +25,7 @@ export default {
   data() {
     return {
       drawer: false,
+      showScrollButton: false, // スクロールボタンの表示フラグ
       items: [
         { title: 'ホーム', route: '/' },
         { title: '店舗評価/登録', route: '/review' },
@@ -30,7 +39,21 @@ export default {
     },
     redirectToHome() {
       this.$router.push('/');
+    },
+    // スクロールイベントハンドラ
+    handleScroll() {
+      this.showScrollButton = window.scrollY > 200;
+    },
+    // ボタンクリックハンドラ
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 }
 </script>
@@ -83,5 +106,20 @@ main {
 
 footer {
   background-color: #f7f7f7!important;
+}
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  border-radius: 50%;
+  background-color: #146a3d;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  cursor: pointer;
 }
 </style>

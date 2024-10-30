@@ -13,23 +13,26 @@
         <!-- userが「幹事」の場合のみpeopleNumを表示 -->
         <span v-if="user === '幹事'" class="text-subtitle-2 text--secondary ps-2 pb-1 text-grey">（{{ peopleNum }}人で利用）</span>
       </div>
-      <div class="review-rate">
-        <v-rating
-          :model-value="rating"
-          color="amber"
-          density="compact"
-          size="small"
-          half-increments
-          readonly
-          align="start"
-        ></v-rating>
-      </div>
     </v-card-title>
-
+    
     <v-divider></v-divider>
-
+    
     <v-card-text class="py-1 text-start">
-      <p class="pa-3">{{ comment }}</p>
+      <div class="d-flex align-center">
+        <div class="review-rate">
+          <v-rating
+            :model-value="rating"
+            color="amber"
+            density="compact"
+            size="small"
+            half-increments
+            readonly
+            align="start"
+          ></v-rating>
+        </div>
+        <span class="ps-1 mt-1 font-weight-bold">{{ rating }}</span>
+      </div>
+      <p class="pb-3 ">{{ comment }}</p>
     </v-card-text>
 
     <v-divider></v-divider>
@@ -86,6 +89,6 @@
 
 <style scoped>
   .review-rate {
-    height: 30px;
+    margin-top: 0.5rem;
   }
 </style>

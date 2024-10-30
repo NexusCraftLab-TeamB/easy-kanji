@@ -147,6 +147,7 @@
 			this.submited = false;
 			this.changeBackgroundImage(); // 初期画像を設定
 			this.intervalId = setInterval(this.changeBackgroundImage, 5000); // 5秒ごとに画像を変更
+			document.title = 'Easy Kanji'; // タイトルを設定
 		},
 		beforeUnmount() {
 			clearInterval(this.intervalId); // コンポーネントが破棄される前にインターバルをクリア
