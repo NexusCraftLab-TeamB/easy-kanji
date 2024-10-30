@@ -10,8 +10,7 @@
         <p>{{ user }}</p>
         <span class="text-subtitle-2 text--secondary ps-2 pb-1 text-grey">{{ department }}</span>
         <span class="text-subtitle-2 text--secondary ps-2 pb-1 text-grey">{{ formattedDate ? formattedDate : '' }}</span>
-        <!-- userが「幹事」の場合のみpeopleNumを表示 -->
-        <span v-if="user === '幹事'" class="text-subtitle-2 text--secondary ps-2 pb-1 text-grey">（{{ peopleNum }}人で利用）</span>
+        <span class="text-subtitle-2 text--secondary ps-2 pb-1 text-grey">（{{ peopleNum }}人で利用）</span>
       </div>
     </v-card-title>
     
