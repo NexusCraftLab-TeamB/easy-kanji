@@ -18,7 +18,7 @@
     </template>
 
     <v-row no-gutters>
-      <v-col cols="4">
+      <v-col cols="3">
         <v-img
           class="responsive-img"
           :src="image"
@@ -26,8 +26,8 @@
           cover
         ></v-img>
       </v-col>
-      <v-col cols="8">
-        <div class="d-flex flex-column justify-space-between pa-2 h-100">
+      <v-col cols="9">
+        <div class="d-flex flex-column justify-space-between py-2 pe-2 h-100">
           <v-card-item class="text-start py-0">
             <div class="my-0 my-md-2 font-weight-bold text-h6 text-clamp">
               {{ name }}
@@ -59,7 +59,7 @@
     
           <div class="ps-5 ps-sm-6">
             <div v-if="Rate === '登録なしの店'" >
-              <div class="text-grey ms-1 mt-3">
+              <div class="text-grey ms-1 mt-0">
                 <span>利用実績なし</span>
               </div>
             </div>
@@ -206,7 +206,7 @@
 .text-clamp {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* 表示する行数を指定 */
+  -webkit-line-clamp: 1; /* 表示する行数を指定 */
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -214,11 +214,11 @@
 /* xs のときに高さを固定 */
 @media (max-width: 600px) {
   .v-card {
-    height: 110px;
+    height: 90px;
   }
 
   .v-col {
-    height: 110px;
+    height: 90px;
   }
 }
 </style>

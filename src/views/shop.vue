@@ -268,6 +268,7 @@ export default {
       this.shop = response.data;
       this.positivePoint = Math.round(this.shop.shop_items[0].positive_percentage);
       this.negativePoint = Math.round(this.shop.shop_items[0].negative_percentage);
+      document.title = `${this.shop.shop_items[0].Name} | Easy Kanji`; // ページタイトルを更新する
     } catch (error) {
       console.error('Error fetching shop data:', error);
     } finally {
@@ -295,7 +296,7 @@ export default {
     shareShop() {
       const url = `https://example.com/shop/${this.ShopId}`;
 
-    // Clipboard APIのサポートを確認
+      // Clipboard APIのサポートを確認
       if (navigator.clipboard) {
           navigator.clipboard.writeText(url).then(() => {
           alert('ショップのURLをコピーしました！');
@@ -304,24 +305,24 @@ export default {
           alert('URLのコピーに失敗しました。');
         });
       } else {
-    // 代替手段: テキストボックスを使って手動コピーを促す
-    const input = document.createElement('input');
-    input.value = url;
-    document.body.appendChild(input);
-    input.select();
-    document.execCommand('copy');
-    document.body.removeChild(input);
-    alert('ショップのURLをコピーしました！');
-    }
-  },
+      // 代替手段: テキストボックスを使って手動コピーを促す
+      const input = document.createElement('input');
+      input.value = url;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      alert('ショップのURLをコピーしました！');
+      }
+    },
     // レビュー登録画面へ遷移するメソッド
     goToReview() {
-        this.$router.push({ 
-          path: "/review",
-          query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
-        }); 
-      }
-  }
+      this.$router.push({
+        path: "/review",
+        query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
+      });
+    }
+  },
 };
 </script>
 

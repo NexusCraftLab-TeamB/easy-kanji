@@ -12,6 +12,10 @@
 			</div>
 			<div class="conditions">
 				<div class="chip-group">
+					<div class="chip" v-if="keyword">
+						<v-icon class="chip-icon" color="black">mdi-magnify</v-icon>
+						<strong>{{ keyword }}</strong>
+					</div>
 					<div class="chip" v-if="locationName">
 						<v-icon class="chip-icon" color="black">mdi-map-marker</v-icon>
 						<span>場所：</span><strong>{{ locationName }}</strong>
@@ -27,6 +31,10 @@
 					<div class="chip" v-if="performance">
 						<v-icon class="chip-icon" color="black">mdi-star</v-icon>
 						<span>実績：</span><strong>{{ performance }}</strong>
+					</div>
+					<div class="chip" v-if="peopleNum">
+						<v-icon class="chip-icon" color="black">mdi-account-multiple</v-icon>
+						<span>人数：</span><strong>{{ peopleNum }}</strong>
 					</div>
 				</div>
 			</div>
@@ -58,10 +66,12 @@
 		data() {
 			return {
 				apiData: [],
+				keyword: '',
 				location: '',
 				genre: '',
 				budget: '',
 				performance: '',
+				peopleNum: '',
 				formData: {},
 				currentImageIndex: 0,
 				backgroundImages: [
@@ -90,11 +100,13 @@
 			// フォームデータを受け取り、APIを呼び出す
 			handleFormData(data) {
 				this.formData = data; // 子コンポーネントから受け取ったデータをセット
+				this.keyword = data.keyword; // キーワードをセット
 				this.name = data.name; // 店名をセット
 				this.location = data.location; // 場所をセット
 				this.genre = data.genre; // ジャンルをセット
 				this.budget = data.budget; // 予算をセット
 				this.performance = data.performance; // 実績をセット
+				this.peopleNum = data.peopleNum; // 人数をセット
 				this.submited = true; // データが送信されたことを示すフラグ
 				this.fetchData(); // APIを呼び出す
 			},
