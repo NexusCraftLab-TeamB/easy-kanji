@@ -16,6 +16,10 @@
 						<v-icon class="chip-icon" color="black">mdi-magnify</v-icon>
 						<strong>{{ keyword }}</strong>
 					</div>
+					<div class="chip" v-if="name">
+						<v-icon class="chip-icon" color="black">mdi-storefront</v-icon>
+						<span>店名：</span><strong>{{ name }}</strong>
+					</div>
 					<div class="chip" v-if="locationName">
 						<v-icon class="chip-icon" color="black">mdi-map-marker</v-icon>
 						<span>場所：</span><strong>{{ locationName }}</strong>
@@ -67,6 +71,7 @@
 			return {
 				apiData: [],
 				keyword: '',
+				name: '',
 				location: '',
 				genre: '',
 				budget: '',
