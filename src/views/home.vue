@@ -34,7 +34,7 @@
 					</div>
 					<div class="chip" v-if="peopleNum">
 						<v-icon class="chip-icon" color="black">mdi-account-multiple</v-icon>
-						<span>人数：</span><strong>{{ peopleNum }}</strong>
+						<span>人数：</span><strong>{{ `${peopleNum}人以上` }} </strong>
 					</div>
 				</div>
 			</div>

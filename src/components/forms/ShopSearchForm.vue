@@ -111,7 +111,7 @@
             <v-icon icon="mdi-account-multiple" size="small" class="input-icon"></v-icon>
             <select id="peopleNum" name="peopleNum" class="search-input" v-model="peopleNum" ref="peopleNumSelect" :class="{'selected': peopleNum !== ''}">
               <option value="" disabled selected>人数</option>
-              <option v-for="peopleNum in peopleNums" :key="peopleNum">
+              <option v-for="peopleNum in peopleNums" :key="peopleNum" :value="peopleNum">
                 {{ `${peopleNum}人以上` }}
               </option>
             </select>
