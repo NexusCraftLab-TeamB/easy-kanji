@@ -8,11 +8,13 @@
     <template v-if="$route.path === '/'">
       <button v-if="showScrollButton" @click="scrollToTop" class="scroll-to-top">
         ▲
+        <p>TOP</p>
       </button>
     </template>
     <template v-else>
       <button @click="redirectToHome" class="scroll-to-top">
         <v-icon>mdi-home</v-icon>
+        <p>HOME</p>
       </button>
     </template>
   </v-app>
@@ -98,6 +100,14 @@ html {
   html {
     font-size: 12px;
   }
+
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
 }
 
 main {
@@ -110,16 +120,26 @@ footer {
 
 .scroll-to-top {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 30px;
+  right: 30px;
   z-index: 1000;
   border-radius: 50%;
   background-color: #146a3d;
   color: white;
   border: none;
-  width: 40px;
-  height: 40px;
-  font-size: 18px;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
   cursor: pointer;
+}
+
+.scroll-to-top:hover {
+  background-color: #0f4e2b;
+}
+
+.scroll-to-top p {
+  position: relative;
+  top: -5px;
+  font-size: 10px;
 }
 </style>
