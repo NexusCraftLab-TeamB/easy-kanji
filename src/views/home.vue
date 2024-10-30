@@ -100,7 +100,8 @@
 							location: this.formData.location || undefined,
 							genre: this.formData.genre || undefined,
 							budget: this.formData.budget || undefined,
-							performance: this.formData.performance || undefined
+							performance: this.formData.performance || undefined,
+							PeopleNum: this.formData.peopleNum || undefined
 						};
 						
 
