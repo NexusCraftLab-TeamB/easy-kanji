@@ -58,7 +58,7 @@
           </v-card-item>
     
           <div class="ps-5 ps-sm-6">
-            <div v-if="Rate === '登録なしの店'" >
+            <div v-if="reviewCount === 0" >
               <div class="text-grey ms-1 mt-0">
                 <span>利用実績なし</span>
               </div>
@@ -140,7 +140,8 @@
       },
       reviewCount: {
         type: Number,
-        required: false
+        required: false,
+        default: 0
       },
     },
     created() {
