@@ -10,7 +10,7 @@
         <v-img
           max-height="600"
           max-width="600"
-          :src="shop.shop_items[0].Photo || require('@/assets/yoshinoya.jpg')"
+          :src="shop.shop_items[0].Photo || require('@/assets/nophoto.jpg')"
           :alt="shop.shop_items[0].Name"
           cover
         ></v-img>
@@ -202,6 +202,7 @@
               :comment="review.Comment"
               :rating="review.Rate"
               :date="review.ReviewDate"
+              :peopleNum="review.PeopleNum"
             />
           </v-col>
         </v-row>
@@ -243,10 +244,11 @@ export default {
         tag_items: []
       },
       loading: true,
-      departments: [
-          '開発一部', '開発二部', '開発三部', '開発四部', '開発五部', '開発六部',
-          'JASTEM開発一部', 'JASTEM開発二部', 'JASTEM開発三部', '系統センター開発部'
-        ],
+      //定数ファイルから読み込んでいるので不要。
+      //departments: [
+      //    '開発一部', '開発二部', '開発三部', '開発四部', '開発五部', '開発六部',
+      //    'JASTEM開発一部', 'JASTEM開発二部', 'JASTEM開発三部', '系統センター開発部'
+      //  ],
       satisfactionEmojis: ['😈','😡','😒','😅','😐','🙂','😀','😊','🥰','😍'],
       satisfactionComments: ['...','怒','う〜ん','微妙','普通かな','良いかも','良いね！','おすすめ！','また行きたい！','最高！！'],
       emoPoint: 0,

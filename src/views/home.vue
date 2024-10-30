@@ -64,18 +64,26 @@
 				performance: '',
 				formData: {},
 				currentImageIndex: 0,
-        backgroundImages: [
+				backgroundImages: [
 					require('@/assets/home-image01.jpg'),
 					require('@/assets/home-image02.jpg'),
-					require('@/assets/home-image03.jpg')
-        ],
+					require('@/assets/home-image03.jpg'),
+					require('@/assets/home-image04.jpg'),
+					require('@/assets/home-image05.jpg'),
+					require('@/assets/home-image06.jpg'),
+					require('@/assets/home-image07.jpg'),
+					require('@/assets/home-image08.jpg'),
+					require('@/assets/home-image09.jpg')
+				],
 				intervalId: null
 			};
 		},
 		methods: {
 			// バックグラウンド画像を変更
 			changeBackgroundImage() {
-				this.currentImageIndex = (this.currentImageIndex + 1) % this.backgroundImages.length;
+				// ランダムなインデックスを生成
+				const randomIndex = Math.floor(Math.random() * this.backgroundImages.length);
+				this.currentImageIndex = randomIndex;
 				const newImageUrl = this.backgroundImages[this.currentImageIndex];
 				document.querySelector('.bg-home').style.backgroundImage = `url(${newImageUrl})`;
 			},
@@ -104,7 +112,6 @@
 							PeopleNum: this.formData.peopleNum || undefined
 						};
 						
-
 						// APIリクエストを送信
 						const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home', { params });
 
