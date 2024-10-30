@@ -165,12 +165,11 @@ export default {
     },
     // カテゴリ検索フォームが送信されたときの処理
     handleSubmit() {
-      if (!this.searchQuery && !this.shopName && !this.location && !this.genre && !this.budget && !this.performance) {
+      if ( !this.shopName && !this.location && !this.genre && !this.budget && !this.performance) {
         this.errorMessage = "検索条件を指定してください";
       } else {
         this.errorMessage = "";
         this.$emit("submit-data", {
-          searchQuery: this.searchQuery,
           name: this.shopName,
           location: this.location,
           genre: this.genre,
