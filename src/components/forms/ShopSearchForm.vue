@@ -302,7 +302,7 @@ export default {
 
 .tab-content {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   height: 400px; /* 固定の高さを設定 */
   overflow-y: auto; /* スクロール可能にする */
 }
