@@ -6,14 +6,11 @@
       <img :src="this.shopImage" alt="shop image" />
     </div>
 
-    <!-- お店の名前を表示 -->
     <div class="shop-name" style="font-weight: bold; color: black;">
       {{ shopName }}
     </div>
 
-    <!-- フォーム -->
     <v-form @submit.prevent>
-
       <v-rating
         v-model="rating"
         half-increments
@@ -23,7 +20,6 @@
         color="amber"
         class="text-h4 my-2"
       />
-
       <div class="mb-2">評価 : {{ rating }}</div>
 
       <v-select
@@ -42,7 +38,15 @@
         :rules="roleRules"
       ></v-select>
 
-      <!-- コメントのテキストエリア -->
+      <!-- 参加人数入力ボックス -->
+      <v-text-field
+        v-model="peopleNum"
+        label="参加人数"
+        type="number"
+        outlined
+        :rules="peopleNumRules"
+      ></v-text-field>
+
       <v-textarea
         v-model="comment"
         label="コメント"
@@ -54,7 +58,6 @@
         :rules="commentRules"
       ></v-textarea>
 
-      <!-- トーストメッセージ -->
       <v-snackbar
         v-model="showSnackbar"
         :timeout="1500"
@@ -73,7 +76,7 @@
           </v-btn>
         </div>
       </v-snackbar>
-      <!-- 登録するボタン -->
+
       <v-btn
         class="mt-2 submit-btn"
         type="submit"
@@ -84,7 +87,6 @@
       >
         登録する
       </v-btn>
-
     </v-form>
 
     <div v-if="showMessage" class="message-box">
@@ -103,37 +105,33 @@ export default {
   name: "ReviewForm",
   data() {
     return {
-      performance: "開発一部", // 実績の選択
-      performances: performances, // 実績の選択肢
+      performance: "開発一部",
+      performances: performances,
       role: '幹事',
       roles: ['幹事', '参加者'],
       rating: "5",
       comment: "",
-      date: new Date().toISOString().substr(0, 10), // 今日の日付をデフォルトに設定
+      peopleNum: "",  // 参加人数を保存するプロパティを追加
+      date: new Date().toISOString().substr(0, 10),
       showMessage: false,
-      showSnackbar: false, // トーストの表示状態を管理
+      showSnackbar: false,
       loading: false,
-      shopName: "",  // お店の名前を保存するプロパティを追加
-      shopImage: "",  // お店の画像を保存するプロパティを追加
+      shopName: "",
+      shopImage: "",
       performanceRules: [(v) => !!v || '利用部門を選択してください'],
       roleRules: [(v) => !!v || '属性を選択してください'],
       commentRules: [(v) => !!v || 'コメントを入力してください'],
-      dateRules: [(v) => !!v || '利用日を選択してください'],
+      peopleNumRules: [(v) => !!v || '参加人数を入力してください'], // 参加人数のバリデーションルール
     };
   },
   methods: {
     async fetchShopName() {
-      const shopId = this.$route.query.shop_id;  // クエリパラメータからshop_idを取得
+      const shopId = this.$route.query.shop_id;
       try {
         const response = await axios.get(`https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop?shop_id=${shopId}`);
-        
-        // API レスポンスをログに出力
-        console.log("Shop Items:", response.data.shop_items);
-        
-        // shop_itemsが空でないか確認
         if (response.data.shop_items.length > 0) {
-          this.shopName = response.data.shop_items[0].Name;  // お店の名前を取得（プロパティ名を修正）
-          this.shopImage = response.data.shop_items[0].Photo;  // お店の画像を取得（プロパティ名を修正）
+          this.shopName = response.data.shop_items[0].Name;
+          this.shopImage = response.data.shop_items[0].Photo;
         } else {
           console.error('No shop items found for the provided shop_id');
         }
@@ -144,20 +142,21 @@ export default {
     async submitReview() {
       if (this.isFormValid) {
         try {
-          this.loading = true
-          setTimeout(() => (this.loading = false), 3000)
+          this.loading = true;
+          setTimeout(() => (this.loading = false), 3000);
 
           const requestBody = {
-            shop_id: this.$route.query.shop_id,  // shop_idをクエリパラメータから取得
+            shop_id: this.$route.query.shop_id,
             section: this.performance,
             comment: this.comment,
             rate: this.rating,
             role: this.role,
             date: this.date,
+            peopleNum: Number(this.peopleNum),  // 入力された人数を数値に変換して送信
           };
 
           const response = await axios.post('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/review', requestBody);
-          this.showSnackbar = true; // トーストを表示
+          this.showSnackbar = true;
 
           if (response.status === 200) {
             this.showMessage = true;
@@ -177,8 +176,7 @@ export default {
       this.role = "幹事";
       this.rating = "5";
       this.comment = "";
-      this.newTag = "";
-      this.tags = [];
+      this.peopleNum = ""; // 参加人数をリセット
     },
     goToSearch() {
       this.$router.push("/");
@@ -186,17 +184,17 @@ export default {
   },
   computed: {
     isFormValid() {
-      // 全てのフォームフィールドが入力されているかを確認
       return (
         this.performance &&
         this.role &&
         this.rating &&
-        this.comment.length > 0
+        this.comment.length > 0 &&
+        this.peopleNum > 0  // 参加人数が正の数であることを確認
       );
     },
   },
   mounted() {
-    this.fetchShopName();  // コンポーネントがマウントされたときにお店の名前を取得
+    this.fetchShopName();
   }
 };
 </script>
@@ -300,19 +298,14 @@ export default {
   .message-box button {
     margin: 5px;
     padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
   }
 
-  .message-box button:first-of-type {
-    background-color: #007bff;
-    color: white;
+  .message-box button:hover {
+    background-color: #0069d9;
   }
-
-  .message-box button:last-of-type {
-    background-color: #6c757d;
-    color: white;
-  }
-
 </style>
