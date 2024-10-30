@@ -95,7 +95,7 @@
 				try {
 						// クエリパラメータを作成、空の場合は undefined に設定
 						const params = {
-							searchQuery: this.formData.searchQuery || undefined,
+							keyword: this.formData.keyword || undefined,
 							name: this.formData.name || undefined,
 							location: this.formData.location || undefined,
 							genre: this.formData.genre || undefined,
