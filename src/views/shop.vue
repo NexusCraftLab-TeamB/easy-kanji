@@ -34,9 +34,10 @@
               readonly
             ></v-rating>
 
-            <div class="text-grey ms-2">
-              {{ shop.shop_items[0].Rate }} ({{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件' }})
-            </div>
+            <p class="ms-2 mb-1 text-h6 font-weight-bold text-orange-darken-4">{{ shop.shop_items[0].Rate }}</p>
+            <span class="text-grey ms-1">
+              ({{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件' }})
+            </span>
           </v-row>
 
           <!-- ジャンル -->
@@ -209,7 +210,6 @@
 
       </div>
     </template>
-
     <template v-else>
       <p class="no-reviews-message">レビューがありませんでした。</p>
     </template>
@@ -294,7 +294,7 @@ export default {
       // Clipboard APIのサポートを確認
       if (navigator.clipboard) {
           navigator.clipboard.writeText(url).then(() => {
-          alert('ショップのURLをコピーしました！');
+          alert('URLをコピーしました！');
         }).catch(err => {
           console.error('Failed to copy: ', err);
           alert('URLのコピーに失敗しました。');
@@ -307,7 +307,7 @@ export default {
       input.select();
       document.execCommand('copy');
       document.body.removeChild(input);
-      alert('ショップのURLをコピーしました！');
+      alert('URLをコピーしました！');
       }
     },
     // レビュー登録画面へ遷移するメソッド
@@ -431,5 +431,4 @@ export default {
     font-weight: bold;
     font-size: 0.8em;
   }
-  
 </style>
