@@ -80,15 +80,15 @@
 				formData: {},
 				currentImageIndex: 0,
 				backgroundImages: [
-					require('@/assets/home-image01.jpg'),
-					require('@/assets/home-image02.jpg'),
-					require('@/assets/home-image03.jpg'),
-					require('@/assets/home-image04.jpg'),
-					require('@/assets/home-image05.jpg'),
-					require('@/assets/home-image06.jpg'),
-					require('@/assets/home-image07.jpg'),
-					require('@/assets/home-image08.jpg'),
-					require('@/assets/home-image09.jpg')
+					require('@/assets/home-image01.webp'),
+					require('@/assets/home-image02.webp'),
+					require('@/assets/home-image03.webp'),
+					require('@/assets/home-image04.webp'),
+					require('@/assets/home-image05.webp'),
+					require('@/assets/home-image06.webp'),
+					require('@/assets/home-image07.webp'),
+					require('@/assets/home-image08.webp'),
+					require('@/assets/home-image09.webp')
 				],
 				intervalId: null
 			};
@@ -151,7 +151,7 @@
 			this.fetchData(); // ページが読み込まれた時にAPI呼び出し
 			this.submited = false;
 			this.changeBackgroundImage(); // 初期画像を設定
-			this.intervalId = setInterval(this.changeBackgroundImage, 5000); // 5秒ごとに画像を変更
+			this.intervalId = setInterval(this.changeBackgroundImage, 10000); // 10秒ごとに画像を変更
 			document.title = 'Easy Kanji'; // タイトルを設定
 		},
 		beforeUnmount() {

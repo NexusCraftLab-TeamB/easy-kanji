@@ -29,7 +29,7 @@
             align="start"
           ></v-rating>
         </div>
-        <span class="ps-1 mt-1 font-weight-bold">{{ rating }}</span>
+        <span class="ps-1 mt-1 font-weight-bold">{{ rating.toFixed(1) }}</span>
       </div>
       <p class="pb-3 ">{{ comment }}</p>
     </v-card-text>
