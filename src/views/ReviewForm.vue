@@ -116,6 +116,7 @@ export default {
       showMessage: false,
       showSnackbar: false,
       loading: false,
+      submitted: false,  // ⭐ 登録済みかどうかのフラグ
       shopName: "",
       shopImage: "",
       performanceRules: [(v) => !!v || '利用部門を選択してください'],
@@ -140,35 +141,47 @@ export default {
       }
     },
     async submitReview() {
-      if (this.isFormValid) {
-        try {
-          this.loading = true;
-          setTimeout(() => (this.loading = false), 3000);
+      if (this.isFormValid && !this.loading && !this.submitted) {  // ⭐ `submitted` をチェック
+       try {
+        this.loading = true;  // ボタンを押した瞬間に無効化
 
-          const requestBody = {
-            shop_id: this.$route.query.shop_id,
-            section: this.performance,
-            comment: this.comment,
-            rate: this.rating,
-            role: this.role,
-            date: this.date,
-            peopleNum: Number(this.peopleNum),  // 入力された人数を数値に変換して送信
-          };
+       const requestBody = {
+        shop_id: this.$route.query.shop_id,
+        section: this.performance,
+        comment: this.comment,
+        rate: this.rating,
+        role: this.role,
+        date: this.date,
+        peopleNum: Number(this.peopleNum),  // 入力された人数を数値に変換して送信
+        };
 
-          const response = await axios.post('https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/review', requestBody);
-          this.showSnackbar = true;
+      const response = await axios.post(
+        'https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/review',
+        requestBody
+      );
 
-          if (response.status === 200) {
-            this.showMessage = true;
-          }
-        } catch (error) {
-          console.error('Error registering the review:', error);
-        }
-      } else {
-        console.log('フォームが無効です');
-        return;
+      if (response.status === 200) {
+        this.showSnackbar = true;
+        this.showMessage = true;
+        this.submitted = true;  // ⭐ 登録後にフラグを立てる
+
+         // ⭐ フォームをリセットする処理
+         this.performance = "開発一部";
+        this.role = "幹事";
+        this.rating = "5";
+        this.comment = "";
+        this.peopleNum = "";
+        
       }
-    },
+    } catch (error) {
+      console.error('Error registering the review:', error);
+    } finally {
+      this.loading = false;  // リクエスト完了後に解除
+    }
+  } else {
+    console.log('フォームが無効です or すでに処理中');
+  }
+},
     continueRegister() {
       this.$forceUpdate();
       this.showMessage = false;
@@ -177,6 +190,7 @@ export default {
       this.rating = "5";
       this.comment = "";
       this.peopleNum = ""; // 参加人数をリセット
+      this.submitted = false;  // ⭐ `submitted` をリセットして再登録できるようにする
     },
     goToSearch() {
       this.$router.push("/");
