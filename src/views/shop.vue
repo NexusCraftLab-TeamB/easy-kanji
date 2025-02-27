@@ -421,6 +421,10 @@ export default {
 
   .shop-rating-container {
     margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
   }
 
   .shop-rating {
@@ -449,6 +453,9 @@ export default {
     display: flex;
     gap: 16px;
     margin-top: 24px;
+    max-width: 500px;
+    margin: auto;
+    justify-content: center;
   }
 
   .share-btn, .review-btn {
@@ -456,6 +463,7 @@ export default {
     font-weight: 600;
     letter-spacing: 0.5px;
     transition: transform 0.2s, box-shadow 0.2s;
+    height: 40px;
   }
 
   .share-btn:hover {
@@ -482,7 +490,7 @@ export default {
     background-color: white;
     border-radius: 16px;
     padding: 24px;
-    margin-bottom: 24px;
+    margin-bottom: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   }
 
@@ -538,8 +546,7 @@ export default {
   .tags-and-departments {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-    margin-bottom: 24px;
+    gap: 12px;
   }
 
   .tags-container, .departments-container {
@@ -746,7 +753,7 @@ export default {
     }
     
     .content-section {
-      margin-top: -40px;
+      /* margin-top: -40px; */
     }
     
     .info-grid {
@@ -758,7 +765,12 @@ export default {
     }
     
     .action-buttons {
-      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .share-btn, .review-btn {
+      height: 48px;
+      font-size: 16px;
     }
   }
 
@@ -782,6 +794,17 @@ export default {
     
     .info-card, .tags-card, .departments-card, .sentiment-card, .reviews-section, .no-reviews-card {
       padding: 16px;
+    }
+    
+    .action-buttons {
+      margin-top: 20px;
+    }
+    
+    .share-btn, .review-btn {
+      width: 100%;
+      height: 52px;
+      padding: 12px 16px;
+      font-size: 16px;
     }
   }
 </style>
