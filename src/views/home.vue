@@ -130,7 +130,7 @@
 						};
 						
 						// APIリクエストを送信
-						const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/home', { params });
+						const response = await axios.get('https://dglqmlwttk.execute-api.ap-northeast-1.amazonaws.com/dev/home', { params });
 
 						// レスポンスのデータを保存
 						this.apiData = response.data;
