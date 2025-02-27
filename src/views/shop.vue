@@ -1,223 +1,354 @@
 <template>
   <div v-if="!loading" class="shop-container">
-    <div class="w-100 pt-3">
-      <v-card
-        :disabled="loading"
-        :loading="loading"
-        class="mx-auto mb-6"
-        max-width="600"
-      >
-        <v-img
-          max-height="600"
-          max-width="600"
-          :src="shop.shop_items[0]?.Photo || require('@/assets/nophoto.jpg')"
-          :alt="shop.shop_items[0]?.Name || '店舗画像'"
-          cover
-        ></v-img>
-
-        <v-card-item>
-          <!-- 店名 -->
-          <v-card-title class="pa-2">
-            <h1 class="font-weight-bold mt-0 text-wrap text-h5">
-              {{ shop.shop_items[0].Name }}
-            </h1>
-          </v-card-title>
-
-          <v-row class="my-1 mx-0 justify-center align-center">
-            <v-rating
-              :model-value="shop.shop_items[0].Rate"
-              color="amber"
-              density="compact"
-              size="normal"
-              class="pb-1"
-              half-increments
-              readonly
-            ></v-rating>
-
-            <p class="ms-2 mb-1 text-h6 font-weight-bold text-orange-darken-4">{{ shop.shop_items[0].Rate }}</p>
-            <span class="text-grey ms-1">
-              ({{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件' }})
-            </span>
-          </v-row>
-
-          <!-- ジャンル -->
-          <v-card-subtitle class="py-1" color="grey-darken-2">
-            <v-icon icon="mdi-silverware-fork-knife" size="small" class="me-1 pb-1"></v-icon>
+    <!-- ヒーローセクション -->
+    <div class="hero-section">
+      <div class="hero-overlay"></div>
+      <v-img
+        class="hero-image"
+        :src="shop.shop_items[0]?.Photo || require('@/assets/nophoto.jpg')"
+        :alt="shop.shop_items[0]?.Name || '店舗画像'"
+        cover
+        :gradient="'to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7)'"
+      ></v-img>
+      
+      <div class="hero-content">
+        <div class="hero-content-inner">
+          <div class="shop-badge">
+            <v-icon icon="mdi-silverware-fork-knife" size="small" class="mr-1"></v-icon>
             <span>{{ shop.shop_items[0].Genre }}</span>
-          </v-card-subtitle>
-
-          <!-- アクセス -->
-           <v-card-subtitle class="py-1" color="grey-darken-2">
-            <v-icon icon="mdi-train" size="small" class="me-1 pb-1"></v-icon>
-            <span>{{ shop.shop_items[0].mobile_access }}</span>
-          </v-card-subtitle>
-
-          <!-- 店舗情報 -->
-            <!-- 住所 -->
-            <v-card-subtitle class="mx-1">
-              <v-icon icon="mdi-map-marker" size="small" class="me-1 pb-1"></v-icon>
-              <span class="me-1">{{ shop.shop_items[0].Adress }}</span>
-            </v-card-subtitle>
-            <!-- ホットペッパーリンク -->
-            <v-card-subtitle class="mx-1">
-              <v-icon icon="mdi-link" size="small" class="me-1 pb-1"></v-icon>
-              <a :href="shop.shop_items[0].urls" target="_blank" rel="noopener noreferrer" class="me-1">ホットペッパーグルメで見る</a>
-            </v-card-subtitle>
-        </v-card-item>
-
-        <v-divider class="mx-4 mb-1"></v-divider>
-
-        <!-- レビューセクション -->
-        <template v-if="shop.review_items.length !== 0">
-          <!-- タグ一覧 -->
-          <v-card-subtitle class="my-1">タグ</v-card-subtitle>
-          <div class="px-4 mb-2">
-            <v-chip-group :mandatory="false" :center-active="true">
-              <v-chip
-                v-for="tag in shop.tag_items" 
-                :key="tag.TagName"
-                class="ma-1 custom-active-class"
-                variant="flat"
-              >
-                {{ tag.TagName }}
-              </v-chip>
-            </v-chip-group>
           </div>
-
-          <!-- 実績部署一覧 -->
-          <v-divider class="mx-4 mb-1"></v-divider>
-          <v-card-subtitle class="my-1">利用実績</v-card-subtitle>
-          <div class="px-4 mb-2">
-            <v-chip-group :mandatory="false" :center-active="true">
-              <v-chip
-                v-for="(section, index) in uniqueSections" 
-                :key="index"
-                class="ma-1"
-                variant="outlined"
-              >
-                {{ section }}
-              </v-chip>
-            </v-chip-group>
+          <h1 class="shop-title">{{ shop.shop_items[0].Name }}</h1>
+          <div class="shop-rating-container">
+            <div class="shop-rating">
+              <v-rating
+                :model-value="shop.shop_items[0].Rate"
+                color="amber"
+                density="compact"
+                size="small"
+                half-increments
+                readonly
+              ></v-rating>
+              <span class="rating-value">{{ shop.shop_items[0].Rate.toFixed(2) }}</span>
+            </div>
+            <span class="review-count">{{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件のレビュー' }}</span>
           </div>
-        </template>
-
-        <!-- ボタンセクション -->
-        <div class="py-5">
-          <v-row justify="center">
-            <v-col cols="10" md="8">
-              <v-row>
-                <v-col cols="6">
-                  <v-btn
-                    color="light-green-lighten-5"
-                    prepend-icon="mdi-share"
-                    rounded="lg"
-                    elevation="1"
-                    size="x-large"
-                    text="シェア"
-                    block
-                    @click="shareShop"
-                  ></v-btn>
-                </v-col>
-                <v-col cols="6">
-                  <v-btn
-                    color="green-darken-1"
-                    prepend-icon="mdi-check"
-                    rounded="lg"
-                    elevation="1"
-                    size="x-large"
-                    text="評価する"
-                    block
-                    @click="goToReview"
-                  ></v-btn>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
+          
+          <div class="action-buttons">
+            <v-btn
+              color="white"
+              prepend-icon="mdi-share-variant"
+              rounded="pill"
+              elevation="3"
+              variant="flat"
+              @click="shareShop"
+              class="share-btn"
+            >
+              シェア
+            </v-btn>
+            <v-btn
+              color="green-darken-1"
+              prepend-icon="mdi-star"
+              rounded="pill"
+              elevation="3"
+              @click="goToReview"
+              class="review-btn"
+            >
+              評価する
+            </v-btn>
+          </div>
         </div>
-      </v-card>
+      </div>
     </div>
 
-    <!-- レビュー表示 -->
-    <template v-if="shop.review_items.length !== 0">
-      <div class="review-container w-100">
-        <h2 class="heading">レビュー</h2>
+    <!-- コンテンツセクション -->
+    <div class="content-section">
+      <!-- 店舗情報と評価サマリーセクション -->
+      <v-container class="content-container">
+        <v-row>
+          <!-- 店舗情報カード -->
+          <v-col cols="12" md="6">
+            <v-card class="info-card" elevation="2" rounded="xl">
+              <v-card-title class="info-card-header d-flex align-center">
+                <v-icon icon="mdi-store" color="green-darken-1" class="mr-2"></v-icon>
+                <h2 class="section-title">店舗情報</h2>
+              </v-card-title>
+              
+              <v-card-text class="pa-0">
+                <v-list class="info-list">
+                  <v-list-item class="info-list-item">
+                    <template v-slot:prepend>
+                      <v-avatar color="green-lighten-4" class="info-icon-avatar">
+                        <v-icon icon="mdi-train" color="green-darken-1"></v-icon>
+                      </v-avatar>
+                    </template>
+                    <v-list-item-subtitle class="info-text">{{ shop.shop_items[0].mobile_access }}</v-list-item-subtitle>
+                  </v-list-item>
+                  
+                  <v-divider class="mx-4"></v-divider>
+                  
+                  <v-list-item class="info-list-item">
+                    <template v-slot:prepend>
+                      <v-avatar color="green-lighten-4" class="info-icon-avatar">
+                        <v-icon icon="mdi-map-marker" color="green-darken-1"></v-icon>
+                      </v-avatar>
+                    </template>
+                    <v-list-item-subtitle class="info-text">{{ shop.shop_items[0].Adress }}</v-list-item-subtitle>
+                  </v-list-item>
+                  
+                  <v-divider class="mx-4"></v-divider>
+                  
+                  <v-list-item class="info-list-item">
+                    <template v-slot:prepend>
+                      <v-avatar color="green-lighten-4" class="info-icon-avatar">
+                        <v-icon icon="mdi-link" color="green-darken-1"></v-icon>
+                      </v-avatar>
+                    </template>
+                    <v-list-item-subtitle>
+                      <a :href="shop.shop_items[0].urls" target="_blank" rel="noopener noreferrer" class="hotpepper-link">
+                        ホットペッパーグルメで見る
+                        <v-icon icon="mdi-open-in-new" size="x-small"></v-icon>
+                      </a>
+                    </v-list-item-subtitle>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </v-card>
+          </v-col>
 
-        <!-- 感情分析結果 -->
-        <div class="mb-2 mx-auto pt-0 emotion-results">
-          <v-card-subtitle class="mt-1">＼  <span class="font-weight-bold">{{ satisfactionComments[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>  ／</v-card-subtitle>
-          <span class="large-emoji">{{ satisfactionEmojis[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>
-          <div class="sentiment-bar">
-            <div class="positive-bar" :style="{ width: positivePoint + '%' }"></div>
-            <div class="negative-bar" :style="{ width: negativePoint + '%' }"></div>
-          </div>
-          <div class="percentage-labels">
-            <span class="positive-label">{{ positivePoint }}% ポジティブ</span>
-            <span class="negative-label">{{ negativePoint }}% ネガティブ</span>
-          </div>
-        </div>
-
-        <!-- フィルタ -->
-        <v-container fluid>
-          <v-row justify="space-between" align="center" gutter="16">
-            <!-- ユーザーフィルタ -->
-            <v-select
-              v-model="userFilter"
-              :items="['幹事', '参加者']"
-              label="ユーザータイプ"
-              clearable
-              class="tight-spacing"
-              style="width: 150px;"
-            ></v-select>
-
-            <!-- 部署フィルタ -->
-            <v-select
-              v-model="departmentFilter"
-              :items="uniqueSections"
-              label="部署"
-              clearable
-              class="tight-spacing"
-              style="width: 150px;"
-            ></v-select>
-
-            <!-- 評価フィルタ -->
-            <v-slider
-              v-model="ratingFilter"
-              :min="0"
-              :max="5"
-              step="0.5"
-              ticks
-              class="tight-spacing"
-              label="評価"
-              thumb-label
-              style="max-width: 300px;"
-            ></v-slider>
-          </v-row>
-        </v-container>
-
-        <!-- フィルタリングされたレビュー一覧 -->
-        <v-row align="center" justify="center" dense class="reviews">
-          <v-col cols="11" v-for="review in filteredReviews" :key="review.id">
-            <ReviewCard
-              :user="review.Role"
-              :department="review.Section"
-              :comment="review.Comment"
-              :rating="review.Rate"
-              :date="review.ReviewDate"
-              :peopleNum="review.PeopleNum"
-            />
+          <!-- 感情分析結果 (レビューがある場合のみ表示) -->
+          <v-col cols="12" md="6" v-if="shop.review_items.length !== 0">
+            <v-card class="sentiment-card" elevation="2" rounded="xl">
+              <v-card-title class="sentiment-card-header d-flex align-center">
+                <v-icon icon="mdi-emoticon" color="green-darken-1" class="mr-2"></v-icon>
+                <h2 class="section-title">みんなの評価</h2>
+              </v-card-title>
+              
+              <v-card-text class="sentiment-content">
+                <div class="sentiment-emoji-container">
+                  <span class="sentiment-emoji">{{ satisfactionEmojis[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>
+                  <h3 class="sentiment-title">{{ satisfactionComments[Math.min(Math.floor(positivePoint / 10), 9)] }}</h3>
+                </div>
+                
+                <div class="sentiment-bar-container">
+                  <div class="sentiment-score">
+                    <span class="score-value">{{ positivePoint }}%</span>
+                    <span class="score-label">満足度</span>
+                  </div>
+                  <v-progress-linear
+                    class="sentiment-progress"
+                    :model-value="positivePoint"
+                    color="green-darken-1"
+                    height="12"
+                    rounded
+                  ></v-progress-linear>
+                  <div class="percentage-labels">
+                    <span class="positive-label">ポジティブ {{ positivePoint }}%</span>
+                    <span class="negative-label">ネガティブ {{ negativePoint }}%</span>
+                  </div>
+                </div>
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
 
-      </div>
-    </template>
-    <template v-else>
-      <p class="no-reviews-message">レビューがありませんでした。</p>
-    </template>
+        <!-- タグと利用実績 (レビューがある場合のみ表示) -->
+        <v-row v-if="shop.review_items.length !== 0" class="mt-4">
+          <!-- タグ一覧 -->
+          <v-col cols="12" md="6" v-if="shop.tag_items.length > 0">
+            <v-card class="tags-card" elevation="2" rounded="xl">
+              <v-card-title class="tags-card-header d-flex align-center">
+                <v-icon icon="mdi-tag-multiple" color="green-darken-1" class="mr-2"></v-icon>
+                <h2 class="section-title">タグ</h2>
+              </v-card-title>
+              <v-card-text class="tags-container">
+                <v-chip
+                  v-for="tag in shop.tag_items" 
+                  :key="tag.TagName"
+                  class="tag-chip"
+                  color="amber-lighten-4"
+                  variant="elevated"
+                  size="small"
+                  label
+                >
+                  <v-icon start icon="mdi-tag" size="x-small"></v-icon>
+                  {{ tag.TagName }}
+                </v-chip>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          
+          <!-- 利用実績部署 -->
+          <v-col cols="12" md="6">
+            <v-card class="departments-card" elevation="2" rounded="xl">
+              <v-card-title class="departments-card-header d-flex align-center">
+                <v-icon icon="mdi-account-group" color="green-darken-1" class="mr-2"></v-icon>
+                <h2 class="section-title">利用実績</h2>
+              </v-card-title>
+              <v-card-text class="departments-container">
+                <v-chip
+                  v-for="(section, index) in uniqueSections" 
+                  :key="index"
+                  class="department-chip"
+                  color="green-lighten-3"
+                  variant="elevated"
+                  size="small"
+                  label
+                >
+                  <v-icon start icon="mdi-office-building" size="x-small"></v-icon>
+                  {{ section }}
+                </v-chip>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+
+        <!-- レビューセクション (レビューがある場合のみ表示) -->
+        <v-row class="mt-4">
+          <v-col cols="12">
+            <v-card v-if="shop.review_items.length !== 0" class="reviews-section" elevation="2" rounded="xl">
+              <v-card-title class="reviews-header d-flex align-center">
+                <div class="d-flex align-center">
+                  <v-icon icon="mdi-comment-multiple" color="green-darken-1" class="mr-2"></v-icon>
+                  <h2 class="section-title">レビュー</h2>
+                  <v-chip class="ml-3 review-count-chip" color="green-lighten-5" size="small">
+                    <span>{{ shop.review_items.length }}件</span>
+                  </v-chip>
+                </div>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="green-darken-1"
+                  variant="elevated"
+                  rounded="pill"
+                  prepend-icon="mdi-star"
+                  @click="goToReview"
+                  class="review-action-btn"
+                  size="small"
+                >
+                  評価する
+                </v-btn>
+              </v-card-title>
+              
+              <!-- フィルタ -->
+              <v-card-text class="pa-0">
+                <v-sheet class="filter-sheet mx-4 my-2">
+                  <v-expand-transition>
+                    <v-card class="filter-card" flat>
+                      <v-expansion-panels variant="accordion" class="filter-panel">
+                        <v-expansion-panel>
+                          <v-expansion-panel-title>
+                            <div class="filter-title">
+                              <v-icon icon="mdi-filter-variant" color="green-darken-1" class="mr-2"></v-icon>
+                              フィルター
+                            </div>
+                          </v-expansion-panel-title>
+                          <v-expansion-panel-text>
+                            <div class="filter-content">
+                              <v-select
+                                v-model="userFilter"
+                                :items="['幹事', '参加者']"
+                                label="ユーザータイプ"
+                                clearable
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                class="filter-select"
+                              ></v-select>
+
+                              <v-select
+                                v-model="departmentFilter"
+                                :items="uniqueSections"
+                                label="部署"
+                                clearable
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                class="filter-select"
+                              ></v-select>
+
+                              <v-select
+                                v-model="ratingFilter"
+                                :items="ratingOptions"
+                                item-title="title"
+                                item-value="value"
+                                label="評価（以上）"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                class="filter-select"
+                              ></v-select>
+                            </div>
+                          </v-expansion-panel-text>
+                        </v-expansion-panel>
+                      </v-expansion-panels>
+                    </v-card>
+                  </v-expand-transition>
+                </v-sheet>
+
+                <!-- レビュー一覧 -->
+                <div class="reviews-container">
+                  <transition-group name="review-transition">
+                    <div v-if="filteredReviews.length > 0" key="reviews">
+                      <v-row class="reviews-grid">
+                        <v-col v-for="review in filteredReviews" :key="review.id" cols="12" sm="6" md="6" lg="4" xl="4" class="review-grid-item">
+                          <ReviewCard
+                            :user="review.Role"
+                            :department="review.Section"
+                            :comment="review.Comment"
+                            :rating="review.Rate"
+                            :date="review.ReviewDate"
+                            :peopleNum="review.PeopleNum"
+                          />
+                        </v-col>
+                      </v-row>
+                    </div>
+                    <div v-else class="no-filtered-reviews" key="no-reviews">
+                      <v-icon icon="mdi-filter-remove" size="large" color="grey-lighten-1"></v-icon>
+                      <p>条件に一致するレビューがありません</p>
+                      <v-btn
+                        color="grey-darken-1"
+                        variant="text"
+                        size="small"
+                        prepend-icon="mdi-filter-remove-outline"
+                        @click="clearFilters"
+                        class="mt-3"
+                      >
+                        フィルターをクリア
+                      </v-btn>
+                    </div>
+                  </transition-group>
+                </div>
+              </v-card-text>
+            </v-card>
+            
+            <!-- レビューがない場合 -->
+            <v-card v-else class="no-reviews-card" elevation="2" rounded="xl">
+              <v-card-text class="no-reviews-content">
+                <v-icon icon="mdi-comment-alert-outline" size="x-large" color="grey-lighten-1"></v-icon>
+                <p>レビューがありませんでした。最初のレビューを投稿してみませんか？</p>
+                <v-btn
+                  color="green-darken-1"
+                  prepend-icon="mdi-star"
+                  rounded="pill"
+                  elevation="2"
+                  @click="goToReview"
+                  class="mt-4 review-cta-btn"
+                >
+                  評価する
+                </v-btn>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </div>
 
   <!-- ローディングインジケーター -->
-  <div v-else>
-    <v-progress-circular indeterminate color="primary"></v-progress-circular>
+  <div v-else class="loading-container">
+    <div class="loading-content">
+      <v-progress-circular indeterminate color="green-darken-1" size="64"></v-progress-circular>
+      <p>店舗情報を読み込み中...</p>
+    </div>
   </div>
 </template>
 
@@ -250,6 +381,14 @@ export default {
       userFilter: null,
       departmentFilter: null,
       ratingFilter: 0,
+      ratingOptions: [
+        { title: 'すべて', value: 0 },
+        { title: '★1以上', value: 1 },
+        { title: '★2以上', value: 2 },
+        { title: '★3以上', value: 3 },
+        { title: '★4以上', value: 4 },
+        { title: '★5のみ', value: 5 }
+      ],
       positivePoint: 0,
       negativePoint: 0
     };
@@ -291,7 +430,7 @@ export default {
   methods: {
     // ショップをシェアするメソッド
     shareShop() {
-      const url = `https://main.d2tcvdo7qdeeoh.amplifyapp.com/shop/${this.ShopId}`;
+      const url = `https://main.d3svezmi1xi8mk.amplifyapp.com//shop/${this.ShopId}`;
 
       // Clipboard APIのサポートを確認
       if (navigator.clipboard) {
@@ -318,119 +457,767 @@ export default {
         path: "/review",
         query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
       });
+    },
+    clearFilters() {
+      this.userFilter = null;
+      this.departmentFilter = null;
+      this.ratingFilter = 0;
     }
   },
 };
 </script>
 
 <style scoped>
-  .filter-container {
-    background-color: #f7f7f7; /* ここを全体の背景色に合わせて変更 */
-    padding: 20px;
-    border-radius: 10px;
-  }
-
+  /* 全体のコンテナ */
   .shop-container {
-    max-width: 800px;
-    margin: auto;
-  }
-  
-  .review-container {
-    margin-top: 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    background-color: #f8f9fa;
   }
 
-  .heading {
-    font-size: 24px;
-    font-weight: bold;
+  /* ローディングコンテナ */
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #f8f9fa;
+    z-index: 999;
+  }
+
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    padding: 24px;
+    border-radius: 16px;
+    background-color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .loading-content p {
+    margin-top: 16px;
+    color: #616161;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ヒーローセクション */
+  .hero-section {
+    position: relative;
+    height: 60vh;
+    min-height: 450px;
+    max-height: 700px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+    z-index: 1;
+  }
+
+  .hero-image {
+    height: 100%;
+    width: 100%;
+    transform: scale(1.05);
+    transition: transform 10s ease;
+  }
+
+  .hero-section:hover .hero-image {
+    transform: scale(1);
+  }
+
+  .hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 60px 40px;
+    z-index: 2;
+    color: white;
+    text-align: center;
+  }
+
+  .hero-content-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .shop-badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .shop-title {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  .shop-rating-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .shop-rating {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    margin-right: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .rating-value {
+    font-weight: 700;
+    font-size: 18px;
+    margin-left: 8px;
+    color: #FFC107;
+  }
+
+  .review-count {
+    font-size: 15px;
+    opacity: 0.9;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 24px;
+    max-width: 500px;
+    margin: auto;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .share-btn, .review-btn {
+    flex: 1;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    height: 48px;
+    max-width: 200px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .share-btn {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #333 !important;
+  }
+
+  .share-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    background-color: white !important;
+  }
+
+  .review-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  /* コンテンツセクション */
+  .content-section {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 3;
+  }
+
+  .content-container {
+    padding: 10px 0px;
+  }
+
+  /* 店舗情報と評価サマリーセクション */
+  .shop-summary-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* タグと利用実績コンテナ */
+  .tags-departments-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* 共通カードスタイル */
+  .info-card, .tags-card, .departments-card, .sentiment-card, .reviews-section, .no-reviews-card {
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .info-card:hover, .tags-card:hover, .departments-card:hover, .sentiment-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* カードヘッダー */
+  .info-card-header, .tags-card-header, .departments-card-header, .sentiment-card-header, .reviews-header {
+    background-color: #f8faf8;
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  /* セクションタイトル */
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2e7d32;
+    margin: 0;
+  }
+
+  /* 店舗情報リスト */
+  .info-list {
+    padding: 0;
+  }
+
+  .info-list-item {
+    padding: 16px 24px;
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  .info-icon-avatar {
+    margin-right: 16px;
+    flex-shrink: 0;
+  }
+
+  .info-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #757575;
+    margin-bottom: 6px;
+  }
+
+  .info-text {
+    font-size: 14px;
+    color: #212121;
+    line-height: 1.6;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    white-space: normal;
+    display: block;
+    text-align: left;
+  }
+
+  /* 感情分析カード */
+  .sentiment-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+  }
+
+  .sentiment-emoji-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .sentiment-emoji {
+    font-size: 48px;
+    display: block;
     margin-bottom: 8px;
   }
 
-  .no-reviews-message {
-    text-align: center;
-    margin-top: 20px;
+  .sentiment-title {
     font-size: 18px;
-    color: grey; 
+    font-weight: 600;
+    color: #424242;
   }
 
-  .image-gallery {
-    margin: 40px 0;
-    text-align: center;
-  }
-
-  .image-grid {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-  }
-
-  .image-grid img {
+  .sentiment-bar-container {
     width: 100%;
-    height: auto;
-    border-radius: 8px;
+    margin-top: 16px;
   }
 
-  .custom-active-class {
-    background-color: #FFC107 !important;
-    color: black !important;
+  .sentiment-score {
+    text-align: center;
+    margin-bottom: 12px;
   }
 
-  .large-emoji {
-    font-size: 1.5em; /* 必要に応じてサイズを調整 */
-    padding: 5px; /* パディングを追加 */
-    margin-bottom: 0.3rem;
-    border-radius: 5px; /* 角を丸くする */
+  .score-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2e7d32;
   }
 
-  /* 感情分析グラフ */
-  .emotion-results {
-    max-width: 800px;
-  }
-  .sentiment-bar {
-    display: flex;
-    width: 80%;
-    height: 30px;
-    margin: 0 auto;
-    background-color: #e0e0e0;
-    border-radius: 15px;
-    overflow: hidden;
+  .score-label {
+    font-size: 14px;
+    color: #757575;
+    margin-left: 8px;
   }
 
-  .positive-bar {
-    background-color: #4caf50; /* 緑色 */
-    height: 100%;
-  }
-
-  .negative-bar {
-    background-color: #f44336; /* 赤色 */
-    height: 100%;
+  .sentiment-progress {
+    margin-bottom: 12px;
   }
 
   .percentage-labels {
     display: flex;
     justify-content: space-between;
-    width: 80%;
-    margin: 10px auto 0px auto;
-  }
-
-  .v-select, .v-slider {
-    margin-bottom: 0; /* 各フィルタの下の余白を取り除く */
-  }
-  
-  .custom-active-class {
-      background-color: #FFC107 !important;
-      color: black !important;
+    margin-top: 8px;
   }
 
   .positive-label {
     color: #4caf50;
-    font-weight: bold;
-    font-size: 0.8em;
+    font-weight: 600;
+    font-size: 14px;
   }
 
   .negative-label {
     color: #f44336;
-    font-weight: bold;
-    font-size: 0.8em;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* タグとチップ */
+  .tags-container, .departments-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 24px;
+  }
+
+  .tag-chip, .department-chip {
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+  }
+
+  .tag-chip:hover, .department-chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* レビューセクション */
+  .reviews-section {
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+
+  .reviews-header {
+    padding: 16px 24px;
+    background-color: #f8faf8;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .review-count-chip {
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .review-action-btn {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .review-action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .filter-sheet {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .filter-card {
+    margin: 0;
+    background-color: #fafafa;
+  }
+
+  .filter-panel {
+    box-shadow: none;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .filter-title {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #424242;
+    font-size: 14px;
+  }
+
+  .filter-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px 0 8px;
+  }
+
+  .filter-select {
+    width: 100%;
+  }
+
+  .reviews-container {
+    padding: 16px 24px 24px;
+  }
+
+  .reviews-grid {
+    margin: 0 -8px;
+  }
+
+  .review-grid-item {
+    padding: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .review-transition-enter-active,
+  .review-transition-leave-active {
+    transition: all 0.5s ease;
+  }
+
+  .review-transition-enter-from,
+  .review-transition-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .no-filtered-reviews {
+    text-align: center;
+    padding: 40px 0;
+    color: #757575;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    margin: 8px;
+  }
+
+  .no-filtered-reviews p {
+    margin-top: 16px;
+    font-size: 15px;
+  }
+
+  /* レビューなしカード */
+  .no-reviews-content {
+    text-align: center;
+    padding: 40px;
+  }
+
+  .no-reviews-content p {
+    margin: 16px 0;
+    color: #616161;
+    font-size: 16px;
+  }
+
+  .review-cta-btn {
+    min-width: 160px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* ホットペッパーリンク */
+  .hotpepper-link {
+    color: #ff5722;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .hotpepper-link:hover {
+    color: #e64a19;
+    text-decoration: underline;
+  }
+
+  /* レスポンシブ対応 */
+  @media (max-width: 960px) {
+
+    .content-container {
+      padding: 30px 0px;
+    }
+
+    .content-section {
+      margin-top: -20px;
+    }
+    
+    .hero-section {
+      height: 55vh;
+    }
+    
+    .shop-title {
+      font-size: 36px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    
+    .hero-section {
+      height: 50vh;
+      min-height: 350px;
+    }
+    
+    .hero-content {
+      padding: 40px 24px;
+    }
+    
+    .shop-title {
+      font-size: 32px;
+    }
+    
+    .shop-badge {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+    
+    .shop-rating {
+      padding: 6px 14px;
+    }
+    
+    .rating-value {
+      font-size: 16px;
+    }
+    
+    .review-count {
+      font-size: 14px;
+    }
+    
+    .action-buttons {
+      gap: 16px;
+    }
+    
+    .share-btn, .review-btn {
+      height: 44px;
+    }
+    
+    .info-list-item {
+      padding: 12px 16px;
+    }
+    
+    .info-icon-avatar {
+      margin-right: 12px;
+      width: 36px !important;
+      height: 36px !important;
+    }
+    
+    .info-text {
+      font-size: 13px;
+    }
+    
+    .sentiment-emoji {
+      font-size: 40px;
+    }
+    
+    .score-value {
+      font-size: 28px;
+    }
+    
+    .reviews-header {
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .review-action-btn {
+      align-self: flex-start;
+    }
+    
+    .filter-content {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .reviews-grid {
+      margin: 0 -4px;
+    }
+    
+    .review-grid-item {
+      padding: 4px;
+    }
+  }
+
+  @media (max-width: 480px) {
+
+    .content-section {
+      padding: 0 12px;
+      /* margin-top: -20px; */
+    }
+    
+    .hero-section {
+      height: 45vh;
+      min-height: 300px;
+    }
+    
+    .hero-content {
+      padding: 30px 16px;
+    }
+    
+    .shop-title {
+      font-size: 26px;
+      margin-bottom: 16px;
+    }
+    
+    .shop-badge {
+      padding: 5px 12px;
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+    
+    .shop-rating {
+      padding: 5px 12px;
+      margin-right: 10px;
+    }
+    
+    .rating-value {
+      font-size: 15px;
+    }
+    
+    .review-count {
+      font-size: 12px;
+      padding: 4px 10px;
+    }
+    
+    .action-buttons {
+      gap: 12px;
+      margin-top: 0px;
+    }
+    
+    .share-btn, .review-btn {
+      height: 42px;
+      font-size: 14px;
+    }
+    
+    .section-title {
+      font-size: 16px;
+    }
+    
+    .info-card-header, .tags-card-header, .departments-card-header, .sentiment-card-header,
+    .info-list-item, .tags-container, .departments-container, .sentiment-content, .reviews-container {
+      padding: 12px 16px;
+    }
+    
+    .info-icon-avatar {
+      width: 32px !important;
+      height: 32px !important;
+      min-width: 32px !important;
+    }
+    
+    .info-text {
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    
+    .sentiment-emoji {
+      font-size: 36px;
+    }
+    
+    .score-value {
+      font-size: 24px;
+    }
+    
+    .filter-content {
+      grid-template-columns: 1fr;
+    }
+    
+    .reviews-container {
+      padding: 12px 16px 16px;
+    }
+    
+    .filter-sheet {
+      margin: 0 8px 12px;
+    }
+    
+    .filter-title {
+      font-size: 13px;
+    }
+    
+    .review-count-chip {
+      font-size: 11px;
+    }
+    
+    .reviews-grid {
+      margin: 0;
+    }
+    
+    .review-grid-item {
+      padding: 4px 0;
+    }
+    
+    .no-filtered-reviews {
+      padding: 30px 0;
+      margin: 4px 0;
+    }
+    
+    .no-filtered-reviews p {
+      font-size: 14px;
+    }
   }
 </style>
