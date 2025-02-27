@@ -257,7 +257,7 @@ export default {
   async created() {
     // ショップデータを取得
     try {
-      const response = await axios.get('https://z7amnjz9n1.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
+      const response = await axios.get('https://dglqmlwttk.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
         params: { shop_id: this.ShopId }
       });
       this.shop = response.data;
