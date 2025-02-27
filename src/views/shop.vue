@@ -194,6 +194,8 @@
                     <v-select
                       v-model="ratingFilter"
                       :items="ratingOptions"
+                      item-title="title"
+                      item-value="value"
                       label="評価（以上）"
                       variant="outlined"
                       density="compact"
@@ -284,6 +286,14 @@ export default {
       userFilter: null,
       departmentFilter: null,
       ratingFilter: 0,
+      ratingOptions: [
+        { title: 'すべて', value: 0 },
+        { title: '★1以上', value: 1 },
+        { title: '★2以上', value: 2 },
+        { title: '★3以上', value: 3 },
+        { title: '★4以上', value: 4 },
+        { title: '★5のみ', value: 5 }
+      ],
       positivePoint: 0,
       negativePoint: 0
     };
