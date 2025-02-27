@@ -430,7 +430,7 @@ export default {
   methods: {
     // ショップをシェアするメソッド
     shareShop() {
-      const url = `https://main.d2tcvdo7qdeeoh.amplifyapp.com/shop/${this.ShopId}`;
+      const url = `https://main.d3svezmi1xi8mk.amplifyapp.com//shop/${this.ShopId}`;
 
       // Clipboard APIのサポートを確認
       if (navigator.clipboard) {
