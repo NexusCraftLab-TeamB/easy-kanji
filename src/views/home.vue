@@ -112,8 +112,18 @@
 				this.budget = data.budget; // 予算をセット
 				this.performance = data.performance; // 実績をセット
 				this.peopleNum = data.peopleNum; // 人数をセット
+
+
+				//  ジャンルが選択されていて、場所が未選択の場合にアラートを表示
+				if (this.genre && !this.location) {
+					alert("ジャンルを選択した場合は、場所も選択してください。");
+					this.submited = false; //  検索結果画面を表示しない**
+					return ; //  ここで処理終了**
+				}
+
 				this.submited = true; // データが送信されたことを示すフラグ
 				this.fetchData(); // APIを呼び出す
+
 			},
 			// APIを呼び出す
 			async fetchData() {
@@ -136,6 +146,7 @@
 						this.apiData = response.data;
 						this.searchError = false;  // エラーフラグをリセット
 						console.log(this.apiData);
+
 				} catch (error) {
 					// 404エラーの場合に「検索結果がありません」というフラグを設定
 					if (error.response && error.response.status === 404) {
