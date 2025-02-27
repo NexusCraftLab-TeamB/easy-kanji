@@ -475,6 +475,51 @@ export default {
     background-color: #f8f9fa;
   }
 
+  /* ローディングコンテナ */
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #f8f9fa;
+    z-index: 999;
+  }
+
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    border-radius: 16px;
+    background-color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .loading-content p {
+    margin-top: 16px;
+    color: #616161;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   /* ヒーローセクション */
   .hero-section {
     position: relative;
@@ -563,7 +608,7 @@ export default {
   }
 
   .shop-rating-container {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1102,7 +1147,7 @@ export default {
     
     .action-buttons {
       gap: 12px;
-      margin-top: 16px;
+      margin-top: 0px;
     }
     
     .share-btn, .review-btn {
