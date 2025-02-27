@@ -128,7 +128,7 @@ export default {
     async fetchShopName() {
       const shopId = this.$route.query.shop_id;
       try {
-        const response = await axios.get(`https://dglqmlwttk.execute-api.ap-northeast-1.amazonaws.com/dev/shop?shop_id=${shopId}`);
+        const response = await axios.get(`https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/shop?shop_id=${shopId}`);
         if (response.data.shop_items.length > 0) {
           this.shopName = response.data.shop_items[0].Name;
           this.shopImage = response.data.shop_items[0].Photo;
@@ -155,7 +155,7 @@ export default {
             peopleNum: Number(this.peopleNum),  // 入力された人数を数値に変換して送信
           };
 
-          const response = await axios.post('https://dglqmlwttk.execute-api.ap-northeast-1.amazonaws.com/dev/review', requestBody);
+          const response = await axios.post('https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/review', requestBody);
           this.showSnackbar = true;
 
           if (response.status === 200) {

@@ -10,8 +10,8 @@
         <v-img
           max-height="600"
           max-width="600"
-          :src="shop.shop_items[0].Photo || require('@/assets/nophoto.jpg')"
-          :alt="shop.shop_items[0].Name"
+          :src="shop.shop_items[0]?.Photo || require('@/assets/nophoto.jpg')"
+          :alt="shop.shop_items[0]?.Name || '店舗画像'"
           cover
         ></v-img>
 
@@ -257,13 +257,15 @@ export default {
   async created() {
     // ショップデータを取得
     try {
-      const response = await axios.get('https://dglqmlwttk.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
+      const response = await axios.get('https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
         params: { shop_id: this.ShopId }
       });
       this.shop = response.data;
       this.positivePoint = Math.round(this.shop.shop_items[0].positive_percentage);
       this.negativePoint = Math.round(this.shop.shop_items[0].negative_percentage);
       document.title = `${this.shop.shop_items[0].Name} | Easy Kanji`; // ページタイトルを更新する
+
+      console.log("shop",this.shop);
     } catch (error) {
       console.error('Error fetching shop data:', error);
     } finally {
