@@ -28,7 +28,7 @@
                 half-increments
                 readonly
               ></v-rating>
-              <span class="rating-value">{{ shop.shop_items[0].Rate }}</span>
+              <span class="rating-value">{{ shop.shop_items[0].Rate.toFixed(2) }}</span>
             </div>
             <span class="review-count">{{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件のレビュー' }}</span>
           </div>
