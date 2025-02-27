@@ -4,13 +4,14 @@
 		<ShopSearchForm @submit-data="handleFormData" class="centered-form"/>
   </div>
 
-	<div class="search-conditions">
-		<div v-if="submited" class="mx-5">
-			<div class="d-flex align-end justify-center ps-3">
-				<h2 class="mt-3">検索結果</h2>
-				<span class="mb-1">（{{ apiData.length }}件)</span>
+	<div class="content-container">
+		<!-- 検索結果表示エリア -->
+		<div v-if="submited" class="search-results-container">
+			<div class="search-header">
+				<h2>検索結果</h2>
+				<span class="result-count">（{{ apiData.length }}件)</span>
 			</div>
-			<div class="conditions">
+			<div class="search-conditions">
 				<div class="chip-group">
 					<div class="chip" v-if="keyword">
 						<v-icon class="chip-icon" color="black">mdi-magnify</v-icon>
@@ -40,21 +41,130 @@
 						<v-icon class="chip-icon" color="black">mdi-account-multiple</v-icon>
 						<span>人数：</span><strong>{{ `${peopleNum}人以上` }} </strong>
 					</div>
-				</div>
-			</div>
-		</div>
-		<div v-else>
-			<h2>おすすめ</h2>
 		</div>
 	</div>
 
 	<ShopList
 		:apiData="apiData"
 	/>
-	<div v-if="searchError || apiData.length === 0">
-		<p class="mt-5">検索結果がありません。</p>
+			<div v-if="searchError || apiData.length === 0" class="no-results">
+				<v-icon size="large" color="grey">mdi-emoticon-sad-outline</v-icon>
+				<p>検索結果がありません。条件を変更して再度お試しください。</p>
+			</div>
+		</div>
+		
+		<!-- 検索していない場合のホーム画面 -->
+		<div v-else class="home-content">
+			<!-- おすすめセクション -->
+			<section class="section-container">
+				<div class="section-header">
+					<h2>おすすめのお店</h2>
+					<a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
+				</div>
+				<div class="section-divider"></div>
+				<div class="scrollable-container">
+					<div class="scrollable-content">
+						<!-- おすすめ店舗カード（APIデータ使用） -->
+						<div v-for="(shop, index) in apiData.slice(0, 8)" :key="`recommended-${index}`" class="shop-card" @click="navigateToShop(shop.ShopId)">
+							<div class="shop-image" :style="`background-image: url(${shop.Photo ? shop.Photo : require('@/assets/nophoto.jpg')})`">
+								<div class="shop-rating" v-if="shop.Rate">
+									<v-icon color="amber" size="small">mdi-star</v-icon>
+									<span>{{ shop.Rate.toFixed(1) }}</span>
+								</div>
+							</div>
+							<div class="shop-info">
+								<h3>{{ shop.Name || 'おすすめ店舗' }}</h3>
+								<div class="shop-tags">
+									<span>{{ shop.Genre || '和食' }}</span>
+									<span v-if="shop.Budget">{{ shop.Budget }}</span>
+									<span v-else>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
+								</div>
+								<p class="shop-access">{{ shop.mobile_access || '最寄り駅から徒歩10分' }}</p>
+							</div>
+						</div>
+						<!-- APIデータが不足している場合はモックデータで補完 -->
+						<div v-if="apiData.length < 8" v-for="i in (8 - apiData.length)" :key="`mock-${i}`" class="shop-card">
+							<div class="shop-image" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`">
+								<div class="shop-rating">
+									<v-icon color="amber" size="small">mdi-star</v-icon>
+									<span>{{ (3 + Math.random() * 2).toFixed(1) }}</span>
+								</div>
+							</div>
+							<div class="shop-info">
+								<h3>おすすめ店舗 {{ i }}</h3>
+								<div class="shop-tags">
+									<span>和食</span>
+									<span>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
+								</div>
+								<p class="shop-access">渋谷駅から徒歩{{ Math.floor(Math.random() * 10 + 1) }}分</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			
+			<!-- 最近投稿されたレビューセクション -->
+			<section class="section-container">
+				<div class="section-header">
+					<h2>最近投稿されたレビュー</h2>
+					<a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
+				</div>
+				<div class="section-divider"></div>
+				<div class="scrollable-container">
+					<div class="scrollable-content">
+						<!-- レビューカード（モック） -->
+						<div v-for="i in 6" :key="`review-${i}`" class="review-card">
+							<div class="review-header">
+								<div class="user-avatar" :style="`background-color: hsl(${i * 40}, 70%, 80%)`">
+									<span>{{ String.fromCharCode(64 + i) }}</span>
+								</div>
+								<div class="review-meta">
+									<div class="user-name">幹事さん</div>
+									<div class="review-date">{{ new Date().toLocaleDateString('ja-JP') }}</div>
+								</div>
+								<div class="review-rating">
+									<v-rating
+										:model-value="3 + Math.random() * 2"
+										color="amber"
+										density="compact"
+										size="small"
+										half-increments
+										readonly
+									></v-rating>
+								</div>
+							</div>
+							<div class="review-shop">
+								<v-icon size="small" color="grey">mdi-storefront</v-icon>
+								<span>{{ apiData[i % apiData.length]?.Name || `レビュー店舗 ${i}` }}</span>
+							</div>
+							<p class="review-text">
+								とても美味しかったです！接客も丁寧で、また行きたいと思います。
+								{{ i % 2 === 0 ? '雰囲気も良く、デートにもおすすめです。' : '値段もリーズナブルで、コスパ最高でした！' }}
+							</p>
+							<div class="review-photos" v-if="i % 3 !== 0">
+								<div class="review-photo" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`"></div>
+								<div class="review-photo" v-if="i % 2 === 0" :style="`background-image: url(${require('@/assets/home-image0' + ((i + 2) % 9 + 1) + '.jpg')})`"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			
+			<!-- 人気のエリアセクション -->
+			<section class="section-container">
+				<div class="section-header">
+					<h2>人気のエリア</h2>
+				</div>
+				<div class="section-divider"></div>
+				<div class="area-grid">
+					<div v-for="(area, index) in popularAreas" :key="index" class="area-card" :style="`background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${area.image})`">
+						<h3>{{ area.name }}</h3>
+						<span>{{ area.count }}件</span>
+					</div>
+				</div>
+			</section>
+		</div>
 	</div>
-
 </template>
   
 <script>
@@ -78,6 +188,7 @@
 				performance: '',
 				peopleNum: '',
 				formData: {},
+				submited: false,
 				currentImageIndex: 0,
 				backgroundImages: [
 					require('@/assets/home-image01.jpg'),
@@ -90,7 +201,16 @@
 					require('@/assets/home-image08.jpg'),
 					require('@/assets/home-image09.jpg')
 				],
-				intervalId: null
+				intervalId: null,
+				// 人気エリアのモックデータ
+				popularAreas: [
+					{ name: '渋谷', count: 256, image: require('@/assets/home-image01.jpg') },
+					{ name: '新宿', count: 312, image: require('@/assets/home-image02.jpg') },
+					{ name: '池袋', count: 187, image: require('@/assets/home-image03.jpg') },
+					{ name: '銀座', count: 203, image: require('@/assets/home-image04.jpg') },
+					{ name: '六本木', count: 178, image: require('@/assets/home-image05.jpg') },
+					{ name: '恵比寿', count: 165, image: require('@/assets/home-image06.jpg') }
+				]
 			};
 		},
 		methods: {
@@ -156,6 +276,12 @@
 						console.error('Error fetching data:', error);
 					}
 				}
+			},
+			// 店舗詳細ページへ遷移
+			navigateToShop(shopId) {
+				if (shopId) {
+					window.location.href = `/shop/${shopId}`;
+				}
 			}
 		},
 		mounted() {
@@ -193,111 +319,373 @@
 </script>
 
 <style scoped>
-
-	.search-container {
-			padding: 20px;
-			background-color: white;
-			margin: 20px;
-			border-radius: 10px;
-			box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+	/* 全体のコンテナスタイル */
+	.content-container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 16px;
 	}
 
-	textarea {
-			width: 100%;
-			padding: 15px;
-			border: 2px solid #97e094;
-			border-radius: 10px;
-			font-size: 16px;
-			margin-bottom: 20px;
-			height: 100px;
+	/* 検索結果コンテナ */
+	.search-results-container {
+		background-color: #fff;
+		border-radius: 12px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+		padding: 24px;
+		margin-bottom: 32px;
 	}
 
-	.form-group {
-			margin-bottom: 20px;
+	/* 検索ヘッダー */
+	.search-header {
+		display: flex;
+		align-items: flex-end;
+		margin-bottom: 16px;
 	}
 
-	label {
-			display: block;
-			margin-bottom: 5px;
-			font-weight: bold;
+	.search-header h2 {
+		font-size: 24px;
+		font-weight: 700;
+		margin: 0;
+		margin-right: 8px;
+		color: #333;
 	}
 
-	select {
-			width: 100%;
-			padding: 10px;
-			border-radius: 5px;
-			border: 1px solid #ccc;
-			font-size: 16px;
+	.result-count {
+		color: #666;
+		font-size: 16px;
+		margin-bottom: 4px;
 	}
 
-	button {
-			padding: 10px;
-			background-color: #97e094;
+	/* 検索条件チップ */
+	.search-conditions {
+		margin-bottom: 24px;
+	}
+
+	.chip-group {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid #e8f5e9; /* 薄い緑色に変更 */
+	}
+
+	.chip {
+		display: flex;
+		align-items: center;
+		padding: 6px 12px;
+		border-radius: 100px;
+		background-color: #e8f5e9; /* 薄い緑色に変更 */
+		font-size: 14px;
+		transition: all 0.2s ease;
+	}
+
+	.chip:hover {
+		background-color: #c8e6c9; /* ホバー時の色を緑系に変更 */
+		transform: translateY(-1px);
+	}
+
+	.chip-icon {
+		margin-right: 6px;
+	}
+
+	.chip strong {
+		font-weight: 600;
+		color: #2e7d32; /* 緑色に変更 */
+	}
+
+	/* 検索結果なしの表示 */
+	.no-results {
+		text-align: center;
+		padding: 48px 0;
+		color: #666;
+	}
+
+	.no-results p {
+		margin-top: 16px;
+		font-size: 16px;
+	}
+
+	/* ホームコンテンツ */
+	.home-content {
+		padding: 16px 0;
+	}
+
+	/* セクションコンテナ */
+	.section-container {
+		margin-bottom: 24px;
+		background-color: #fff;
+		border-radius: 12px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+		padding: 24px;
+		position: relative;
+	}
+
+	/* セクション区切り線 */
+	.section-divider {
+		height: 2px;
+		background: linear-gradient(to right, #2e7d32, #81c784); /* 緑系のグラデーションに変更 */
+		margin: 8px 0 20px 0;
+		border-radius: 2px;
+	}
+
+	/* セクションヘッダー */
+	.section-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 8px;
+	}
+
+	.section-header h2 {
+		font-size: 22px;
+		font-weight: 700;
+		color: #333;
+		margin: 0;
+	}
+
+	.view-all {
+		display: flex;
+		align-items: center;
+		color: #333;
+		text-decoration: none;
+		font-size: 14px;
+		font-weight: 600;
+		transition: color 0.2s ease;
+	}
+
+	.view-all:hover {
+		color: #666
+	}
+
+	/* スクロール可能なコンテナ */
+	.scrollable-container {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: thin; /* Firefox */
+		-ms-overflow-style: -ms-autohiding-scrollbar; /* IE and Edge */
+		padding-bottom: 8px;
+		padding: 0 2px; /* セクションのパディングを内側に追加 */
+	}
+
+	.scrollable-container::-webkit-scrollbar {
+		height: 8px; /* スクロールバーの高さ */
+		background-color: #f5f5f5;
+	}
+
+	.scrollable-container::-webkit-scrollbar-thumb {
+		background-color: #2e7d32; /* スクロールバーの色を緑に */
+		border-radius: 4px;
+	}
+
+	.scrollable-container::-webkit-scrollbar-track {
+		background-color: #e8f5e9; /* スクロールバーのトラックの色を薄緑に */
+		border-radius: 4px;
+	}
+
+	.scrollable-content {
+		display: flex;
+		gap: 16px;
+		padding: 4px 0;
+		min-width: max-content; /* コンテンツが少ない場合でもスクロール可能に */
+	}
+
+	/* 店舗カード */
+	.shop-card {
+		flex: 0 0 auto;
+		width: 220px;
+		border-radius: 12px;
+		overflow: hidden;
+		background-color: #fff;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+		cursor: pointer; /* カーソルをポインターに変更 */
+	}
+
+	.shop-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+	}
+
+	.shop-image {
+		height: 160px;
+		background-size: cover;
+		background-position: center;
+		position: relative;
+	}
+
+	.shop-rating {
+		position: absolute;
+		bottom: 8px;
+		right: 8px;
+		background-color: rgba(0, 0, 0, 0.7);
 			color: white;
-			border: none;
-			border-radius: 5px;
-			font-size: 16px;
-			cursor: pointer;
-			width: 100%;
+		padding: 4px 8px;
+		border-radius: 100px;
+		font-size: 12px;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		gap: 4px;
 	}
 
-	button:hover {
-			background-color: #7ed17e;
+	.shop-info {
+		padding: 16px;
 	}
 
-	.recommendations {
-			margin: 20px;
+	.shop-info h3 {
+		margin: 0 0 8px 0;
+		font-size: 16px;
+		font-weight: 600;
+		color: #333;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
-	.recommendations h2 {
-			margin-bottom: 20px;
-			color: #3a6f3a;
+	.shop-tags {
+		display: flex;
+		justify-content: center;
+		gap: 2px;
+		margin-bottom: 8px;
+		flex-wrap: wrap; /* タグを折り返し可能に */
 	}
 
-	.recommendation-item {
-			display: flex;
-			background-color: white;
-			border-radius: 10px;
-			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-			overflow: hidden;
-			margin-bottom: 20px;
+	.shop-tags span {
+		background-color: #e8f5e9; /* 薄い緑色に変更 */
+		color: #2e7d32; /* 緑色に変更 */
+		padding: 4px 8px;
+		border-radius: 4px;
+		font-size: 10px;
+		margin-bottom: 4px; /* 縦並びになった時の間隔 */
 	}
 
-	.recommendation-item img {
-			width: 150px;
-			height: auto;
+	.shop-access {
+		color: #666;
+		font-size: 12px;
+		margin: 0;
 	}
 
-	.details {
-			padding: 20px;
-			width: 100%;
+	/* レビューカード */
+	.review-card {
+		flex: 0 0 auto;
+		width: 300px;
+		border-radius: 12px;
+		overflow: hidden;
+		background-color: #fff;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+		padding: 16px;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
 	}
 
-	.details h3 {
-			margin-top: 0;
+	.review-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 	}
 
-	.tags {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 5px;
+	.review-header {
+		display: flex;
+		align-items: center;
+		margin-bottom: 12px;
 	}
 
-	.tags span, .tags a {
-			background-color: #97e094;
-			color: white;
-			padding: 5px 10px;
-			border-radius: 5px;
-			font-size: 12px;
-			text-decoration: none;
+	.user-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 600;
+		color: #333;
+		margin-right: 12px;
 	}
 
-	.tags a {
-			background-color: #7ed17e;
+	.review-meta {
+		flex: 1;
 	}
 
-	.tags a:hover {
-			background-color: #5bb75b;
+	.user-name {
+		font-weight: 600;
+		font-size: 14px;
+		color: #333;
+	}
+
+	.review-date {
+		font-size: 12px;
+		color: #888;
+	}
+
+	.review-shop {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		margin-bottom: 8px;
+		font-size: 14px;
+		color: #666;
+	}
+
+	.review-text {
+		font-size: 14px;
+		line-height: 1.5;
+		color: #333;
+		margin-bottom: 12px;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.review-photos {
+		display: flex;
+		gap: 8px;
+	}
+
+	.review-photo {
+		width: 80px;
+		height: 80px;
+		border-radius: 8px;
+		background-size: cover;
+		background-position: center;
+	}
+
+	/* エリアグリッド */
+	.area-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		gap: 16px;
+	}
+
+	.area-card {
+		height: 120px;
+		border-radius: 12px;
+		overflow: hidden;
+		background-size: cover;
+		background-position: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		color: white;
+		text-align: center;
+		padding: 16px;
+		transition: transform 0.3s ease;
+		cursor: pointer;
+	}
+
+	.area-card:hover {
+		transform: scale(1.03);
+	}
+
+	.area-card h3 {
+		margin: 0 0 4px 0;
+		font-size: 18px;
+		font-weight: 700;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+	}
+
+	.area-card span {
+		font-size: 14px;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 	}
 
 	/* 背景画像 */
@@ -347,33 +735,69 @@
 		width: 95%; /* 必要に応じて調整 */
 	}
 
-	/* 検索結果のチップ */
-	.chip-group {
-		display: flex;
-		justify-content: center;
-		flex-wrap: wrap;
-		gap: 5px; /* チップ間の間隔を指定 */
-		margin: 0.5rem;
-		padding-bottom: 0.6rem;
-		border-bottom: 1px solid #ccc;
+	/* ************************************************** */
+	/* レスポンシブデザイン */
+	/* ************************************************** */
+	@media (max-width: 768px) {
+		.shop-card {
+			width: 180px;
+		}
+		
+		.review-card {
+			width: 260px;
+		}
+		
+		.area-grid {
+			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		}
+
+		.shop-info h3 {
+			font-size: 12px;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			white-space: normal;
+			height: 3rem;
+		}
+		
+		.shop-tags span {
+			margin-right: 0;
+			margin-bottom: 4px;
+		}
 	}
 
-	.chip {
-		display: flex;
-		align-items: center;
-		padding: 5px 10px;
-		border-radius: 24px; /* 丸みを帯びた角にする */
-		background-color: #e0e0e0; /* 薄いグレー背景 */
-		font-size: 0.9rem;
+	@media (max-width: 480px) {
+		.section-header h2 {
+			font-size: 18px;
+		}
+		
+		.shop-card {
+			width: 160px;
+		}
+		
+		.shop-image {
+			height: 120px;
+		}
+		
+		.review-card {
+			width: 240px;
+		}
+		
+		.area-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		
+		.area-card {
+			height: 100px;
+		}
+		
+		.shop-tags {
+			flex-direction: column; /* タグを縦並びに */
+		}
+		
+		.shop-tags span {
+			width: 100%;
+			box-sizing: border-box;
+		}
 	}
-
-	.chip-icon {
-		margin-right: 4px;
-		font-size: 0.9rem;
-	}
-
-	.chip strong {
-		margin-right: 5px;
-	}
-
 </style>
