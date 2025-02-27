@@ -28,7 +28,7 @@
                 half-increments
                 readonly
               ></v-rating>
-              <span class="rating-value">{{ shop.shop_items[0].Rate }}</span>
+              <span class="rating-value">{{ shop.shop_items[0].Rate.toFixed(2) }}</span>
             </div>
             <span class="review-count">{{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件のレビュー' }}</span>
           </div>
@@ -430,7 +430,7 @@ export default {
   methods: {
     // ショップをシェアするメソッド
     shareShop() {
-      const url = `https://main.d2tcvdo7qdeeoh.amplifyapp.com/shop/${this.ShopId}`;
+      const url = `https://main.d3svezmi1xi8mk.amplifyapp.com//shop/${this.ShopId}`;
 
       // Clipboard APIのサポートを確認
       if (navigator.clipboard) {
