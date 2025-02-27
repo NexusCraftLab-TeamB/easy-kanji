@@ -83,22 +83,24 @@
 							</div>
 						</div>
 						<!-- APIデータが不足している場合はモックデータで補完 -->
-						<div v-if="apiData.length < 8" v-for="i in (8 - apiData.length)" :key="`mock-${i}`" class="shop-card">
-							<div class="shop-image" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`">
-								<div class="shop-rating">
-									<v-icon color="amber" size="small">mdi-star</v-icon>
-									<span>{{ (3 + Math.random() * 2).toFixed(1) }}</span>
+						<template v-for="i in (8 - apiData.length)" :key="`mock-${i}`">
+							<div v-if="apiData.length < 8" class="shop-card">
+								<div class="shop-image" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`">
+									<div class="shop-rating">
+										<v-icon color="amber" size="small">mdi-star</v-icon>
+										<span>{{ (3 + Math.random() * 2).toFixed(1) }}</span>
+									</div>
+								</div>
+								<div class="shop-info">
+									<h3>おすすめ店舗 {{ i }}</h3>
+									<div class="shop-tags">
+										<span>和食</span>
+										<span>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
+									</div>
+									<p class="shop-access">渋谷駅から徒歩{{ Math.floor(Math.random() * 10 + 1) }}分</p>
 								</div>
 							</div>
-							<div class="shop-info">
-								<h3>おすすめ店舗 {{ i }}</h3>
-								<div class="shop-tags">
-									<span>和食</span>
-									<span>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
-								</div>
-								<p class="shop-access">渋谷駅から徒歩{{ Math.floor(Math.random() * 10 + 1) }}分</p>
-							</div>
-						</div>
+						</template>
 					</div>
 				</div>
 			</section>
