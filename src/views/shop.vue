@@ -21,14 +21,14 @@
           <div class="shop-rating-container">
             <div class="shop-rating">
               <v-rating
-                :model-value="shop.shop_items[0].Rate"
+                :model-value="shop.shop_items[0]?.Rate"
                 color="amber"
                 density="compact"
                 size="small"
                 half-increments
                 readonly
               ></v-rating>
-              <span class="rating-value">{{ shop.shop_items[0].Rate.toFixed(2) }}</span>
+              <span class="rating-value">{{ typeof shop.shop_items[0]?.Rate === 'string' ? shop.shop_items[0]?.Rate : shop.shop_items[0]?.Rate?.toFixed(2) }}</span>
             </div>
             <span class="review-count">{{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件のレビュー' }}</span>
           </div>
