@@ -393,9 +393,6 @@ export default {
             imageData: imageData,
           };
           
-          // リクエストサイズをログに出力
-          const requestSize = JSON.stringify(requestBody).length;
-          
           // APIリクエスト
           const response = await axios.post(
             'https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/shop',
