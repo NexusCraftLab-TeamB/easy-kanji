@@ -1,178 +1,203 @@
 <template>
-  <div class="bg-home">
-		<img :src="require('@/assets/easy-kanji-logo.png')" alt="logo">
-		<ShopSearchForm @submit-data="handleFormData" class="centered-form"/>
+  <div>
+    <div class="bg-home">
+      <img :src="require('@/assets/easy-kanji-logo.png')" alt="logo">
+      <ShopSearchForm @submit-data="handleFormData" class="centered-form"/>
+    </div>
+
+    <div class="content-container">
+      <!-- 検索結果表示エリア -->
+      <div v-if="submited" class="search-results-container">
+        <div class="search-header">
+          <h2>検索結果</h2>
+          <span class="result-count">（{{ apiData.length }}件)</span>
+        </div>
+        <div class="search-conditions">
+          <div class="chip-group">
+            <div class="chip" v-if="keyword">
+              <v-icon class="chip-icon" color="black">mdi-magnify</v-icon>
+              <strong>{{ keyword }}</strong>
+            </div>
+            <div class="chip" v-if="name">
+              <v-icon class="chip-icon" color="black">mdi-storefront</v-icon>
+              <span>店名：</span><strong>{{ name }}</strong>
+            </div>
+            <div class="chip" v-if="locationName">
+              <v-icon class="chip-icon" color="black">mdi-map-marker</v-icon>
+              <span>場所：</span><strong>{{ locationName }}</strong>
+            </div>
+            <div class="chip" v-if="genreName">
+              <v-icon class="chip-icon" color="black">mdi-silverware-fork-knife</v-icon>
+              <span>ジャンル：</span><strong>{{ genreName }}</strong>
+            </div>
+            <div class="chip" v-if="budgetName">
+              <v-icon class="chip-icon" color="black">mdi-cash</v-icon>
+              <span>予算：</span><strong>{{ budgetName }}</strong>
+            </div>
+            <div class="chip" v-if="performance">
+              <v-icon class="chip-icon" color="black">mdi-star</v-icon>
+              <span>実績：</span><strong>{{ performance }}</strong>
+            </div>
+            <div class="chip" v-if="peopleNum">
+              <v-icon class="chip-icon" color="black">mdi-account-multiple</v-icon>
+              <span>人数：</span><strong>{{ `${peopleNum}人以上` }} </strong>
+            </div>
+          </div>
+					<ShopList
+						:apiData="apiData"
+					/>
+          <!-- 店舗登録ボタン -->
+          <div class="register-shop-button-container">
+            <button class="register-shop-button" @click="openRegisterForm">
+              <v-icon>mdi-plus</v-icon>
+              <span>検索結果にない店舗を登録する</span>
+            </button>
+          </div>
+
+          <div v-if="searchError || apiData.length === 0" class="no-results">
+            <v-icon size="large" color="grey">mdi-emoticon-sad-outline</v-icon>
+            <p>検索結果がありません。条件を変更して再度お試しください。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 検索していない場合のホーム画面 -->
+      <div v-else class="home-content">
+        <!-- おすすめセクション -->
+        <section class="section-container">
+          <div class="section-header">
+            <h2>おすすめのお店</h2>
+            <a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
+          </div>
+          <div class="section-divider"></div>
+          <div class="scrollable-container">
+            <div class="scrollable-content">
+              <!-- おすすめ店舗カード（APIデータ使用） -->
+              <div v-for="(shop, index) in apiData.slice(0, 8)" :key="`recommended-${index}`" class="shop-card" @click="navigateToShop(shop.ShopId)">
+                <div class="shop-image" :style="`background-image: url(${shop.Photo ? shop.Photo : require('@/assets/nophoto.jpg')})`">
+                  <div class="shop-rating" v-if="shop.Rate">
+                    <v-icon color="amber" size="small">mdi-star</v-icon>
+                    <span>{{ shop.Rate.toFixed(1) }}</span>
+                  </div>
+                </div>
+                <div class="shop-info">
+                  <h3>{{ shop.Name || 'おすすめ店舗' }}</h3>
+                  <div class="shop-tags">
+                    <span>{{ shop.Genre || '和食' }}</span>
+                    <span v-if="shop.Budget">{{ shop.Budget }}</span>
+                    <span v-else>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
+                  </div>
+                  <p class="shop-access">{{ shop.mobile_access || '最寄り駅から徒歩10分' }}</p>
+                </div>
+              </div>
+              <!-- APIデータが不足している場合はモックデータで補完 -->
+              <template v-for="i in Math.max(0, 8 - apiData.length)" :key="`mock-${i}`">
+                <div v-if="apiData.length < 8" class="shop-card">
+                  <div class="shop-image" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`">
+                    <div class="shop-rating">
+                      <v-icon color="amber" size="small">mdi-star</v-icon>
+                      <span>{{ (3 + Math.random() * 2).toFixed(1) }}</span>
+                    </div>
+                  </div>
+                  <div class="shop-info">
+                    <h3>おすすめ店舗 {{ i }}</h3>
+                    <div class="shop-tags">
+                      <span>和食</span>
+                      <span>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
+                    </div>
+                    <p class="shop-access">渋谷駅から徒歩{{ Math.floor(Math.random() * 10 + 1) }}分</p>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </section>
+        
+        <!-- 最近投稿されたレビューセクション -->
+        <section class="section-container">
+          <div class="section-header">
+            <h2>最近投稿されたレビュー</h2>
+            <a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
+          </div>
+          <div class="section-divider"></div>
+          <div class="scrollable-container">
+            <div class="scrollable-content">
+              <!-- レビューカード（モック） -->
+              <div v-for="i in 6" :key="`review-${i}`" class="review-card">
+                <div class="review-header">
+                  <div class="user-avatar" :style="`background-color: hsl(${i * 40}, 70%, 80%)`">
+                    <span>{{ String.fromCharCode(64 + i) }}</span>
+                  </div>
+                  <div class="review-meta">
+                    <div class="user-name">幹事さん</div>
+                    <div class="review-date">{{ new Date().toLocaleDateString('ja-JP') }}</div>
+                  </div>
+                  <div class="review-rating">
+                    <v-rating
+                      :model-value="3 + Math.random() * 2"
+                      color="amber"
+                      density="compact"
+                      size="small"
+                      half-increments
+                      readonly
+                    ></v-rating>
+                  </div>
+                </div>
+                <div class="review-shop">
+                  <v-icon size="small" color="grey">mdi-storefront</v-icon>
+                  <span>{{ apiData[i % apiData.length]?.Name || `レビュー店舗 ${i}` }}</span>
+                </div>
+                <p class="review-text">
+                  とても美味しかったです！接客も丁寧で、また行きたいと思います。
+                  {{ i % 2 === 0 ? '雰囲気も良く、デートにもおすすめです。' : '値段もリーズナブルで、コスパ最高でした！' }}
+                </p>
+                <div class="review-photos" v-if="i % 3 !== 0">
+                  <div class="review-photo" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`"></div>
+                  <div class="review-photo" v-if="i % 2 === 0" :style="`background-image: url(${require('@/assets/home-image0' + ((i + 2) % 9 + 1) + '.jpg')})`"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- 人気のエリアセクション -->
+        <section class="section-container">
+          <div class="section-header">
+            <h2>人気のエリア</h2>
+          </div>
+          <div class="section-divider"></div>
+          <div class="area-grid">
+            <div v-for="(area, index) in popularAreas" :key="index" class="area-card" :style="`background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${area.image})`">
+              <h3>{{ area.name }}</h3>
+              <span>{{ area.count }}件</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 店舗登録ボタン -->
+        <div class="register-shop-button-container">
+          <button class="register-shop-button" @click="openRegisterForm">
+            <v-icon>mdi-plus</v-icon>
+            <span>検索結果にない店舗を登録する</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+    
+    <!-- 店舗登録フォームモーダル -->
+    <ShopRegisterForm 
+      :isOpen="isRegisterFormOpen" 
+      @close="closeRegisterForm"
+    />
   </div>
-
-	<div class="content-container">
-		<!-- 検索結果表示エリア -->
-		<div v-if="submited" class="search-results-container">
-			<div class="search-header">
-				<h2>検索結果</h2>
-				<span class="result-count">（{{ apiData.length }}件)</span>
-			</div>
-			<div class="search-conditions">
-				<div class="chip-group">
-					<div class="chip" v-if="keyword">
-						<v-icon class="chip-icon" color="black">mdi-magnify</v-icon>
-						<strong>{{ keyword }}</strong>
-					</div>
-					<div class="chip" v-if="name">
-						<v-icon class="chip-icon" color="black">mdi-storefront</v-icon>
-						<span>店名：</span><strong>{{ name }}</strong>
-					</div>
-					<div class="chip" v-if="locationName">
-						<v-icon class="chip-icon" color="black">mdi-map-marker</v-icon>
-						<span>場所：</span><strong>{{ locationName }}</strong>
-					</div>
-					<div class="chip" v-if="genreName">
-						<v-icon class="chip-icon" color="black">mdi-silverware-fork-knife</v-icon>
-						<span>ジャンル：</span><strong>{{ genreName }}</strong>
-					</div>
-					<div class="chip" v-if="budgetName">
-						<v-icon class="chip-icon" color="black">mdi-cash</v-icon>
-						<span>予算：</span><strong>{{ budgetName }}</strong>
-					</div>
-					<div class="chip" v-if="performance">
-						<v-icon class="chip-icon" color="black">mdi-star</v-icon>
-						<span>実績：</span><strong>{{ performance }}</strong>
-					</div>
-					<div class="chip" v-if="peopleNum">
-						<v-icon class="chip-icon" color="black">mdi-account-multiple</v-icon>
-						<span>人数：</span><strong>{{ `${peopleNum}人以上` }} </strong>
-					</div>
-		</div>
-	</div>
-
-	<ShopList
-		:apiData="apiData"
-	/>
-			<div v-if="searchError || apiData.length === 0" class="no-results">
-				<v-icon size="large" color="grey">mdi-emoticon-sad-outline</v-icon>
-				<p>検索結果がありません。条件を変更して再度お試しください。</p>
-			</div>
-		</div>
-		
-		<!-- 検索していない場合のホーム画面 -->
-		<div v-else class="home-content">
-			<!-- おすすめセクション -->
-			<section class="section-container">
-				<div class="section-header">
-					<h2>おすすめのお店</h2>
-					<a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
-				</div>
-				<div class="section-divider"></div>
-				<div class="scrollable-container">
-					<div class="scrollable-content">
-						<!-- おすすめ店舗カード（APIデータ使用） -->
-						<div v-for="(shop, index) in apiData.slice(0, 8)" :key="`recommended-${index}`" class="shop-card" @click="navigateToShop(shop.ShopId)">
-							<div class="shop-image" :style="`background-image: url(${shop.Photo ? shop.Photo : require('@/assets/nophoto.jpg')})`">
-								<div class="shop-rating" v-if="shop.Rate">
-									<v-icon color="amber" size="small">mdi-star</v-icon>
-									<span>{{ shop.Rate.toFixed(1) }}</span>
-								</div>
-							</div>
-							<div class="shop-info">
-								<h3>{{ shop.Name || 'おすすめ店舗' }}</h3>
-								<div class="shop-tags">
-									<span>{{ shop.Genre || '和食' }}</span>
-									<span v-if="shop.Budget">{{ shop.Budget }}</span>
-									<span v-else>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
-								</div>
-								<p class="shop-access">{{ shop.mobile_access || '最寄り駅から徒歩10分' }}</p>
-							</div>
-						</div>
-						<!-- APIデータが不足している場合はモックデータで補完 -->
-						<template v-for="i in (8 - apiData.length)" :key="`mock-${i}`">
-							<div v-if="apiData.length < 8" class="shop-card">
-								<div class="shop-image" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`">
-									<div class="shop-rating">
-										<v-icon color="amber" size="small">mdi-star</v-icon>
-										<span>{{ (3 + Math.random() * 2).toFixed(1) }}</span>
-									</div>
-								</div>
-								<div class="shop-info">
-									<h3>おすすめ店舗 {{ i }}</h3>
-									<div class="shop-tags">
-										<span>和食</span>
-										<span>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
-									</div>
-									<p class="shop-access">渋谷駅から徒歩{{ Math.floor(Math.random() * 10 + 1) }}分</p>
-								</div>
-							</div>
-						</template>
-					</div>
-				</div>
-			</section>
-			
-			<!-- 最近投稿されたレビューセクション -->
-			<section class="section-container">
-				<div class="section-header">
-					<h2>最近投稿されたレビュー</h2>
-					<a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
-				</div>
-				<div class="section-divider"></div>
-				<div class="scrollable-container">
-					<div class="scrollable-content">
-						<!-- レビューカード（モック） -->
-						<div v-for="i in 6" :key="`review-${i}`" class="review-card">
-							<div class="review-header">
-								<div class="user-avatar" :style="`background-color: hsl(${i * 40}, 70%, 80%)`">
-									<span>{{ String.fromCharCode(64 + i) }}</span>
-								</div>
-								<div class="review-meta">
-									<div class="user-name">幹事さん</div>
-									<div class="review-date">{{ new Date().toLocaleDateString('ja-JP') }}</div>
-								</div>
-								<div class="review-rating">
-									<v-rating
-										:model-value="3 + Math.random() * 2"
-										color="amber"
-										density="compact"
-										size="small"
-										half-increments
-										readonly
-									></v-rating>
-								</div>
-							</div>
-							<div class="review-shop">
-								<v-icon size="small" color="grey">mdi-storefront</v-icon>
-								<span>{{ apiData[i % apiData.length]?.Name || `レビュー店舗 ${i}` }}</span>
-							</div>
-							<p class="review-text">
-								とても美味しかったです！接客も丁寧で、また行きたいと思います。
-								{{ i % 2 === 0 ? '雰囲気も良く、デートにもおすすめです。' : '値段もリーズナブルで、コスパ最高でした！' }}
-							</p>
-							<div class="review-photos" v-if="i % 3 !== 0">
-								<div class="review-photo" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`"></div>
-								<div class="review-photo" v-if="i % 2 === 0" :style="`background-image: url(${require('@/assets/home-image0' + ((i + 2) % 9 + 1) + '.jpg')})`"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			
-			<!-- 人気のエリアセクション -->
-			<section class="section-container">
-				<div class="section-header">
-					<h2>人気のエリア</h2>
-				</div>
-				<div class="section-divider"></div>
-				<div class="area-grid">
-					<div v-for="(area, index) in popularAreas" :key="index" class="area-card" :style="`background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${area.image})`">
-						<h3>{{ area.name }}</h3>
-						<span>{{ area.count }}件</span>
-					</div>
-				</div>
-			</section>
-		</div>
-	</div>
 </template>
   
 <script>
 	import axios from 'axios';
 	import ShopList from '../components/ShopList.vue';
 	import ShopSearchForm from '../components/forms/ShopSearchForm.vue';
+	import ShopRegisterForm from '../components/forms/ShopRegisterForm.vue';
 	import { locations } from '@/constants/locations.js';
 	import { genres } from '@/constants/genres.js';
 	import { budgets } from '@/constants/budgets.js';
@@ -212,10 +237,20 @@
 					{ name: '銀座', count: 203, image: require('@/assets/home-image04.jpg') },
 					{ name: '六本木', count: 178, image: require('@/assets/home-image05.jpg') },
 					{ name: '恵比寿', count: 165, image: require('@/assets/home-image06.jpg') }
-				]
+				],
+				// 店舗登録フォームの表示状態
+				isRegisterFormOpen: false
 			};
 		},
 		methods: {
+			// 店舗登録フォームを開く
+			openRegisterForm() {
+				this.isRegisterFormOpen = true;
+			},
+			// 店舗登録フォームを閉じる
+			closeRegisterForm() {
+				this.isRegisterFormOpen = false;
+			},
 			// バックグラウンド画像を変更
 			changeBackgroundImage() {
 				// ランダムなインデックスを生成
@@ -315,7 +350,8 @@
 		},
 		components: {
 			ShopList,
-			ShopSearchForm
+			ShopSearchForm,
+			ShopRegisterForm
 		}
 	};
 </script>
@@ -326,6 +362,34 @@
 		max-width: 1200px;
 		margin: 0 auto;
 		padding: 0 16px;
+	}
+
+	/* 店舗登録ボタン */
+	.register-shop-button-container {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 16px;
+	}
+
+	.register-shop-button {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 16px;
+		background-color: #2e7d32;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background-color 0.3s, transform 0.2s;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.register-shop-button:hover {
+		background-color: #1b5e20;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 	}
 
 	/* 検索結果コンテナ */
