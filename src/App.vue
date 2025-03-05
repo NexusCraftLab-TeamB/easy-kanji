@@ -11,12 +11,6 @@
         <p>TOP</p>
       </button>
     </template>
-    <template v-else>
-      <button @click="redirectToHome" class="scroll-to-top">
-        <v-icon>mdi-home</v-icon>
-        <p>HOME</p>
-      </button>
-    </template>
   </v-app>
 
 </template>
