@@ -1,5 +1,19 @@
 <template>
   <div v-if="!loading" class="shop-container">
+    <!-- 戻るボタン -->
+    <div class="back-button-container">
+      <v-btn
+        color="white"
+        icon
+        variant="text"
+        elevation="0"
+        @click="goBack"
+        class="back-btn"
+      >
+        <v-icon icon="mdi-arrow-left"></v-icon>
+      </v-btn>
+    </div>
+    
     <!-- ヒーローセクション -->
     <div class="hero-section">
       <div class="hero-overlay"></div>
@@ -21,14 +35,14 @@
           <div class="shop-rating-container">
             <div class="shop-rating">
               <v-rating
-                :model-value="shop.shop_items[0].Rate"
+                :model-value="shop.shop_items[0]?.Rate"
                 color="amber"
                 density="compact"
                 size="small"
                 half-increments
                 readonly
               ></v-rating>
-              <span class="rating-value">{{ shop.shop_items[0].Rate.toFixed(2) }}</span>
+              <span class="rating-value">{{ typeof shop.shop_items[0]?.Rate === 'string' ? shop.shop_items[0]?.Rate : shop.shop_items[0]?.Rate?.toFixed(2) }}</span>
             </div>
             <span class="review-count">{{ shop.review_items.length === 0 ? '利用実績なし' : shop.review_items.length + '件のレビュー' }}</span>
           </div>
@@ -462,12 +476,42 @@ export default {
       this.userFilter = null;
       this.departmentFilter = null;
       this.ratingFilter = 0;
+    },
+    goBack() {
+      this.$router.push('/');
     }
   },
 };
 </script>
 
 <style scoped>
+  /* 戻るボタン */
+  .back-button-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+  }
+
+  .back-btn {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(5px);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .back-btn:hover {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  }
+
   /* 全体のコンテナ */
   .shop-container {
     max-width: 100%;
@@ -1001,6 +1045,15 @@ export default {
 
   /* レスポンシブ対応 */
   @media (max-width: 960px) {
+    .back-button-container {
+      top: 16px;
+      left: 16px;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+    }
 
     .content-container {
       padding: 30px 0px;
@@ -1020,6 +1073,10 @@ export default {
   }
 
   @media (max-width: 768px) {
+    .back-button-container {
+      top: 12px;
+      left: 12px;
+    }
     
     .hero-section {
       height: 50vh;
@@ -1105,6 +1162,15 @@ export default {
   }
 
   @media (max-width: 480px) {
+    .back-button-container {
+      top: 10px;
+      left: 10px;
+    }
+
+    .back-btn {
+      width: 32px;
+      height: 32px;
+    }
 
     .content-section {
       padding: 0 12px;
