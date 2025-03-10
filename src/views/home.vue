@@ -122,52 +122,8 @@
         </section>
         
         <!-- 最近投稿されたレビューセクション -->
-        <section class="section-container">
-          <div class="section-header">
-            <h2>最近投稿されたレビュー</h2>
-            <a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
-          </div>
-          <div class="section-divider"></div>
-          <div class="scrollable-container">
-            <div class="scrollable-content">
-              <!-- レビューカード（モック） -->
-              <div v-for="i in 6" :key="`review-${i}`" class="review-card">
-                <div class="review-header">
-                  <div class="user-avatar" :style="`background-color: hsl(${i * 40}, 70%, 80%)`">
-                    <span>{{ String.fromCharCode(64 + i) }}</span>
-                  </div>
-                  <div class="review-meta">
-                    <div class="user-name">幹事さん</div>
-                    <div class="review-date">{{ new Date().toLocaleDateString('ja-JP') }}</div>
-                  </div>
-                  <div class="review-rating">
-                    <v-rating
-                      :model-value="3 + Math.random() * 2"
-                      color="amber"
-                      density="compact"
-                      size="small"
-                      half-increments
-                      readonly
-                    ></v-rating>
-                  </div>
-                </div>
-                <div class="review-shop">
-                  <v-icon size="small" color="grey">mdi-storefront</v-icon>
-                  <span>{{ apiData[i % apiData.length]?.Name || `レビュー店舗 ${i}` }}</span>
-                </div>
-                <p class="review-text">
-                  とても美味しかったです！接客も丁寧で、また行きたいと思います。
-                  {{ i % 2 === 0 ? '雰囲気も良く、デートにもおすすめです。' : '値段もリーズナブルで、コスパ最高でした！' }}
-                </p>
-                <div class="review-photos" v-if="i % 3 !== 0">
-                  <div class="review-photo" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`"></div>
-                  <div class="review-photo" v-if="i % 2 === 0" :style="`background-image: url(${require('@/assets/home-image0' + ((i + 2) % 9 + 1) + '.jpg')})`"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        
+        <RecentReviews />
+
         <!-- 人気のエリアセクション -->
         <section class="section-container">
           <div class="section-header">
@@ -206,6 +162,7 @@
 	import ShopList from '../components/ShopList.vue';
 	import ShopSearchForm from '../components/forms/ShopSearchForm.vue';
 	import ShopRegisterForm from '../components/forms/ShopRegisterForm.vue';
+	import RecentReviews from '../components/RecentReviews.vue';
 	import { locations } from '@/constants/locations.js';
 	import { genres } from '@/constants/genres.js';
 	import { budgets } from '@/constants/budgets.js';
@@ -364,7 +321,8 @@
 		components: {
 			ShopList,
 			ShopSearchForm,
-			ShopRegisterForm
+			ShopRegisterForm,
+			RecentReviews
 		}
 	};
 </script>
@@ -683,89 +641,6 @@
 		margin: 0;
 	}
 
-	/* レビューカード */
-	.review-card {
-		flex: 0 0 auto;
-		width: 300px;
-		border-radius: 12px;
-		overflow: hidden;
-		background-color: #fff;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-		padding: 16px;
-		transition: transform 0.3s ease, box-shadow 0.3s ease;
-	}
-
-	.review-card:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-	}
-
-	.review-header {
-		display: flex;
-		align-items: center;
-		margin-bottom: 12px;
-	}
-
-	.user-avatar {
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-weight: 600;
-		color: #333;
-		margin-right: 12px;
-	}
-
-	.review-meta {
-		flex: 1;
-	}
-
-	.user-name {
-		font-weight: 600;
-		font-size: 14px;
-		color: #333;
-	}
-
-	.review-date {
-		font-size: 12px;
-		color: #888;
-	}
-
-	.review-shop {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		margin-bottom: 8px;
-		font-size: 14px;
-		color: #666;
-	}
-
-	.review-text {
-		font-size: 14px;
-		line-height: 1.5;
-		color: #333;
-		margin-bottom: 12px;
-		display: -webkit-box;
-		-webkit-line-clamp: 3;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
-
-	.review-photos {
-		display: flex;
-		gap: 8px;
-	}
-
-	.review-photo {
-		width: 80px;
-		height: 80px;
-		border-radius: 8px;
-		background-size: cover;
-		background-position: center;
-	}
-
 	/* エリアグリッド */
 	.area-grid {
 		display: grid;
@@ -861,10 +736,6 @@
 			width: 180px;
 		}
 		
-		.review-card {
-			width: 260px;
-		}
-		
 		.area-grid {
 			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
 		}
@@ -895,10 +766,6 @@
 		
 		.shop-image {
 			height: 120px;
-		}
-		
-		.review-card {
-			width: 240px;
 		}
 		
 		.area-grid {
