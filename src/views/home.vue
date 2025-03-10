@@ -79,6 +79,10 @@
                     <v-icon color="amber" size="small">mdi-star</v-icon>
                     <span>{{ shop.Rate.toFixed(1) }}</span>
                   </div>
+                  <!-- 順位表示 -->
+                  <div :class="['shop-rank', index < 3 ? `rank-${index + 1}` : 'rank-other']">
+                    {{ index + 1 }}
+                  </div>
                 </div>
                 <div class="shop-info">
                   <h3>{{ shop.Name || 'おすすめ店舗' }}</h3>
@@ -97,6 +101,10 @@
                     <div class="shop-rating">
                       <v-icon color="amber" size="small">mdi-star</v-icon>
                       <span>{{ (3 + Math.random() * 2).toFixed(1) }}</span>
+                    </div>
+                    <!-- モックデータの順位表示 -->
+                    <div :class="['shop-rank', (apiData.length + i) <= 3 ? `rank-${apiData.length + i}` : 'rank-other']">
+                      {{ apiData.length + i }}
                     </div>
                   </div>
                   <div class="shop-info">
@@ -582,6 +590,45 @@
 		background-size: cover;
 		background-position: center;
 		position: relative;
+		overflow: hidden;
+	}
+
+	/* 順位表示のスタイル */
+	.shop-rank {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		font-weight: bold;
+		font-size: 14px;
+		color: white;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.rank-1 {
+		background: linear-gradient(135deg, #ffd700, #ffb700); /* 金色 */
+		border: 1px solid #e6c200;
+	}
+
+	.rank-2 {
+		background: linear-gradient(135deg, #c0c0c0, #e0e0e0); /* 銀色 */
+		border: 1px solid #a0a0a0;
+	}
+
+	.rank-3 {
+		background: linear-gradient(135deg, #cd7f32, #e0955e); /* 銅色 */
+		border: 1px solid #b06728;
+	}
+
+	.rank-other {
+		background: linear-gradient(135deg, #607d8b, #90a4ae); /* ブルーグレー */
+		border: 1px solid #546e7a;
 	}
 
 	.shop-rating {
