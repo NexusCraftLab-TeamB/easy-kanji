@@ -132,7 +132,11 @@ export default {
         const response = await axios.get(`https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/shop?shop_id=${shopId}`);
         if (response.data.shop_items.length > 0) {
           this.shopName = response.data.shop_items[0].Name;
-          this.shopImage = response.data.shop_items[0].PicUrl;
+          if (!response.data.shop_items[0].PicUrl) {
+            this.shopImage = 'https://easykanji.s3.ap-northeast-1.amazonaws.com/uploads/nophoto.jpg';
+          }else{
+            this.shopImage = response.data.shop_items[0].PicUrl;
+          }
         } else {
           console.error('No shop items found for the provided shop_id');
         }
