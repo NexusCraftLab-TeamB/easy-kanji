@@ -375,16 +375,26 @@
       <p>店舗情報を読み込み中...</p>
     </div>
   </div>
+
+  <!-- レビューモーダル -->
+  <ReviewModal 
+    :is-open="isReviewModalOpen" 
+    :shop-id="ShopId"
+    @close="closeReviewModal"
+    @review-submitted="handleReviewSubmitted"
+  />
 </template>
 
 <script>
 import axios from 'axios';
 import ReviewCard from '../components/data/ReviewCard.vue';
+import ReviewModal from '../components/forms/ReviewModal.vue';
 
 export default {
   name: 'ShopView',
   components: {
     ReviewCard,
+    ReviewModal
   },
   props: {
     ShopId: {
@@ -415,7 +425,8 @@ export default {
         { title: '★5のみ', value: 5 }
       ],
       positivePoint: 0,
-      negativePoint: 0
+      negativePoint: 0,
+      isReviewModalOpen: false
     };
   },
   async created() {
@@ -478,10 +489,25 @@ export default {
     },
     // レビュー登録画面へ遷移するメソッド
     goToReview() {
-      this.$router.push({
-        path: "/review",
-        query: { shop_id: this.ShopId } // shop_idをクエリパラメータとして渡す
-      });
+      this.isReviewModalOpen = true;
+    },
+    // レビューモーダルを閉じるメソッド
+    closeReviewModal() {
+      this.isReviewModalOpen = false;
+    },
+    // レビュー登録完了時のハンドラ
+    async handleReviewSubmitted() {
+      // 店舗データを再取得して最新のレビューを表示
+      try {
+        const response = await axios.get('https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/shop', {
+          params: { shop_id: this.ShopId }
+        });
+        this.shop = response.data;
+        this.positivePoint = Math.round(this.shop.shop_items[0].positive_percentage);
+        this.negativePoint = Math.round(this.shop.shop_items[0].negative_percentage);
+      } catch (error) {
+        console.error('Error refreshing shop data:', error);
+      }
     },
     clearFilters() {
       this.userFilter = null;
