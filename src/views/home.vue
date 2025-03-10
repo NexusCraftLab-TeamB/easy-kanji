@@ -74,7 +74,7 @@
             <div class="scrollable-content">
               <!-- おすすめ店舗カード（APIデータ使用） -->
               <div v-for="(shop, index) in apiData.slice(0, 8)" :key="`recommended-${index}`" class="shop-card" @click="navigateToShop(shop.ShopId)">
-                <div class="shop-image" :style="`background-image: url(${shop.Photo ? shop.Photo : require('@/assets/nophoto.jpg')})`">
+                <div class="shop-image" :style="`background-image: url(${shop.PicUrl ? shop.PicUrl : require('@/assets/nophoto.jpg')})`">
                   <div class="shop-rating" v-if="shop.Rate">
                     <v-icon color="amber" size="small">mdi-star</v-icon>
                     <span>{{ shop.Rate.toFixed(1) }}</span>
@@ -87,7 +87,7 @@
                     <span v-if="shop.Budget">{{ shop.Budget }}</span>
                     <span v-else>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
                   </div>
-                  <p class="shop-access">{{ shop.mobile_access || '最寄り駅から徒歩10分' }}</p>
+                  <p class="shop-access">{{ shop.Access || '最寄り駅から徒歩10分' }}</p>
                 </div>
               </div>
               <!-- APIデータが不足している場合はモックデータで補完 -->
@@ -302,7 +302,7 @@
 						// レスポンスのデータを保存
 						this.apiData = response.data;
 						this.searchError = false;  // エラーフラグをリセット
-						console.log(this.apiData);
+						console.log("apiData",this.apiData);
 
 				} catch (error) {
 					// 404エラーの場合に「検索結果がありません」というフラグを設定

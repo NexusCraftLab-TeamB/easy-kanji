@@ -19,7 +19,7 @@
       <div class="hero-overlay"></div>
       <v-img
         class="hero-image"
-        :src="shop.shop_items[0]?.Photo || require('@/assets/nophoto.jpg')"
+        :src="shop.shop_items[0]?.PicUrl || require('@/assets/nophoto.jpg')"
         :alt="shop.shop_items[0]?.Name || '店舗画像'"
         cover
         :gradient="'to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7)'"
@@ -29,9 +29,9 @@
         <div class="hero-content-inner">
           <div class="shop-badge">
             <v-icon icon="mdi-silverware-fork-knife" size="small" class="mr-1"></v-icon>
-            <span>{{ shop.shop_items[0].Genre }}</span>
+            <span>{{ shop.shop_items[0]?.Genre }}</span>
           </div>
-          <h1 class="shop-title">{{ shop.shop_items[0].Name }}</h1>
+          <h1 class="shop-title">{{ shop.shop_items[0]?.Name }}</h1>
           <div class="shop-rating-container">
             <div class="shop-rating">
               <v-rating
@@ -95,7 +95,7 @@
                         <v-icon icon="mdi-train" color="green-darken-1"></v-icon>
                       </v-avatar>
                     </template>
-                    <v-list-item-subtitle class="info-text">{{ shop.shop_items[0].mobile_access }}</v-list-item-subtitle>
+                    <v-list-item-subtitle class="info-text">{{ shop.shop_items[0]?.Access }}</v-list-item-subtitle>
                   </v-list-item>
                   
                   <v-divider class="mx-4"></v-divider>
@@ -106,7 +106,7 @@
                         <v-icon icon="mdi-map-marker" color="green-darken-1"></v-icon>
                       </v-avatar>
                     </template>
-                    <v-list-item-subtitle class="info-text">{{ shop.shop_items[0].Adress }}</v-list-item-subtitle>
+                    <v-list-item-subtitle class="info-text">{{ shop.shop_items[0]?.Address }}</v-list-item-subtitle>
                   </v-list-item>
                   
                   <v-divider class="mx-4"></v-divider>
@@ -118,7 +118,7 @@
                       </v-avatar>
                     </template>
                     <v-list-item-subtitle>
-                      <a :href="shop.shop_items[0].urls" target="_blank" rel="noopener noreferrer" class="hotpepper-link">
+                      <a :href="shop.shop_items[0]?.urls" target="_blank" rel="noopener noreferrer" class="hotpepper-link">
                         ホットペッパーグルメで見る
                         <v-icon icon="mdi-open-in-new" size="x-small"></v-icon>
                       </a>
@@ -129,15 +129,16 @@
             </v-card>
           </v-col>
 
-          <!-- 感情分析結果 (レビューがある場合のみ表示) -->
-          <v-col cols="12" md="6" v-if="shop.review_items.length !== 0">
+          <!-- 感情分析結果 -->
+          <v-col cols="12" md="6">
             <v-card class="sentiment-card" elevation="2" rounded="xl">
               <v-card-title class="sentiment-card-header d-flex align-center">
                 <v-icon icon="mdi-emoticon" color="green-darken-1" class="mr-2"></v-icon>
                 <h2 class="section-title">みんなの評価</h2>
               </v-card-title>
               
-              <v-card-text class="sentiment-content">
+              <!-- レビューがある場合 -->
+              <v-card-text v-if="shop.review_items.length !== 0" class="sentiment-content">
                 <div class="sentiment-emoji-container">
                   <span class="sentiment-emoji">{{ satisfactionEmojis[Math.min(Math.floor(positivePoint / 10), 9)] }}</span>
                   <h3 class="sentiment-title">{{ satisfactionComments[Math.min(Math.floor(positivePoint / 10), 9)] }}</h3>
@@ -159,6 +160,14 @@
                     <span class="positive-label">ポジティブ {{ positivePoint }}%</span>
                     <span class="negative-label">ネガティブ {{ negativePoint }}%</span>
                   </div>
+                </div>
+              </v-card-text>
+              
+              <!-- レビューがない場合 -->
+              <v-card-text v-else class="no-sentiment-content">
+                <div class="no-sentiment-container">
+                  <v-icon icon="mdi-emoticon-neutral-outline" size="x-large" color="grey-lighten-1"></v-icon>
+                  <p>まだ評価がありません</p>
                 </div>
               </v-card-text>
             </v-card>
@@ -414,9 +423,9 @@ export default {
         params: { shop_id: this.ShopId }
       });
       this.shop = response.data;
+      document.title = `${this.shop.shop_items[0]?.Name} | Easy Kanji`; // ページタイトルを更新する
       this.positivePoint = Math.round(this.shop.shop_items[0].positive_percentage);
       this.negativePoint = Math.round(this.shop.shop_items[0].negative_percentage);
-      document.title = `${this.shop.shop_items[0].Name} | Easy Kanji`; // ページタイトルを更新する
 
       console.log("shop",this.shop);
     } catch (error) {
@@ -821,6 +830,38 @@ export default {
     flex-direction: column;
     align-items: center;
     padding: 24px;
+  }
+
+  /* レビューがない場合の感情分析カード */
+  .no-sentiment-content {
+    padding: 24px;
+  }
+
+  .no-sentiment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .no-sentiment-container p {
+    margin-top: 16px;
+    color: #757575;
+    font-size: 15px;
+  }
+
+  .first-review-btn {
+    margin-top: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+
+  .first-review-btn:hover {
+    background-color: rgba(46, 125, 50, 0.1);
+    transform: translateY(-1px);
   }
 
   .sentiment-emoji-container {
