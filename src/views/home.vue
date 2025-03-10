@@ -83,11 +83,11 @@
                 <div class="shop-info">
                   <h3>{{ shop.Name || 'おすすめ店舗' }}</h3>
                   <div class="shop-tags">
-                    <span>{{ shop.Genre || '和食' }}</span>
+                    <span>{{ shop.Genre || '-' }}</span>
                     <span v-if="shop.Budget">{{ getBudgetName(shop.Budget) }}</span>
                     <span v-else>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
                   </div>
-                  <p class="shop-access">{{ shop.Access || '最寄り駅から徒歩10分' }}</p>
+                  <p class="shop-access">{{ shop.Access || '' }}</p>
                 </div>
               </div>
               <!-- APIデータが不足している場合はモックデータで補完 -->
