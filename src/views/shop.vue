@@ -118,10 +118,12 @@
                       </v-avatar>
                     </template>
                     <v-list-item-subtitle>
-                      <a :href="shop.shop_items[0]?.urls" target="_blank" rel="noopener noreferrer" class="hotpepper-link">
-                        ホットペッパーグルメで見る
-                        <v-icon icon="mdi-open-in-new" size="x-small"></v-icon>
-                      </a>
+                      <div>
+                        <a :href="shop.shop_items[0]?.ShopUrl" target="_blank" rel="noopener noreferrer" class="hotpepper-link">
+                          {{ shop.shop_items[0]?.Flag === 0 ? 'ホットペッパーグルメでみる' : 'WEBサイトでみる' }}
+                          <v-icon icon="mdi-open-in-new" size="x-small"></v-icon>
+                        </a>
+                      </div>
                     </v-list-item-subtitle>
                   </v-list-item>
                 </v-list>
