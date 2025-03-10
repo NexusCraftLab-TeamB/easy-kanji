@@ -41,7 +41,7 @@
                   size="small"
                   class="me-1 pb-1"
                 ></v-icon>
-                <span class="">{{ mobile_access }}</span>
+                <span class="">{{ access }}</span>
               </div>
 
               <div class="py-1">
@@ -100,7 +100,7 @@
       loading: false,
       selection: 1,
       localName: '',
-      localAdress: '',
+      localAddress: '',
       localTags: [],
       localRate: 0,
     }),
@@ -117,11 +117,11 @@
         type: String,
         required: true
       },
-      Adress: {
+      address: {
         type: String,
         required: true
       },
-      mobile_access: {
+      access: {
         type: String,
         required: false
       },
@@ -146,28 +146,22 @@
     },
     created() {
       this.localName = this.name;
-      this.localAdress = this.Adress;
+      this.localAddress = this.address;
       this.localTags = this.tags;
-      this.localRate = this.Rate;
+      this.localRate = this.rate;
+      console.log("props",this.props);
     },
     methods: {
       showDetail () {
         this.loading = true
+        
+        // 新しいタブでリンクを開く
+        const newWindow = window.open(this.link, '_blank');
+        // 新しいウィンドウにフォーカスを与える（ブラウザによってはブロックされる場合があります）
+        if (newWindow) newWindow.focus();
 
-        // /shopへ遷移
-        setTimeout(() => {
-          window.open(this.link, '_blank');
-        }, 1000);
-
-        setTimeout(() => (this.loading = false), 2000)
+        setTimeout(() => (this.loading = false), 100)
       },
-      updateShopData(data){
-        console.log(data);
-        this.localName = data.Name || this.localName;
-        this.localAdress = data.Adress || this.localAdress;
-        this.localTags = data.Genre ? [data.Genre] : this.localTags;
-        this.localRate = data.Rate || this.localRate;
-      }
     },
     computed: {
       formattedRate() {
