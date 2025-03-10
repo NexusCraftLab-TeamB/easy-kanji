@@ -1,9 +1,11 @@
 <template>
-  <div class="toast-container" v-if="show">
-    <div class="toast-notification" :class="type">
-      <v-icon :icon="icon" size="small" class="toast-icon"></v-icon>
-      <span class="toast-message">{{ message }}</span>
-    </div>
+  <div class="toast-container">
+    <transition>
+      <div v-if="show" class="toast-notification" :class="type">
+        <v-icon :icon="icon" size="small" class="toast-icon"></v-icon>
+        <span class="toast-message">{{ message }}</span>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -59,7 +61,6 @@ export default {
   right: 20px;
   z-index: 9999;
   max-width: 350px;
-  animation: toast-in 0.5s ease-in-out;
 }
 
 .toast-notification {
@@ -74,7 +75,7 @@ export default {
 
 .toast-notification.success {
   background-color: #e8f5e9;
-  border-left: 4px solid #2e7d32;
+  border-left: 2px solid #2e7d32;
   color: #2e7d32;
 }
 
@@ -96,13 +97,21 @@ export default {
   color: #2196f3;
 }
 
+.toast-notification.v-enter-active {
+  animation: toast-in 0.3s ease-in-out;
+}
+
+.toast-notification.v-leave-active {
+  animation: toast-out 0.3s ease-in-out;
+}
+
 .toast-icon {
   margin-right: 12px;
   flex-shrink: 0;
 }
 
 .toast-message {
-  font-weight: 500;
+  font-weight: bold;
   font-size: 14px;
 }
 
