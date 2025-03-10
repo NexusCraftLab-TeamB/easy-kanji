@@ -91,6 +91,28 @@
             {{ errors.genre }}
           </div>
         </div>
+
+        <!-- 予算 -->
+        <div class="form-group" :class="{ 'focused': focusedField === 'budget', 'filled': formData.budget }">
+          <label for="budget">予算</label>
+          <div class="input-group">
+            <v-icon icon="mdi-cash" size="small" class="input-icon"></v-icon>
+            <select 
+              id="budget" 
+              v-model="formData.budget" 
+              class="form-input" 
+              @focus="focusField('budget')"
+              @blur="blurField"
+            >
+              <option value="" disabled selected>予算を選択してください</option>
+              <option v-for="budget in budgets" :key="budget.code" :value="budget.code">
+                {{ budget.name }}
+              </option>
+            </select>
+            <span class="input-highlight"></span>
+            <v-icon icon="mdi-chevron-down" size="small" class="select-icon"></v-icon>
+          </div>
+        </div>
         
         <!-- アクセス -->
         <div class="form-group" :class="{ 'focused': focusedField === 'access', 'filled': formData.access }">
@@ -199,6 +221,7 @@
 
 <script>
 import { genres } from '@/constants/genres.js';
+import { budgets } from '@/constants/budgets.js';
 import axios from 'axios';
 
 export default {
@@ -226,6 +249,7 @@ export default {
       },
       imagePreview: null,
       genres: genres,
+      budgets: budgets,
       focusedField: null,
       isSubmitting: false,
       formProgress: 0,
@@ -387,6 +411,7 @@ export default {
             name: this.formData.name,
             address: this.formData.address,
             genre: this.getGenreName(this.formData.genre),
+            budget: this.formData.budget || '',
             access: this.formData.access || '',
             shopUrl: this.formData.shopUrl || '',
             // 画像データ
