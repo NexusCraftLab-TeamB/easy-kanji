@@ -71,7 +71,7 @@
                   class=""
                 >
                   <v-rating
-                    :model-value="Rate"
+                    :model-value="rate"
                     color="amber"
                     density="compact"
                     size="normal"
@@ -129,7 +129,7 @@
         type: String,
         required: true
       },
-      Rate: {
+      rate: {
         type: Number,
         required: true
       },
@@ -149,7 +149,6 @@
       this.localAddress = this.address;
       this.localTags = this.tags;
       this.localRate = this.rate;
-      console.log("props",this.props);
     },
     methods: {
       showDetail () {
@@ -165,7 +164,7 @@
     },
     computed: {
       formattedRate() {
-        return (Math.round(this.Rate * 10) / 10).toFixed(2); // 四捨五入して表示
+        return (Math.round(this.rate * 10) / 10).toFixed(2); // 四捨五入して表示
       }
     }
   }
