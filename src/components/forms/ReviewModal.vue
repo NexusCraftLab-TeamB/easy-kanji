@@ -33,6 +33,7 @@
               :length="5"
               color="amber"
               class="rating-stars"
+              size="large"
             />
             <div class="rating-value">{{ rating }}</div>
           </div>
@@ -163,14 +164,25 @@
       </form>
     </div>
   </div>
+  
+  <!-- トースト通知 -->
+  <ToastNotification
+    v-model:show="showToast"
+    :message="toastMessage"
+    :type="toastType"
+  />
 </template>
 
 <script>
 import axios from 'axios';
 import { performances } from '@/constants/performances';
+import ToastNotification from '@/components/common/ToastNotification.vue';
 
 export default {
   name: 'ReviewModal',
+  components: {
+    ToastNotification
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -201,7 +213,11 @@ export default {
         role: '',
         peopleNum: '',
         comment: ''
-      }
+      },
+      // トースト通知用の状態
+      showToast: false,
+      toastMessage: "",
+      toastType: "success"
     };
   },
   watch: {
@@ -333,9 +349,17 @@ export default {
             this.$emit('review-submitted');
             this.resetForm();
             this.closeModal();
+            
+            // トースト通知を表示
+            this.showToast = true;
+            this.toastMessage = 'レビューを登録しました！';
           }
         } catch (error) {
           console.error('Error registering the review:', error);
+          // エラー時のトースト通知
+          this.showToast = true;
+          this.toastMessage = 'レビューの登録に失敗しました。';
+          this.toastType = 'error';
         } finally {
           this.isSubmitting = false;
         }
