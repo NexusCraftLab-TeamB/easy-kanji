@@ -5,48 +5,88 @@
       <a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
     </div>
     <div class="section-divider"></div>
-    <div class="scrollable-container">
+    
+    <!-- エラーメッセージ表示 -->
+    <div v-if="error" class="error-container">
+      <v-icon color="error" size="large">mdi-alert-circle</v-icon>
+      <p>{{ error }}</p>
+      <v-btn color="primary" variant="text" @click="fetchRecentReviews">
+        再試行
+      </v-btn>
+    </div>
+    
+    <!-- ローディング表示 -->
+    <div v-else-if="isLoading" class="loading-container">
+      <div class="scrollable-content">
+        <div v-for="i in 3" :key="`skeleton-${i}`" class="review-card skeleton-card">
+          <div class="review-header">
+            <!-- アバタースケルトン -->
+            <div class="skeleton-avatar"></div>
+            <div class="review-meta">
+              <!-- 名前スケルトン -->
+              <div class="skeleton-text"></div>
+              <!-- 日付スケルトン -->
+              <div class="skeleton-text-sm"></div>
+            </div>
+            <!-- 評価スケルトン -->
+            <div class="skeleton-rating">
+              <div class="rating-placeholder"></div>
+            </div>
+          </div>
+          <!-- 店舗名スケルトン -->
+          <div class="skeleton-shop"></div>
+          <!-- コメントスケルトン -->
+          <div class="skeleton-paragraph">
+            <div class="paragraph-line"></div>
+            <div class="paragraph-line"></div>
+            <div class="paragraph-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- レビュー表示 -->
+    <div v-else class="scrollable-container">
       <div class="scrollable-content">
         <!-- レビューカード -->
-        <div v-for="(review, i) in reviews" :key="`review-${i}`" class="review-card">
-          <div class="review-header">
-            <div class="user-avatar" :style="`background-color: hsl(${i * 40}, 70%, 80%)`">
-              <span>{{ review.userInitial || String.fromCharCode(64 + i) }}</span>
+        <div 
+          v-for="(review, i) in reviews" 
+          :key="`review-${i}`" 
+          class="review-card"
+          @click="navigateToShop(review.ShopId)"
+          :class="{ 'clickable': review.ShopId }"
+        >
+          <div class="review-card-content">
+            <div class="review-header">
+              <div class="user-avatar" :style="`background-color: hsl(${i * 40}, 70%, 80%)`">
+                <span>{{ review.Role ? review.Role.slice(0,1) : 'A' }}</span>
+              </div>
+              <div class="review-meta">
+                <div class="user-name">{{ review.Role || 'NoName' }}</div>
+                <div class="review-date">{{ formatReviewDate(review.ReviewDate) || new Date().toLocaleDateString('ja-JP') }}</div>
+              </div>
+              <div class="review-rating">
+                <v-rating
+                  :model-value="review.Rate || 3 + Math.random() * 2"
+                  color="amber"
+                  density="compact"
+                  size="small"
+                  half-increments
+                  readonly
+                ></v-rating>
+              </div>
             </div>
-            <div class="review-meta">
-              <div class="user-name">{{ review.userName || '幹事さん' }}</div>
-              <div class="review-date">{{ review.date || new Date().toLocaleDateString('ja-JP') }}</div>
+            <div class="review-shop">
+              <v-icon size="small" color="grey">mdi-storefront</v-icon>
+              <span>{{ review.ShopName || `レビュー店舗 ${i}` }}</span>
             </div>
-            <div class="review-rating">
-              <v-rating
-                :model-value="review.rating || 3 + Math.random() * 2"
-                color="amber"
-                density="compact"
-                size="small"
-                half-increments
-                readonly
-              ></v-rating>
-            </div>
+            <p class="review-text">
+              {{ review.Comment || '' }}
+            </p>
           </div>
-          <div class="review-shop">
-            <v-icon size="small" color="grey">mdi-storefront</v-icon>
-            <span>{{ review.shopName || `レビュー店舗 ${i}` }}</span>
-          </div>
-          <p class="review-text">
-            {{ review.text || `とても美味しかったです！接客も丁寧で、また行きたいと思います。${i % 2 === 0 ? '雰囲気も良く、デートにもおすすめです。' : '値段もリーズナブルで、コスパ最高でした！'}` }}
-          </p>
-          <div class="review-photos" v-if="review.photos && review.photos.length > 0">
-            <div 
-              v-for="(photo, index) in review.photos" 
-              :key="`photo-${index}`" 
-              class="review-photo" 
-              :style="`background-image: url(${photo})`"
-            ></div>
-          </div>
-          <!-- モックデータの場合の写真表示 -->
-          <div class="review-photos" v-else-if="i % 3 !== 0">
-            <div class="review-photo" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`"></div>
-            <div class="review-photo" v-if="i % 2 === 0" :style="`background-image: url(${require('@/assets/home-image0' + ((i + 2) % 9 + 1) + '.jpg')})`"></div>
+          <div v-if="review.ShopId" class="shop-link">
+            <v-icon size="small" color="">mdi-arrow-right</v-icon>
+            <span>詳細</span>
           </div>
         </div>
       </div>
@@ -69,34 +109,36 @@ export default {
   methods: {
     async fetchRecentReviews() {
       this.isLoading = true;
+      this.error = null;
       try {
-        // 仮のエンドポイント - 実際の実装時に変更してください
         const response = await axios.get('https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/home/RecentReviews');
-        this.reviews = response.data;
-        console.log("response",response);
+        const parsedBody = JSON.parse(response.data.body);
+        this.reviews = parsedBody;
       } catch (error) {
         console.error('最近のレビューの取得に失敗しました:', error);
         this.error = '最近のレビューを読み込めませんでした。';
-        // エラー時はモックデータを使用
-        this.useMockData();
       } finally {
         this.isLoading = false;
       }
     },
-    useMockData() {
-      // APIが失敗した場合や開発中に使用するモックデータ
-      this.reviews = Array(6).fill().map((_, i) => ({
-        userInitial: String.fromCharCode(65 + i),
-        userName: '幹事さん',
-        date: new Date().toLocaleDateString('ja-JP'),
-        rating: 3 + Math.random() * 2,
-        shopName: `レビュー店舗 ${i + 1}`,
-        text: `とても美味しかったです！接客も丁寧で、また行きたいと思います。${i % 2 === 0 ? '雰囲気も良く、デートにもおすすめです。' : '値段もリーズナブルで、コスパ最高でした！'}`,
-        photos: i % 3 !== 0 ? [
-          require('@/assets/home-image0' + (i % 9 + 1) + '.jpg'),
-          ...(i % 2 === 0 ? [require('@/assets/home-image0' + ((i + 2) % 9 + 1) + '.jpg')] : [])
-        ] : []
-      }));
+    formatReviewDate(dateString) {
+      if (!dateString) return null;
+      
+      // dateStringが数値の場合は文字列に変換
+      const dateStr = String(dateString);
+      
+      // yyyymmdd形式の文字列をyyyy/M/d形式に変換
+      const year = dateStr.substring(0, 4);
+      const month = parseInt(dateStr.substring(4, 6), 10); // 先頭の0を削除するために parseInt を使用
+      const day = parseInt(dateStr.substring(6, 8), 10);
+      
+      return `${year}/${month}/${day}`;
+    },
+    navigateToShop(shopId) {
+      if (!shopId) return;
+      
+      // Vue Routerを使用して店舗詳細ページに遷移
+      this.$router.push(`/shop/${shopId}`);
     }
   },
   mounted() {
@@ -115,6 +157,7 @@ export default {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   padding: 24px;
   position: relative;
+  min-height: 200px;
 }
 
 /* セクション区切り線 */
@@ -190,16 +233,28 @@ export default {
 .review-card {
   flex: 0 0 auto;
   width: 300px;
+  min-height: 180px;
   border-radius: 12px;
   overflow: hidden;
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 16px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.review-card:hover {
-  transform: translateY(-4px);
+.review-card-content {
+  flex: 1;
+}
+
+.review-card.clickable {
+  cursor: pointer;
+}
+
+.review-card.clickable:hover {
+  transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
@@ -223,50 +278,171 @@ export default {
 
 .review-meta {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
 }
 
 .user-name {
   font-weight: 600;
   font-size: 14px;
   color: #333;
+  text-align: left;
 }
 
 .review-date {
   font-size: 12px;
   color: #888;
+  text-align: left;
 }
 
 .review-shop {
   display: flex;
   align-items: center;
+  justify-content: start;
   gap: 6px;
   margin-bottom: 8px;
-  font-size: 14px;
+  font-size: 10px;
   color: #666;
 }
 
+.review-shop span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .review-text {
-  font-size: 14px;
+  font-size: 12px;
+  text-align: left;
   line-height: 1.5;
   color: #333;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.review-photos {
+.shop-link {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 12px;
+  color: #2e7d32;
+  margin-top: auto;
+  padding-top: 4px;
 }
 
-.review-photo {
+/* ローディングスタイル */
+.loading-container {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.skeleton-card {
+  background-color: #f9f9f9;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  margin-right: 12px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-text {
+  height: 14px;
   width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  background-size: cover;
-  background-position: center;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-text-sm {
+  height: 12px;
+  width: 60px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-rating {
+  width: 100px;
+}
+
+.rating-placeholder {
+  height: 16px;
+  width: 100px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-shop {
+  height: 10px;
+  width: 120px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin: 8px 0;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-paragraph {
+  margin-top: 8px;
+}
+
+.paragraph-line {
+  height: 12px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.paragraph-line:nth-child(1) {
+  width: 100%;
+}
+
+.paragraph-line:nth-child(2) {
+  width: 90%;
+}
+
+.paragraph-line:nth-child(3) {
+  width: 80%;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* エラー表示スタイル */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  min-height: 150px;
+}
+
+.error-container p {
+  margin: 12px 0;
+  color: #d32f2f;
+  font-size: 14px;
 }
 
 /* レスポンシブデザイン */
