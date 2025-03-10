@@ -64,63 +64,8 @@
       <!-- 検索していない場合のホーム画面 -->
       <div v-else class="home-content">
         <!-- おすすめセクション -->
-        <section class="section-container">
-          <div class="section-header">
-            <h2>おすすめのお店</h2>
-            <a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
-          </div>
-          <div class="section-divider"></div>
-          <div class="scrollable-container">
-            <div class="scrollable-content">
-              <!-- おすすめ店舗カード（APIデータ使用） -->
-              <div v-for="(shop, index) in apiData.slice(0, 8)" :key="`recommended-${index}`" class="shop-card" @click="navigateToShop(shop.ShopId)">
-                <div class="shop-image" :style="`background-image: url(${shop.PicUrl ? shop.PicUrl : require('@/assets/nophoto.jpg')})`">
-                  <div class="shop-rating" v-if="shop.Rate">
-                    <v-icon color="amber" size="small">mdi-star</v-icon>
-                    <span>{{ shop.Rate.toFixed(1) }}</span>
-                  </div>
-                  <!-- 順位表示 -->
-                  <div :class="['shop-rank', index < 3 ? `rank-${index + 1}` : 'rank-other']">
-                    {{ index + 1 }}
-                  </div>
-                </div>
-                <div class="shop-info">
-                  <h3>{{ shop.Name || 'おすすめ店舗' }}</h3>
-                  <div class="shop-tags">
-                    <span>{{ shop.Genre || '-' }}</span>
-                    <span v-if="shop.Budget">{{ getBudgetName(shop.Budget) }}</span>
-                    <span v-else>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
-                  </div>
-                  <p class="shop-access">{{ shop.Access || '' }}</p>
-                </div>
-              </div>
-              <!-- APIデータが不足している場合はモックデータで補完 -->
-              <template v-for="i in Math.max(0, 8 - apiData.length)" :key="`mock-${i}`">
-                <div v-if="apiData.length < 8" class="shop-card">
-                  <div class="shop-image" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`">
-                    <div class="shop-rating">
-                      <v-icon color="amber" size="small">mdi-star</v-icon>
-                      <span>{{ (3 + Math.random() * 2).toFixed(1) }}</span>
-                    </div>
-                    <!-- モックデータの順位表示 -->
-                    <div :class="['shop-rank', (apiData.length + i) <= 3 ? `rank-${apiData.length + i}` : 'rank-other']">
-                      {{ apiData.length + i }}
-                    </div>
-                  </div>
-                  <div class="shop-info">
-                    <h3>おすすめ店舗 {{ i }}</h3>
-                    <div class="shop-tags">
-                      <span>和食</span>
-                      <span>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
-                    </div>
-                    <p class="shop-access">渋谷駅から徒歩{{ Math.floor(Math.random() * 10 + 1) }}分</p>
-                  </div>
-                </div>
-              </template>
-            </div>
-          </div>
-        </section>
-        
+        <RecommendedShops />
+
         <!-- 最近投稿されたレビューセクション -->
         <RecentReviews />
 
@@ -163,6 +108,7 @@
 	import ShopSearchForm from '../components/forms/ShopSearchForm.vue';
 	import ShopRegisterForm from '../components/forms/ShopRegisterForm.vue';
 	import RecentReviews from '../components/RecentReviews.vue';
+	import RecommendedShops from '../components/RecommendedShops.vue';
 	import { locations } from '@/constants/locations.js';
 	import { genres } from '@/constants/genres.js';
 	import { budgets } from '@/constants/budgets.js';
@@ -322,7 +268,8 @@
 			ShopList,
 			ShopSearchForm,
 			ShopRegisterForm,
-			RecentReviews
+			RecentReviews,
+			RecommendedShops
 		}
 	};
 </script>
