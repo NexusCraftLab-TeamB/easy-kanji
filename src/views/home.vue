@@ -84,7 +84,7 @@
                   <h3>{{ shop.Name || 'おすすめ店舗' }}</h3>
                   <div class="shop-tags">
                     <span>{{ shop.Genre || '和食' }}</span>
-                    <span v-if="shop.Budget">{{ shop.Budget }}</span>
+                    <span v-if="shop.Budget">{{ getBudgetName(shop.Budget) }}</span>
                     <span v-else>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
                   </div>
                   <p class="shop-access">{{ shop.Access || '最寄り駅から徒歩10分' }}</p>
@@ -243,6 +243,11 @@
 			};
 		},
 		methods: {
+			// 予算コードから予算名を取得するメソッド
+			getBudgetName(budgetCode) {
+				const budget = budgets.find(bud => bud.code === budgetCode);
+				return budget ? budget.name : budgetCode;
+			},
 			// 店舗登録フォームを開く
 			openRegisterForm() {
 				this.isRegisterFormOpen = true;
