@@ -217,15 +217,27 @@
       </form>
     </div>
   </div>
+
+  <!-- トースト通知 -->
+  <ToastNotification
+    v-model:show="showToast"
+    :message="toastMessage"
+    :type="toastType"
+  />
+
 </template>
 
 <script>
 import { genres } from '@/constants/genres.js';
 import { budgets } from '@/constants/budgets.js';
 import axios from 'axios';
+import ToastNotification from '@/components/common/ToastNotification.vue';
 
 export default {
   name: 'ShopRegisterForm',
+  components: {
+    ToastNotification
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -256,7 +268,10 @@ export default {
       uploadedImageUrl: null,
       uploadError: null,
       uploadProgress: 0,
-      isUploading: false
+      isUploading: false,
+      showToast: false,
+      toastMessage: '',
+      toastType: 'success'
     };
   },
   watch: {
@@ -438,11 +453,17 @@ export default {
           }, 500);
           
           if (response.status === 200) {
-            alert('店舗登録が完了しました');
+            // トースト通知を表示
+            this.showToast = true;
+            this.toastMessage = '店舗登録が完了しました';
+
             this.resetForm();
             this.closeModal();
           } else {
-            alert('店舗登録に失敗しました');
+            // トースト通知を表示
+            this.showToast = true;
+            this.toastMessage = '店舗登録に失敗しました';
+            this.toastType = 'error';
           }
         } catch (error) {
           console.error('送信エラー詳細:', {
@@ -457,7 +478,10 @@ export default {
             }
           });
           
-          alert('店舗登録に失敗しました');
+          // トースト通知を表示
+          this.showToast = true;
+          this.toastMessage = '店舗登録に失敗しました';
+          this.toastType = 'error';
         } finally {
           this.isSubmitting = false;
         }

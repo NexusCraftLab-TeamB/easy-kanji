@@ -894,13 +894,12 @@ export default {
 
   .sentiment-emoji-container {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
 
   .sentiment-emoji {
-    font-size: 48px;
+    font-size: 36px;
     display: block;
-    margin-bottom: 8px;
   }
 
   .sentiment-title {
@@ -911,7 +910,6 @@ export default {
 
   .sentiment-bar-container {
     width: 100%;
-    margin-top: 16px;
   }
 
   .sentiment-score {
@@ -944,13 +942,13 @@ export default {
   .positive-label {
     color: #4caf50;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .negative-label {
     color: #f44336;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   /* タグとチップ */
@@ -1200,7 +1198,7 @@ export default {
     }
     
     .sentiment-emoji {
-      font-size: 40px;
+      font-size: 32px;
     }
     
     .score-value {
@@ -1311,7 +1309,7 @@ export default {
     }
     
     .sentiment-emoji {
-      font-size: 36px;
+      font-size: 24px;
     }
     
     .score-value {

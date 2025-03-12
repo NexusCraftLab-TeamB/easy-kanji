@@ -16,9 +16,6 @@
       <form @submit.prevent="submitReview" class="register-form">
         <!-- 店舗情報 -->
         <div class="shop-info">
-          <div class="shop-image">
-            <img :src="shopImage || require('@/assets/nophoto.jpg')" :alt="shopName" />
-          </div>
           <div class="shop-name">{{ shopName }}</div>
         </div>
 
@@ -31,10 +28,10 @@
               half-increments
               hover
               :length="5"
+              :size="50"
               color="amber"
               class="rating-stars"
             />
-            <div class="rating-value">{{ rating }}</div>
           </div>
         </div>
         
@@ -163,14 +160,25 @@
       </form>
     </div>
   </div>
+  
+  <!-- トースト通知 -->
+  <ToastNotification
+    v-model:show="showToast"
+    :message="toastMessage"
+    :type="toastType"
+  />
 </template>
 
 <script>
 import axios from 'axios';
 import { performances } from '@/constants/performances';
+import ToastNotification from '@/components/common/ToastNotification.vue';
 
 export default {
   name: 'ReviewModal',
+  components: {
+    ToastNotification
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -201,7 +209,11 @@ export default {
         role: '',
         peopleNum: '',
         comment: ''
-      }
+      },
+      // トースト通知用の状態
+      showToast: false,
+      toastMessage: "",
+      toastType: "success"
     };
   },
   watch: {
@@ -333,9 +345,17 @@ export default {
             this.$emit('review-submitted');
             this.resetForm();
             this.closeModal();
+            
+            // トースト通知を表示
+            this.showToast = true;
+            this.toastMessage = 'レビューを登録しました！';
           }
         } catch (error) {
           console.error('Error registering the review:', error);
+          // エラー時のトースト通知
+          this.showToast = true;
+          this.toastMessage = 'レビューの登録に失敗しました。';
+          this.toastType = 'error';
         } finally {
           this.isSubmitting = false;
         }
@@ -477,21 +497,6 @@ export default {
   border-bottom: 1px solid #e8f5e9;
 }
 
-.shop-image {
-  width: 120px;
-  height: 120px;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.shop-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .shop-name {
   font-size: 18px;
   font-weight: 600;
@@ -508,7 +513,11 @@ export default {
 }
 
 .rating-stars {
-  margin-right: 12px;
+  margin-right: 6px;
+}
+
+.rating-stars :deep(.v-rating__wrapper) {
+  font-size: 30px;
 }
 
 .rating-value {
@@ -519,7 +528,7 @@ export default {
 
 /* フォームグループ */
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   transition: all 0.3s ease;
 }
 
