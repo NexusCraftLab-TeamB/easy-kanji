@@ -64,102 +64,11 @@
       <!-- 検索していない場合のホーム画面 -->
       <div v-else class="home-content">
         <!-- おすすめセクション -->
-        <section class="section-container">
-          <div class="section-header">
-            <h2>おすすめのお店</h2>
-            <a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
-          </div>
-          <div class="section-divider"></div>
-          <div class="scrollable-container">
-            <div class="scrollable-content">
-              <!-- おすすめ店舗カード（APIデータ使用） -->
-              <div v-for="(shop, index) in apiData.slice(0, 8)" :key="`recommended-${index}`" class="shop-card" @click="navigateToShop(shop.ShopId)">
-                <div class="shop-image" :style="`background-image: url(${shop.Photo ? shop.Photo : require('@/assets/nophoto.jpg')})`">
-                  <div class="shop-rating" v-if="shop.Rate">
-                    <v-icon color="amber" size="small">mdi-star</v-icon>
-                    <span>{{ shop.Rate.toFixed(1) }}</span>
-                  </div>
-                </div>
-                <div class="shop-info">
-                  <h3>{{ shop.Name || 'おすすめ店舗' }}</h3>
-                  <div class="shop-tags">
-                    <span>{{ shop.Genre || '和食' }}</span>
-                    <span v-if="shop.Budget">{{ shop.Budget }}</span>
-                    <span v-else>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
-                  </div>
-                  <p class="shop-access">{{ shop.mobile_access || '最寄り駅から徒歩10分' }}</p>
-                </div>
-              </div>
-              <!-- APIデータが不足している場合はモックデータで補完 -->
-              <template v-for="i in Math.max(0, 8 - apiData.length)" :key="`mock-${i}`">
-                <div v-if="apiData.length < 8" class="shop-card">
-                  <div class="shop-image" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`">
-                    <div class="shop-rating">
-                      <v-icon color="amber" size="small">mdi-star</v-icon>
-                      <span>{{ (3 + Math.random() * 2).toFixed(1) }}</span>
-                    </div>
-                  </div>
-                  <div class="shop-info">
-                    <h3>おすすめ店舗 {{ i }}</h3>
-                    <div class="shop-tags">
-                      <span>和食</span>
-                      <span>¥{{ Math.floor(Math.random() * 3 + 2) }},000〜</span>
-                    </div>
-                    <p class="shop-access">渋谷駅から徒歩{{ Math.floor(Math.random() * 10 + 1) }}分</p>
-                  </div>
-                </div>
-              </template>
-            </div>
-          </div>
-        </section>
-        
+        <RecommendedShops />
+
         <!-- 最近投稿されたレビューセクション -->
-        <section class="section-container">
-          <div class="section-header">
-            <h2>最近投稿されたレビュー</h2>
-            <a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
-          </div>
-          <div class="section-divider"></div>
-          <div class="scrollable-container">
-            <div class="scrollable-content">
-              <!-- レビューカード（モック） -->
-              <div v-for="i in 6" :key="`review-${i}`" class="review-card">
-                <div class="review-header">
-                  <div class="user-avatar" :style="`background-color: hsl(${i * 40}, 70%, 80%)`">
-                    <span>{{ String.fromCharCode(64 + i) }}</span>
-                  </div>
-                  <div class="review-meta">
-                    <div class="user-name">幹事さん</div>
-                    <div class="review-date">{{ new Date().toLocaleDateString('ja-JP') }}</div>
-                  </div>
-                  <div class="review-rating">
-                    <v-rating
-                      :model-value="3 + Math.random() * 2"
-                      color="amber"
-                      density="compact"
-                      size="small"
-                      half-increments
-                      readonly
-                    ></v-rating>
-                  </div>
-                </div>
-                <div class="review-shop">
-                  <v-icon size="small" color="grey">mdi-storefront</v-icon>
-                  <span>{{ apiData[i % apiData.length]?.Name || `レビュー店舗 ${i}` }}</span>
-                </div>
-                <p class="review-text">
-                  とても美味しかったです！接客も丁寧で、また行きたいと思います。
-                  {{ i % 2 === 0 ? '雰囲気も良く、デートにもおすすめです。' : '値段もリーズナブルで、コスパ最高でした！' }}
-                </p>
-                <div class="review-photos" v-if="i % 3 !== 0">
-                  <div class="review-photo" :style="`background-image: url(${require('@/assets/home-image0' + (i % 9 + 1) + '.jpg')})`"></div>
-                  <div class="review-photo" v-if="i % 2 === 0" :style="`background-image: url(${require('@/assets/home-image0' + ((i + 2) % 9 + 1) + '.jpg')})`"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        
+        <RecentReviews />
+
         <!-- 人気のエリアセクション -->
         <section class="section-container">
           <div class="section-header">
@@ -198,6 +107,8 @@
 	import ShopList from '../components/ShopList.vue';
 	import ShopSearchForm from '../components/forms/ShopSearchForm.vue';
 	import ShopRegisterForm from '../components/forms/ShopRegisterForm.vue';
+	import RecentReviews from '../components/RecentReviews.vue';
+	import RecommendedShops from '../components/RecommendedShops.vue';
 	import { locations } from '@/constants/locations.js';
 	import { genres } from '@/constants/genres.js';
 	import { budgets } from '@/constants/budgets.js';
@@ -243,6 +154,11 @@
 			};
 		},
 		methods: {
+			// 予算コードから予算名を取得するメソッド
+			getBudgetName(budgetCode) {
+				const budget = budgets.find(bud => bud.code === budgetCode);
+				return budget ? budget.name : budgetCode;
+			},
 			// 店舗登録フォームを開く
 			openRegisterForm() {
 				this.isRegisterFormOpen = true;
@@ -302,7 +218,7 @@
 						// レスポンスのデータを保存
 						this.apiData = response.data;
 						this.searchError = false;  // エラーフラグをリセット
-						console.log(this.apiData);
+						console.log("apiData",this.apiData);
 
 				} catch (error) {
 					// 404エラーの場合に「検索結果がありません」というフラグを設定
@@ -351,7 +267,9 @@
 		components: {
 			ShopList,
 			ShopSearchForm,
-			ShopRegisterForm
+			ShopRegisterForm,
+			RecentReviews,
+			RecommendedShops
 		}
 	};
 </script>
@@ -577,6 +495,45 @@
 		background-size: cover;
 		background-position: center;
 		position: relative;
+		overflow: hidden;
+	}
+
+	/* 順位表示のスタイル */
+	.shop-rank {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		font-weight: bold;
+		font-size: 14px;
+		color: white;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.rank-1 {
+		background: linear-gradient(135deg, #ffd700, #ffb700); /* 金色 */
+		border: 1px solid #e6c200;
+	}
+
+	.rank-2 {
+		background: linear-gradient(135deg, #c0c0c0, #e0e0e0); /* 銀色 */
+		border: 1px solid #a0a0a0;
+	}
+
+	.rank-3 {
+		background: linear-gradient(135deg, #cd7f32, #e0955e); /* 銅色 */
+		border: 1px solid #b06728;
+	}
+
+	.rank-other {
+		background: linear-gradient(135deg, #607d8b, #90a4ae); /* ブルーグレー */
+		border: 1px solid #546e7a;
 	}
 
 	.shop-rating {
@@ -629,89 +586,6 @@
 		color: #666;
 		font-size: 12px;
 		margin: 0;
-	}
-
-	/* レビューカード */
-	.review-card {
-		flex: 0 0 auto;
-		width: 300px;
-		border-radius: 12px;
-		overflow: hidden;
-		background-color: #fff;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-		padding: 16px;
-		transition: transform 0.3s ease, box-shadow 0.3s ease;
-	}
-
-	.review-card:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-	}
-
-	.review-header {
-		display: flex;
-		align-items: center;
-		margin-bottom: 12px;
-	}
-
-	.user-avatar {
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-weight: 600;
-		color: #333;
-		margin-right: 12px;
-	}
-
-	.review-meta {
-		flex: 1;
-	}
-
-	.user-name {
-		font-weight: 600;
-		font-size: 14px;
-		color: #333;
-	}
-
-	.review-date {
-		font-size: 12px;
-		color: #888;
-	}
-
-	.review-shop {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		margin-bottom: 8px;
-		font-size: 14px;
-		color: #666;
-	}
-
-	.review-text {
-		font-size: 14px;
-		line-height: 1.5;
-		color: #333;
-		margin-bottom: 12px;
-		display: -webkit-box;
-		-webkit-line-clamp: 3;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
-
-	.review-photos {
-		display: flex;
-		gap: 8px;
-	}
-
-	.review-photo {
-		width: 80px;
-		height: 80px;
-		border-radius: 8px;
-		background-size: cover;
-		background-position: center;
 	}
 
 	/* エリアグリッド */
@@ -809,10 +683,6 @@
 			width: 180px;
 		}
 		
-		.review-card {
-			width: 260px;
-		}
-		
 		.area-grid {
 			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
 		}
@@ -843,10 +713,6 @@
 		
 		.shop-image {
 			height: 120px;
-		}
-		
-		.review-card {
-			width: 240px;
 		}
 		
 		.area-grid {

@@ -7,13 +7,13 @@
 					<div v-for="(shop, index) in apiData" :key="index">
 						<ShopCard
 							:link="`/shop/${shop.ShopId}`"
-							:image="shop.Photo ? shop.Photo : require('@/assets/nophoto.jpg')"
+							:image="shop.PicUrl ? shop.PicUrl : require('@/assets/nophoto.jpg')"
 							:name="shop.Name || '店名未設定'"
-							:Adress="shop.Adress || '住所未設定'"
-							:mobile_access="shop.mobile_access || '未登録'"
+							:address="shop.Address || '住所未設定'"
+							:access="shop.Access || '未登録'"
 							:tags="shop.tags"
 							:genre="shop.Genre"
-							:Rate="shop.Rate"
+							:rate="shop.Rate"
 							:reviewCount="shop.review_count"
 						/>
 					</div>
