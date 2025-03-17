@@ -111,7 +111,7 @@
 	<!-- ✅ 追加したフッター -->
 	<footer class="footer">
 		<ul class="footer-links">
-			<li><a href="#">Easy Kanjii について</a></li>
+			<li><router-link to="/about">Easy Kanji について</router-link></li>
 		</ul>
 		<p class="footer-right">&copy; 2024-2025 Easy Kanjii. All Rights Reserved.</p>
 	</footer>
@@ -128,6 +128,7 @@
 	import { locations } from '@/constants/locations.js';
 	import { genres } from '@/constants/genres.js';
 	import { budgets } from '@/constants/budgets.js';
+
 
 	export default {
 		name: 'HomeView',
@@ -157,6 +158,7 @@
 				],
 				intervalId: null,
 				// 人気エリアのモックデータ
+				/*
 				popularAreas: [
 					{ name: '渋谷', count: 256, image: require('@/assets/home-image01.jpg') },
 					{ name: '新宿', count: 312, image: require('@/assets/home-image02.jpg') },
@@ -167,6 +169,7 @@
 				],
 				// 店舗登録フォームの表示状態
 				isRegisterFormOpen: false
+				*/
 			};
 		},
 		methods: {
