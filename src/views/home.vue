@@ -70,7 +70,7 @@
         <RecentReviews />
 
         <!-- 人気のエリアセクション -->
-        <section class="section-container">
+        <!-- <section class="section-container">
           <div class="section-header">
             <h2>人気のエリア</h2>
           </div>
@@ -81,7 +81,7 @@
               <span>{{ area.count }}件</span>
             </div>
           </div>
-        </section>
+        </section> -->
 
         <!-- 店舗登録ボタン -->
         <div class="register-shop-button-container">

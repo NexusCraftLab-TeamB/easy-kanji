@@ -2,7 +2,7 @@
   <section class="section-container">
     <div class="section-header">
       <h2>おすすめのお店</h2>
-      <a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
+      <!--<a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>-->
     </div>
     <div class="section-divider"></div>
     
