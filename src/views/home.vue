@@ -1,7 +1,12 @@
 <template>
   <div>
     <div class="bg-home">
-      <img :src="require('@/assets/easy-kanji-logo.png')" alt="logo">
+	<img
+		:src="require('@/assets/easy-kanji-logo.png')"
+		alt="logo"
+		class="clickable-logo"
+		@click="navigateToHome"
+	>
       <ShopSearchForm @submit-data="handleFormData" class="centered-form"/>
     </div>
 
@@ -154,6 +159,10 @@
 			};
 		},
 		methods: {
+			// ヘッダーのロゴを押すとホーム画面（'/'）へ遷移
+			navigateToHome() {
+				window.location.reload();
+			},
 			// 予算コードから予算名を取得するメソッド
 			getBudgetName(budgetCode) {
 				const budget = budgets.find(bud => bud.code === budgetCode);
@@ -275,6 +284,10 @@
 </script>
 
 <style scoped>
+	.clickable-logo {
+		cursor: pointer;
+	}
+
 	/* 全体のコンテナスタイル */
 	.content-container {
 		max-width: 1200px;
