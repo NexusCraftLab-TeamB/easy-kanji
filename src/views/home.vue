@@ -1,8 +1,13 @@
 <template>
   <div>
     <div class="bg-home">
-      <img :src="require('@/assets/easy-kanji-logo.png')" alt="logo">
-      <ShopSearchForm @submit-data="handleFormData" class="centered-form"/>
+		<img
+			:src="require('@/assets/easy-kanji-logo.png')"
+			alt="logo"
+			class="clickable-logo"
+			@click="navigateToHome"
+		>
+		<ShopSearchForm @submit-data="handleFormData" class="centered-form"/>
     </div>
 
     <div class="content-container">
@@ -154,6 +159,15 @@
 			};
 		},
 		methods: {
+			// ヘッダーのロゴを押すとホーム画面（'/'）へ遷移
+			navigateToHome() {
+				console.log('ロゴがクリックされました');
+				if (this.$router) {
+					window.location.reload();
+				} else {
+					console.error('Vue Router が利用できません');
+				}
+			},
 			// 予算コードから予算名を取得するメソッド
 			getBudgetName(budgetCode) {
 				const budget = budgets.find(bud => bud.code === budgetCode);
@@ -275,6 +289,12 @@
 </script>
 
 <style scoped>
+	.clickable-logo {
+		cursor: pointer;
+		z-index: 10;
+		position: relative;
+	}
+
 	/* 全体のコンテナスタイル */
 	.content-container {
 		max-width: 1200px;
