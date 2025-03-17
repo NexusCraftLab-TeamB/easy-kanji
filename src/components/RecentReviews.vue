@@ -2,7 +2,7 @@
   <section class="section-container">
     <div class="section-header">
       <h2>最近投稿されたレビュー</h2>
-      <a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a>
+      <!--<a href="#" class="view-all">すべて見る <v-icon>mdi-chevron-right</v-icon></a> -->
     </div>
     <div class="section-divider"></div>
     
