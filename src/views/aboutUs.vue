@@ -1,86 +1,217 @@
 <template>
-  <div class="about-container">
-    <!-- ✅ 画像を上部に表示 -->
-    <img src="@/assets/AboutUs.jpg" alt="About Easy Kanji" class="about-image">
+  <div class="home-overview-container">
+    <!-- Hero image or illustration -->
+    <div class="hero-image-container">
+      <img src="@/assets/AboutUs.png" alt="Easy Kanji Home Overview" class="hero-image" />
+      <div class="overlay-text">
+        <p>
+          <span class="highlight-text">“お店選びで、もう迷わない！”</span>
+          「イージー幹事ぃ（EASY KANJii）」は、<br>
+          社内のローカル飲み会実績共有WEBサイトとして、<br>
+          NIC社内の各部・各班で利用実績がある確かなお店を数クリックで検索できます。
+        </p>
+      </div>
+    </div>
 
-    <!-- ✅ 画像の下にコンテンツを配置 -->
-    <div class="text-content">
-      <h1>Easy Kanji について</h1>
-      <p>Easy Kanji は、最適な店舗を探すための検索サイトです。</p>
-      <h1>できること</h1>
-      <h2>キーワードから検索：</h2>
-      <p>テキストボックスに記載された言葉でいろいろ考慮しながら検索します。</p>
-      <p>利用実績がある店舗が優先されます。</p>
+    <div class="overview-content">
+      <h1>Easy Kanjii(ver1.0) 機能説明</h1>
 
-      <h2>カテゴリから検索：</h2>
-      <p>条件を指定して検索します。実績がある店舗が優先されます。</p>
-      
-      <h2>検索結果にない店舗を登録する：</h2>
-      <p>いくら検索しても店舗が出てこない。そんな時に利用します。</p>
-      <p>登録した店舗の修正はできないので、慎重に登録しましょう。</p>
-      <p>登録した店舗は、カテゴリから名前検索すると見つかりやすいです。</p>
+      <section>
+        <h2>トップへ戻る</h2>
+        <p>画面上部のロゴをクリックすると、いつでもホーム（トップ）にリロードして戻ることができます。</p>
+      </section>
+
+      <section>
+        <h2>キーワード検索</h2>
+        <ul>
+          <li>テキストボックスに入力されたキーワードをもとに、過去の利用実績やレビューを優先して絞り込み</li>
+          <li>入力後、ボタン一つで結果がカード形式で即時表示されます</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>カテゴリ（条件）検索</h2>
+        <ul>
+          <li>「場所」「ジャンル」「予算」「実績」「人数」など、複数の条件を組み合わせて絞り込み可能</li>
+          <li>選択中の条件は画面上部にチップとして並び、クリックで解除できます</li>
+          <li>条件を選択・変更すると、自動的に結果が更新されます</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>おすすめ＆最新レビュー</h2>
+        <ul>
+          <li>検索を行っていないときは「おすすめ店舗」セクションと「最近投稿されたレビュー」を表示</li>
+          <li>おすすめは評価スコアや利用実績をもとに自動ピックアップ</li>
+          <li>最新レビューは投稿日時の新しい順に一覧化</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>店舗登録</h2>
+        <li>検索結果にない店舗は「検索結果にない店舗を登録する」ボタンから追加登録可能。登録後はカテゴリ検索や名前検索で見つかりやすくなります。</li>
+        <li>※登録内容は後で修正できないため、慎重に入力してください。</li>
+      </section>
 
       <router-link to="/" class="back-button">戻る</router-link>
     </div>
+
+    <!-- ✅ フッターの上にラインを追加 -->
+    <div class="footer-separator"></div>
+
+    <!-- ✅ 追加したフッター -->
+    <footer class="footer">
+      <p class="footer-right">&copy; 2024-2025 Easy Kanjii. All Rights Reserved.</p>
+    </footer>
+
   </div>
 </template>
 
 <script>
 export default {
-  name: "AboutUs"
+  name: "HomeOverview",
+  mounted() {
+    window.scrollTo(0, 0);
+  }
 };
 </script>
 
 <style scoped>
-/* ✅ 全体のコンテナ */
-.about-container {
+.home-overview-container {
+  font-family: 'ヒラギノ角ゴ Pro','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100vw;
-  max-width: 100%;
+  text-align: center;
+  padding: 16px;
+}
+
+.hero-image-container {
+  position: relative;
+  width: 100%;
+}
+.overlay-text {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  text-shadow: 0 0 6px rgba(0,0,0,0.7);
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 80%;
   text-align: center;
 }
 
-/* ✅ 画像のスタイル */
-.about-image {
+.overlay-text p {
+  font-size: 1.2rem;
+}
+
+.highlight-text {
+  font-family: inherit;
+  font-size: 2.5rem;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.hero-image {
   width: 100%;
-  height: auto;
-  max-height: 700px; /* 高さを制限 */
-  object-fit: cover; /* 画像の比率を保ちつつリサイズ */
+  max-height: 400px;
+  object-fit: cover;
+  margin-bottom: 24px;
 }
 
-/* ✅ 画像の下に表示するテキスト */
-.text-content {
+.overview-content {
   max-width: 800px;
-  padding: 20px;
 }
 
-/* ✅ 見出し */
-h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
+.overview-content h1 {
+  font-size: 32px;
+  margin-bottom: 16px;
   color: #1b5e20;
 }
 
-/* ✅ 説明文 */
-p {
-  font-size: 18px;
-  margin-bottom: 20px;
+.overview-content h2 {
+  font-size: 24px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  color: #2e7d32;
 }
 
-/* ✅ 戻るボタン */
+.overview-content p,
+.overview-content li {
+  font-size: 16px;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.overview-content ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+
 .back-button {
   display: inline-block;
+  margin-top: 24px;
   padding: 10px 20px;
   background-color: #2e7d32;
   color: white;
   text-decoration: none;
-  border-radius: 5px;
-  transition: background 0.3s;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
 .back-button:hover {
   background-color: #1b5e20;
 }
+
+
+		/* フッター上部の区切り線 */
+		.footer-separator {
+			width: 100%;
+			height: 2px;
+			background: linear-gradient(to right, #e0e0e0, #c8e6c9, #e0e0e0); /* 両端がグレー、中央が薄い緑 */
+			margin-top: 32px;
+		}
+
+		/* フッター */
+		.footer {
+			background-color: #2e7d32;
+			color: darkolivegreen;
+			padding: 16px 24px;
+			text-align: center;
+			font-size: 14px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+		}
+
+		/* フッターのリンク */
+		.footer-links {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.footer-links li {
+			display: inline;
+			margin-right: 20px; /* 間隔を空ける */
+		}
+
+		.footer-links a {
+			color: darkolivegreen;
+			font-weight:bold;
+			text-decoration: none;
+			font-size: 14px;
+		}
+
+		.footer-links a:hover {
+			text-decoration: underline;
+		}
+
+		/* コピーライト */
+		.footer-right {
+			font-size: 14px;
+		}
 </style>

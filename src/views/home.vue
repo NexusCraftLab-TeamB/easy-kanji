@@ -166,10 +166,10 @@
 					{ name: '銀座', count: 203, image: require('@/assets/home-image04.jpg') },
 					{ name: '六本木', count: 178, image: require('@/assets/home-image05.jpg') },
 					{ name: '恵比寿', count: 165, image: require('@/assets/home-image06.jpg') }
-				],
+				],*/
 				// 店舗登録フォームの表示状態
 				isRegisterFormOpen: false
-				*/
+				
 			};
 		},
 		methods: {
@@ -251,6 +251,7 @@
 					} else {
 						console.error('Error fetching data:', error);
 					}
+
 				}
 			},
 			// 店舗詳細ページへ遷移
