@@ -37,7 +37,7 @@
     <div v-else class="scrollable-container">
       <div class="scrollable-content">
         <div 
-          v-for="(shop, index) in shops.slice(0, 8)" 
+          v-for="(shop, index) in shops.slice(0, 10)" 
           :key="`recommended-${index}`" 
           class="shop-card" 
           @click="navigateToShop(shop.ShopId)"
