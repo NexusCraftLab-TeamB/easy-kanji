@@ -1,13 +1,17 @@
 <template>
   <div>
     <div class="bg-home">
-	<img
-		:src="require('@/assets/easy-kanji-logo.png')"
-		alt="logo"
-		class="clickable-logo"
-		@click="navigateToHome"
-	>
+			<img
+				:src="require('@/assets/easy-kanji-logo.png')"
+				alt="logo"
+				class="clickable-logo"
+				@click="navigateToHome"
+			>
       <ShopSearchForm @submit-data="handleFormData" class="centered-form"/>
+      <div class="recommendation-text" v-if="!submited">
+				<v-icon class="scroll-icon">mdi-chevron-double-down</v-icon>
+				<span>おすすめをみる</span>
+      </div>
     </div>
 
     <div class="content-container">
@@ -73,20 +77,6 @@
 
         <!-- 最近投稿されたレビューセクション -->
         <RecentReviews />
-
-        <!-- 人気のエリアセクション -->
-        <!-- <section class="section-container">
-          <div class="section-header">
-            <h2>人気のエリア</h2>
-          </div>
-          <div class="section-divider"></div>
-          <div class="area-grid">
-            <div v-for="(area, index) in popularAreas" :key="index" class="area-card" :style="`background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${area.image})`">
-              <h3>{{ area.name }}</h3>
-              <span>{{ area.count }}件</span>
-            </div>
-          </div>
-        </section> -->
 
         <!-- 店舗登録ボタン -->
         <div class="register-shop-button-container">
@@ -807,5 +797,41 @@
 			.footer-right {
 			margin-left: auto;
 			font-size: 14px;
+		}
+
+		/* おすすめテキスト */
+		.recommendation-text {
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			text-align: center;
+			color: white;
+			opacity: 0.8;
+			font-weight: bold;
+			font-size: 14px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 4px;
+			animation: gentle-bounce 3s infinite;
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+		}
+
+		.scroll-icon {
+			font-size: 22px;
+			opacity: 0.8;
+		}
+
+		@keyframes gentle-bounce {
+			0%, 20%, 50%, 80%, 100% {
+				transform: translateY(0) translateX(-50%);
+			}
+			40% {
+				transform: translateY(-4px) translateX(-50%);
+			}
+			60% {
+				transform: translateY(-2px) translateX(-50%);
+			}
 		}
 </style>
