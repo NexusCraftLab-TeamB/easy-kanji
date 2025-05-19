@@ -1,7 +1,12 @@
 <template>
   <div>
     <div class="bg-home">
-      <img :src="require('@/assets/easy-kanji-logo.png')" alt="logo">
+	<img
+		:src="require('@/assets/easy-kanji-logo.png')"
+		alt="logo"
+		class="clickable-logo"
+		@click="navigateToHome"
+	>
       <ShopSearchForm @submit-data="handleFormData" class="centered-form"/>
     </div>
 
@@ -99,6 +104,17 @@
       :isOpen="isRegisterFormOpen" 
       @close="closeRegisterForm"
     />
+
+	<!-- ✅ フッターの上にラインを追加 -->
+	<div class="footer-separator"></div>
+
+	<!-- ✅ 追加したフッター -->
+	<footer class="footer">
+		<ul class="footer-links">
+			<li><router-link to="/about">Easy Kanji について</router-link></li>
+		</ul>
+		<p class="footer-right">&copy; 2024-2025 Easy Kanjii. All Rights Reserved.</p>
+	</footer>
   </div>
 </template>
   
@@ -112,6 +128,7 @@
 	import { locations } from '@/constants/locations.js';
 	import { genres } from '@/constants/genres.js';
 	import { budgets } from '@/constants/budgets.js';
+
 
 	export default {
 		name: 'HomeView',
@@ -141,6 +158,7 @@
 				],
 				intervalId: null,
 				// 人気エリアのモックデータ
+				/*
 				popularAreas: [
 					{ name: '渋谷', count: 256, image: require('@/assets/home-image01.jpg') },
 					{ name: '新宿', count: 312, image: require('@/assets/home-image02.jpg') },
@@ -148,12 +166,17 @@
 					{ name: '銀座', count: 203, image: require('@/assets/home-image04.jpg') },
 					{ name: '六本木', count: 178, image: require('@/assets/home-image05.jpg') },
 					{ name: '恵比寿', count: 165, image: require('@/assets/home-image06.jpg') }
-				],
+				],*/
 				// 店舗登録フォームの表示状態
 				isRegisterFormOpen: false
+				
 			};
 		},
 		methods: {
+			// ヘッダーのロゴを押すとホーム画面（'/'）へ遷移
+			navigateToHome() {
+				window.location.reload();
+			},
 			// 予算コードから予算名を取得するメソッド
 			getBudgetName(budgetCode) {
 				const budget = budgets.find(bud => bud.code === budgetCode);
@@ -228,6 +251,7 @@
 					} else {
 						console.error('Error fetching data:', error);
 					}
+
 				}
 			},
 			// 店舗詳細ページへ遷移
@@ -275,6 +299,10 @@
 </script>
 
 <style scoped>
+	.clickable-logo {
+		cursor: pointer;
+	}
+
 	/* 全体のコンテナスタイル */
 	.content-container {
 		max-width: 1200px;
@@ -732,4 +760,52 @@
 			box-sizing: border-box;
 		}
 	}
+		/* フッター上部の区切り線 */
+		.footer-separator {
+			width: 100%;
+			height: 2px;
+			background: linear-gradient(to right, #e0e0e0, #c8e6c9, #e0e0e0); /* 両端がグレー、中央が薄い緑 */
+			margin-top: 32px;
+		}
+
+		/* フッター */
+		.footer {
+			background-color: #2e7d32;
+			color: darkolivegreen;
+			padding: 16px 24px;
+			text-align: center;
+			font-size: 14px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		/* フッターのリンク */
+		.footer-links {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.footer-links li {
+			display: inline;
+			margin-right: 20px; /* 間隔を空ける */
+		}
+
+		.footer-links a {
+			color: darkolivegreen;
+			font-weight:bold;
+			text-decoration: none;
+			font-size: 14px;
+		}
+
+		.footer-links a:hover {
+			text-decoration: underline;
+		}
+
+		/* コピーライト */
+			.footer-right {
+			margin-left: auto;
+			font-size: 14px;
+		}
 </style>
