@@ -380,6 +380,7 @@
   <ReviewModal 
     :is-open="isReviewModalOpen" 
     :shop-id="ShopId"
+    :shop-name="shop.shop_items[0]?.Name"
     @close="closeReviewModal"
     @review-submitted="handleReviewSubmitted"
   />
