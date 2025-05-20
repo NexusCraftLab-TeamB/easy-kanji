@@ -50,7 +50,8 @@
       <section>
         <h2>店舗登録</h2>
         <li>検索結果にない店舗は「検索結果にない店舗を登録する」ボタンから追加登録可能。登録後はカテゴリ検索や名前検索で見つかりやすくなります。</li>
-        <li>※登録内容は後で修正できないため、慎重に入力してください。</li>
+        <p>※登録内容は後で修正できないため、慎重に入力してください。</p>
+        <p>※店舗登録で登録した店舗の画像は、「仮想ブラウザ環境」からは表示されないのでご留意ください（ネットワークのフィルタリングの仕様）。</p>
       </section>
 
       <router-link to="/" class="back-button">戻る</router-link>
@@ -89,30 +90,51 @@ export default {
 .hero-image-container {
   position: relative;
   width: 100%;
+  overflow: hidden; /* はみ出し防止 */
 }
+
 .overlay-text {
   position: absolute;
-  top: 20%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
+  /* 背景の端ギリギリまで広がらないように左右に余白を設定 */
+  padding: 0 1rem;
+  box-sizing: border-box;
   color: white;
   text-shadow: 0 0 6px rgba(0,0,0,0.7);
-  font-size: 18px;
-  line-height: 1.6;
-  max-width: 80%;
   text-align: center;
+  width: 100%;
+  max-width: 800px; /* 大きい画面での最大幅 */
 }
 
 .overlay-text p {
-  font-size: 1.2rem;
+  /* ビューポート幅に応じて自動的に縮小 */
+  font-size: min(1.2rem, 4vw);
+  line-height: 1.4;
+  margin: 0;
 }
 
 .highlight-text {
-  font-family: inherit;
-  font-size: 2.5rem;
-  font-weight: bold;
   display: block;
+  /* 同様にレスポンシブにフォントサイズ調整 */
+  font-size: min(2.5rem, 6vw);
+  font-weight: bold;
   margin-bottom: 0.5rem;
+}
+
+/* 小さい画面向けの微調整 */
+@media (max-width: 480px) {
+  .overlay-text {
+    top: 40%;
+  }
+  .overlay-text p {
+    font-size: 3.5vw;
+    line-height: 1.3;
+  }
+  .highlight-text {
+    font-size: 5.5vw;
+  }
 }
 
 .hero-image {
