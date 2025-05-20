@@ -2,7 +2,7 @@
   <div class="toast-container">
     <transition>
       <div v-if="show" class="toast-notification" :class="type">
-        <v-icon :icon="icon" size="small" class="toast-icon"></v-icon>
+        <v-icon :icon="icon" class="toast-icon"></v-icon>
         <span class="toast-message">{{ message }}</span>
       </div>
     </transition>
@@ -10,8 +10,13 @@
 </template>
 
 <script>
+import { VIcon } from 'vuetify/components'
+
 export default {
   name: 'ToastNotification',
+  components: {
+    VIcon
+  },
   props: {
     show: {
       type: Boolean,

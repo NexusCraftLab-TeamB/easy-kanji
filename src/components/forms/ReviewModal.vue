@@ -179,6 +179,7 @@ export default {
   components: {
     ToastNotification
   },
+  emits: ['close', 'review-submitted'],
   props: {
     isOpen: {
       type: Boolean,

@@ -231,7 +231,9 @@
 						// レスポンスのデータを保存
 						this.apiData = response.data;
 						this.searchError = false;  // エラーフラグをリセット
-						console.log("apiData",this.apiData);
+						if (process.env.NODE_ENV === 'development') {
+							console.log("apiData", this.apiData);
+						}
 
 				} catch (error) {
 					// 404エラーの場合に「検索結果がありません」というフラグを設定

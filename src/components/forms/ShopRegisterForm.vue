@@ -220,13 +220,16 @@
 
   <!-- トースト通知 -->
   <ToastNotification
-    v-model:show="showToast"
+    :show="showToast"
     :message="toastMessage"
     :type="toastType"
+    :duration="3000"
+    @update:show="showToast = $event"
   />
 
   <!-- レビューモーダル -->
   <ReviewModal 
+    v-if="registeredShopId"
     :is-open="isReviewModalOpen" 
     :shop-id="registeredShopId"
     :shop-name="formData.name"
@@ -242,13 +245,16 @@ import { budgets } from '@/constants/budgets.js';
 import axios from 'axios';
 import ToastNotification from '@/components/common/ToastNotification.vue';
 import ReviewModal from '@/components/forms/ReviewModal.vue';
+import { VIcon } from 'vuetify/components';
 
 export default {
   name: 'ShopRegisterForm',
   components: {
     ToastNotification,
-    ReviewModal
+    ReviewModal,
+    VIcon
   },
+  emits: ['close'],
   props: {
     isOpen: {
       type: Boolean,

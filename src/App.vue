@@ -30,7 +30,6 @@ export default {
   },
   methods: {
     onItemClick(item) {
-      console.log(item.title);
       this.$router.push(item.route);
     },
     redirectToHome() {

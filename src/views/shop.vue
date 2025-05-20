@@ -380,7 +380,7 @@
   <ReviewModal 
     :is-open="isReviewModalOpen" 
     :shop-id="ShopId"
-    :shop-name="shop.shop_items[0]?.Name"
+    :shop-name="shop?.shop_items[0]?.Name || ''"
     @close="closeReviewModal"
     @review-submitted="handleReviewSubmitted"
   />
@@ -453,7 +453,6 @@ export default {
       this.positivePoint = Math.round(this.shop.shop_items[0].positive_percentage);
       this.negativePoint = Math.round(this.shop.shop_items[0].negative_percentage);
 
-      console.log("shop",this.shop);
     } catch (error) {
       console.error('Error fetching shop data:', error);
     } finally {
