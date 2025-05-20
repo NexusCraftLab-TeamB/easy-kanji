@@ -147,19 +147,8 @@
 					require('@/assets/home-image09.jpg')
 				],
 				intervalId: null,
-				// 人気エリアのモックデータ
-				/*
-				popularAreas: [
-					{ name: '渋谷', count: 256, image: require('@/assets/home-image01.jpg') },
-					{ name: '新宿', count: 312, image: require('@/assets/home-image02.jpg') },
-					{ name: '池袋', count: 187, image: require('@/assets/home-image03.jpg') },
-					{ name: '銀座', count: 203, image: require('@/assets/home-image04.jpg') },
-					{ name: '六本木', count: 178, image: require('@/assets/home-image05.jpg') },
-					{ name: '恵比寿', count: 165, image: require('@/assets/home-image06.jpg') }
-				],*/
-				// 店舗登録フォームの表示状態
+				preloadedImages: [], // プリロードされた画像を保持する配列
 				isRegisterFormOpen: false
-				
 			};
 		},
 		methods: {
@@ -180,13 +169,30 @@
 			closeRegisterForm() {
 				this.isRegisterFormOpen = false;
 			},
+			// 画像をプリロードするメソッド
+			preloadImages() {
+				this.backgroundImages.forEach((imageUrl, index) => {
+					const img = new Image();
+					img.src = imageUrl;
+					img.onload = () => {
+						this.preloadedImages[index] = img;
+					};
+				});
+			},
 			// バックグラウンド画像を変更
 			changeBackgroundImage() {
 				// ランダムなインデックスを生成
 				const randomIndex = Math.floor(Math.random() * this.backgroundImages.length);
 				this.currentImageIndex = randomIndex;
 				const newImageUrl = this.backgroundImages[this.currentImageIndex];
-				document.querySelector('.bg-home').style.backgroundImage = `url(${newImageUrl})`;
+				
+				// プリロードされた画像が利用可能な場合はそれを使用
+				if (this.preloadedImages[this.currentImageIndex]) {
+					document.querySelector('.bg-home').style.backgroundImage = `url(${newImageUrl})`;
+				} else {
+					// プリロードされていない場合は通常の方法で設定
+					document.querySelector('.bg-home').style.backgroundImage = `url(${newImageUrl})`;
+				}
 			},
 			// フォームデータを受け取り、APIを呼び出す
 			handleFormData(data) {
@@ -231,7 +237,9 @@
 						// レスポンスのデータを保存
 						this.apiData = response.data;
 						this.searchError = false;  // エラーフラグをリセット
-						console.log("apiData",this.apiData);
+						if (process.env.NODE_ENV === 'development') {
+							console.log("apiData", this.apiData);
+						}
 
 				} catch (error) {
 					// 404エラーの場合に「検索結果がありません」というフラグを設定
@@ -254,8 +262,9 @@
 		mounted() {
 			this.fetchData(); // ページが読み込まれた時にAPI呼び出し
 			this.submited = false;
+			this.preloadImages(); // 画像のプリロードを開始
 			this.changeBackgroundImage(); // 初期画像を設定
-			this.intervalId = setInterval(this.changeBackgroundImage, 10000); // 10秒ごとに画像を変更
+			this.intervalId = setInterval(this.changeBackgroundImage, 20000); // 20秒ごとに画像を変更
 			document.title = 'Easy Kanji'; // タイトルを設定
 		},
 		beforeUnmount() {
@@ -333,7 +342,7 @@
 		background-color: #fff;
 		border-radius: 12px;
 		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-		padding: 24px;
+		padding: 10px;
 		margin-bottom: 32px;
 	}
 

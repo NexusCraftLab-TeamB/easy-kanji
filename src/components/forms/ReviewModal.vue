@@ -179,12 +179,17 @@ export default {
   components: {
     ToastNotification
   },
+  emits: ['close', 'review-submitted'],
   props: {
     isOpen: {
       type: Boolean,
       default: false
     },
     shopId: {
+      type: String,
+      required: true
+    },
+    shopName: {
       type: String,
       required: true
     }
@@ -200,8 +205,6 @@ export default {
       peopleNum: "",
       date: new Date().toISOString().substr(0, 10),
       isSubmitting: false,
-      shopName: "",
-      shopImage: "",
       focusedField: null,
       formProgress: 0,
       errors: {
@@ -220,7 +223,6 @@ export default {
     isOpen(newVal) {
       if (newVal) {
         document.body.style.overflow = 'hidden';
-        this.fetchShopInfo();
       } else {
         document.body.style.overflow = '';
       }
@@ -304,19 +306,6 @@ export default {
     },
     hasErrors() {
       return Object.values(this.errors).some(error => error !== '');
-    },
-    async fetchShopInfo() {
-      try {
-        const response = await axios.get(`https://v2r53b54we.execute-api.ap-northeast-1.amazonaws.com/dev/shop?shop_id=${this.shopId}`);
-        if (response.data.shop_items.length > 0) {
-          this.shopName = response.data.shop_items[0].Name;
-          this.shopImage = response.data.shop_items[0].PicUrl;
-        } else {
-          console.error('No shop items found for the provided shop_id');
-        }
-      } catch (error) {
-        console.error('Error fetching shop info:', error);
-      }
     },
     async submitReview() {
       this.validateForm();

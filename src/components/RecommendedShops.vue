@@ -35,7 +35,11 @@
     
     <!-- 店舗表示 -->
     <div v-else class="scrollable-container">
-      <div class="scrollable-content">
+      <div v-if="shops.length === 0" class="no-content-message">
+        <v-icon size="large" color="grey">mdi-store-outline</v-icon>
+        <p>おすすめ店舗がありません。レビューを投稿するとおすすめ店舗が表示されます。</p>
+      </div>
+      <div v-else class="scrollable-content">
         <div 
           v-for="(shop, index) in shops.slice(0, 10)" 
           :key="`recommended-${index}`" 
@@ -382,6 +386,23 @@ export default {
 .error-container p {
   margin: 12px 0;
   color: #d32f2f;
+  font-size: 14px;
+}
+
+/* コンテンツなしメッセージ */
+.no-content-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  min-height: 150px;
+  color: #666;
+}
+
+.no-content-message p {
+  margin: 12px 0;
   font-size: 14px;
 }
 

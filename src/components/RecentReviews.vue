@@ -47,7 +47,11 @@
     
     <!-- レビュー表示 -->
     <div v-else class="scrollable-container">
-      <div class="scrollable-content">
+      <div v-if="reviews.length === 0" class="no-content-message">
+        <v-icon size="large" color="grey">mdi-comment-outline</v-icon>
+        <p>まだレビューがありません</p>
+      </div>
+      <div v-else class="scrollable-content">
         <!-- レビューカード -->
         <div 
           v-for="(review, i) in reviews" 
@@ -442,6 +446,23 @@ export default {
 .error-container p {
   margin: 12px 0;
   color: #d32f2f;
+  font-size: 14px;
+}
+
+/* コンテンツなしメッセージ */
+.no-content-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  min-height: 150px;
+  color: #666;
+}
+
+.no-content-message p {
+  margin: 12px 0;
   font-size: 14px;
 }
 

@@ -208,7 +208,7 @@ export default {
       setTimeout(() => {
         this.loading = false;
         // 特定のクラスまでスクロール
-        const targetElement = document.querySelector('.search-conditions');
+        const targetElement = document.querySelector('.search-results-container');
         if (targetElement) {
           targetElement.scrollIntoView({ behavior: 'smooth' });
         }

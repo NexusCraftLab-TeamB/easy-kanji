@@ -220,9 +220,21 @@
 
   <!-- トースト通知 -->
   <ToastNotification
-    v-model:show="showToast"
+    :show="showToast"
     :message="toastMessage"
     :type="toastType"
+    :duration="3000"
+    @update:show="showToast = $event"
+  />
+
+  <!-- レビューモーダル -->
+  <ReviewModal 
+    v-if="registeredShopId"
+    :is-open="isReviewModalOpen" 
+    :shop-id="registeredShopId"
+    :shop-name="formData.name"
+    @close="closeReviewModal"
+    @review-submitted="handleReviewSubmitted"
   />
 
 </template>
@@ -232,12 +244,17 @@ import { genres } from '@/constants/genres.js';
 import { budgets } from '@/constants/budgets.js';
 import axios from 'axios';
 import ToastNotification from '@/components/common/ToastNotification.vue';
+import ReviewModal from '@/components/forms/ReviewModal.vue';
+import { VIcon } from 'vuetify/components';
 
 export default {
   name: 'ShopRegisterForm',
   components: {
-    ToastNotification
+    ToastNotification,
+    ReviewModal,
+    VIcon
   },
+  emits: ['close'],
   props: {
     isOpen: {
       type: Boolean,
@@ -271,7 +288,9 @@ export default {
       isUploading: false,
       showToast: false,
       toastMessage: '',
-      toastType: 'success'
+      toastType: 'success',
+      isReviewModalOpen: false,
+      registeredShopId: null,
     };
   },
   watch: {
@@ -453,11 +472,20 @@ export default {
           }, 500);
           
           if (response.status === 200) {
+            // 登録した店舗のIDを保存
+            this.registeredShopId = response.data;
             // トースト通知を表示
             this.showToast = true;
+            this.toastType = 'success';
             this.toastMessage = '店舗登録が完了しました';
-
+            
+            // レビューモーダルを表示
+            this.isReviewModalOpen = true;
+            
+            // フォームをリセット
             this.resetForm();
+            
+            // モーダルを閉じる
             this.closeModal();
           } else {
             // トースト通知を表示
@@ -534,6 +562,9 @@ export default {
       this.$refs.imageInput.value = '';
     },
     resetForm() {
+      const currentName = this.formData.name;
+      const currentShopId = this.registeredShopId;
+
       this.formData = {
         name: '',
         address: '',
@@ -548,6 +579,10 @@ export default {
       if (this.$refs.imageInput) {
         this.$refs.imageInput.value = '';
       }
+      
+      // 店舗名とIDを保持
+      this.formData.name = currentName;
+      this.registeredShopId = currentShopId;
     },
     closeModal() {
       this.$emit('close');
@@ -555,6 +590,17 @@ export default {
     getGenreName(code) {
       const genre = this.genres.find(g => g.code === code);
       return genre ? genre.name : '未選択';
+    },
+    closeReviewModal() {
+      this.isReviewModalOpen = false;
+      // レビューモーダルを閉じた後、店舗詳細ページへ遷移
+      if (this.registeredShopId) {
+        this.$router.push(`/shop/${this.registeredShopId}`);
+      }
+    },
+    handleReviewSubmitted() {
+      // レビュー投稿完了後、店舗詳細ページへ遷移
+      this.$router.push(`/shop/${this.registeredShopId}`);
     }
   }
 };
