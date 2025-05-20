@@ -114,7 +114,7 @@ footer {
 
 .scroll-to-top {
   position: fixed;
-  bottom: 80px;
+  bottom: 20px;
   right: 30px;
   z-index: 1000;
   border-radius: 50%;
