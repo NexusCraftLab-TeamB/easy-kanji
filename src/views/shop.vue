@@ -478,7 +478,7 @@ export default {
   methods: {
     // ショップをシェアするメソッド
     shareShop() {
-      const url = `https://main.d3svezmi1xi8mk.amplifyapp.com//shop/${this.ShopId}`;
+      const url = `https://main.d2tcvdo7qdeeoh.amplifyapp.com/shop/${this.ShopId}`;
 
       // Clipboard APIのサポートを確認
       if (navigator.clipboard) {
@@ -489,14 +489,14 @@ export default {
           alert('URLのコピーに失敗しました。');
         });
       } else {
-      // 代替手段: テキストボックスを使って手動コピーを促す
-      const input = document.createElement('input');
-      input.value = url;
-      document.body.appendChild(input);
-      input.select();
-      document.execCommand('copy');
-      document.body.removeChild(input);
-      alert('URLをコピーしました！');
+        // 代替手段: テキストボックスを使って手動コピーを促す
+        const input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        alert('URLをコピーしました！');
       }
     },
     // レビュー登録画面へ遷移するメソッド
