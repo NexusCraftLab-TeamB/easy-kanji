@@ -1,239 +1,615 @@
 <template>
-  <div class="home-overview-container">
-    <!-- Hero image or illustration -->
-    <div class="hero-image-container">
-      <img src="@/assets/AboutUs.png" alt="Easy Kanji Home Overview" class="hero-image" />
-      <div class="overlay-text">
-        <p>
-          <span class="highlight-text">“お店選びで、もう迷わない！”</span>
-          「イージー幹事ぃ（EASY KANJii）」は、<br>
-          社内のローカル飲み会実績共有WEBサイトとして、<br>
+  <div class="about-us-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="">Easy Kanji</span>について
+        </h1>
+        <p class="hero-subtitle">
+          社内飲み会の店舗選びを、もっと簡単に、もっとスマートに
+        </p>
+        <p class="hero-description">
+          <span class="emphasis">"お店選びで、もう迷わない！"</span><br>
+          「イージー幹事ぃ（EASY KANJii）」は、社内のローカル飲み会実績共有WEBサイトとして、<br>
           NIC社内の各部・各班で利用実績がある確かなお店を数クリックで検索できます。
         </p>
       </div>
-    </div>
+    </section>
 
-    <div class="overview-content">
-      <h1>Easy Kanjii(ver1.0) 機能説明</h1>
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="section-header">
+        <h2>主な機能</h2>
+        <p>Easy Kanjiの便利な機能をご紹介します</p>
+      </div>
 
-      <section>
-        <h2>トップへ戻る</h2>
-        <p>画面上部のロゴをクリックすると、いつでもホーム（トップ）にリロードして戻ることができます。</p>
-      </section>
+      <div class="features-grid">
+                 <!-- Feature 1 -->
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="feature-header">
+            <div class="feature-icon">
+              <v-icon size="24" color="#2e7d32">mdi-home</v-icon>
+            </div>
+            <h3>トップへ戻る</h3>
+          </div>
+          <p>画面上部のロゴをクリックすると、いつでもホーム（トップ）にリロードして戻ることができます。</p>
+        </div>
 
-      <section>
-        <h2>キーワード検索</h2>
-        <ul>
-          <li>テキストボックスに入力されたキーワードをもとに、過去の利用実績やレビューを優先して絞り込み</li>
-          <li>入力後、ボタン一つで結果がカード形式で即時表示されます</li>
-        </ul>
-      </section>
+        <!-- Feature 2 -->
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-header">
+            <div class="feature-icon">
+              <v-icon size="24" color="#2e7d32">mdi-magnify</v-icon>
+            </div>
+            <h3>キーワード検索</h3>
+          </div>
+          <div class="feature-list">
+            <ul>
+              <li>テキストボックスに入力されたキーワードをもとに絞り込み</li>
+              <li>過去の利用実績やレビューを優先して表示</li>
+              <li>入力後、ボタン一つで結果がカード形式で即時表示</li>
+            </ul>
+          </div>
+        </div>
 
-      <section>
-        <h2>カテゴリ（条件）検索</h2>
-        <ul>
-          <li>「場所」「ジャンル」「予算」「実績」「人数」など、複数の条件を組み合わせて絞り込み可能</li>
-          <li>選択中の条件は画面上部にチップとして並び、クリックで解除できます</li>
-          <li>条件を選択・変更すると、自動的に結果が更新されます</li>
-        </ul>
-      </section>
+        <!-- Feature 3 -->
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-header">
+            <div class="feature-icon">
+              <v-icon size="24" color="#2e7d32">mdi-filter-variant</v-icon>
+            </div>
+            <h3>カテゴリ検索</h3>
+          </div>
+          <div class="feature-list">
+            <ul>
+              <li>「場所」「ジャンル」「予算」「実績」「人数」など複数条件で絞り込み</li>
+              <li>選択中の条件は画面上部にチップとして表示</li>
+              <li>条件を選択・変更すると自動的に結果が更新</li>
+            </ul>
+          </div>
+        </div>
 
-      <section>
-        <h2>おすすめ＆最新レビュー</h2>
-        <ul>
-          <li>検索を行っていないときは「おすすめ店舗」セクションと「最近投稿されたレビュー」を表示</li>
-          <li>おすすめは評価スコアや利用実績をもとに自動ピックアップ</li>
-          <li>最新レビューは投稿日時の新しい順に一覧化</li>
-        </ul>
-      </section>
+        <!-- Feature 4 -->
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+          <div class="feature-header">
+            <div class="feature-icon">
+              <v-icon size="24" color="#2e7d32">mdi-star</v-icon>
+            </div>
+            <h3>おすすめ＆レビュー</h3>
+          </div>
+          <div class="feature-list">
+            <ul>
+              <li>検索未実行時は「おすすめ店舗」と「最新レビュー」を表示</li>
+              <li>評価スコアや利用実績をもとに自動ピックアップ</li>
+              <li>最新レビューは投稿日時の新しい順に一覧化</li>
+            </ul>
+          </div>
+        </div>
 
-      <section>
-        <h2>店舗登録</h2>
-        <li>検索結果にない店舗は「検索結果にない店舗を登録する」ボタンから追加登録可能。登録後はカテゴリ検索や名前検索で見つかりやすくなります。</li>
-        <p>※登録内容は後で修正できないため、慎重に入力してください。</p>
-        <p>※店舗登録で登録した店舗の画像は、「仮想ブラウザ環境」からは表示されないのでご留意ください（ネットワークのフィルタリングの仕様）。</p>
-      </section>
+        <!-- Feature 5 -->
+        <div class="feature-card feature-card-wide" data-aos="fade-up" data-aos-delay="500">
+          <div class="feature-header">
+            <div class="feature-icon">
+              <v-icon size="24" color="#2e7d32">mdi-store-plus</v-icon>
+            </div>
+            <h3>店舗登録</h3>
+          </div>
+          <div class="feature-content-wide">
+            <p>検索結果にない店舗は「検索結果にない店舗を登録する」ボタンから追加登録可能。登録後はカテゴリ検索や名前検索で見つかりやすくなります。</p>
+            <div class="notice-box">
+              <v-icon class="notice-icon" color="#ff9800">mdi-alert-circle</v-icon>
+              <div class="notice-content">
+                <p><strong>注意事項：</strong></p>
+                <ul>
+                  <li>登録内容は後で修正できないため、慎重に入力してください。</li>
+                  <li>店舗登録で登録した店舗の画像は、「仮想ブラウザ環境」からは表示されないのでご留意ください（ネットワークのフィルタリングの仕様）。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-      <router-link to="/" class="back-button">戻る</router-link>
-    </div>
-
-    <!-- ✅ フッターの上にラインを追加 -->
-    <div class="footer-separator"></div>
-
-    <!-- ✅ 追加したフッター -->
-    <footer class="footer">
-      <p class="footer-right">&copy; 2024-2025 Easy Kanjii. All Rights Reserved.</p>
-    </footer>
-
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="cta-content">
+        <h2>今すぐ使ってみませんか？</h2>
+        <p>社内飲み会の店舗選びを、Easy Kanjiでもっと簡単に</p>
+        <div class="cta-actions">
+          <router-link to="/" class="cta-button">
+            <v-icon left>mdi-home</v-icon>
+            ホームに戻る
+          </router-link>
+          <div class="qr-code-section">
+            <img src="@/assets/qr-code.png" alt="QR Code" class="qr-code">
+            <p class="qr-label">スマホでアクセス</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
+
+  <!-- フッター -->
+  <AppFooter />
 </template>
 
 <script>
+import AppFooter from '../components/layout/Footer.vue';
+
 export default {
-  name: "HomeOverview",
+  name: "AboutUs",
+  components: {
+    AppFooter
+  },
   mounted() {
     window.scrollTo(0, 0);
+    // Simple scroll animation trigger
+    this.initScrollAnimation();
+  },
+  methods: {
+    initScrollAnimation() {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      }, observerOptions);
+
+      // Observe all feature cards
+      document.querySelectorAll('.feature-card').forEach(card => {
+        observer.observe(card);
+      });
+    }
   }
 };
 </script>
 
 <style scoped>
-.home-overview-container {
-  font-family: 'ヒラギノ角ゴ Pro','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 16px;
+/* ================================================ */
+/* Base Styles */
+/* ================================================ */
+.about-us-container {
+  font-family: 'Segoe UI', 'ヒラギノ角ゴ Pro', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  overflow-x: hidden;
 }
 
-.hero-image-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden; /* はみ出し防止 */
-}
-
-.overlay-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* 背景の端ギリギリまで広がらないように左右に余白を設定 */
-  padding: 0 1rem;
-  box-sizing: border-box;
+/* ================================================ */
+/* Hero Section */
+/* ================================================ */
+.hero-section {
+  background: url('@/assets/AboutUs.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: white;
-  text-shadow: 0 0 6px rgba(0,0,0,0.7);
+  padding: 60px 24px;
   text-align: center;
-  width: 100%;
-  max-width: 800px; /* 大きい画面での最大幅 */
+  position: relative;
 }
 
-.overlay-text p {
-  /* ビューポート幅に応じて自動的に縮小 */
-  font-size: min(1.2rem, 4vw);
-  line-height: 1.4;
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.highlight {
+  color: #a5d6a7;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  margin-bottom: 24px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+.hero-description {
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.emphasis {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #ffffff;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ================================================ */
+/* Features Section */
+/* ================================================ */
+.features-section {
+  padding: 100px 24px;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.section-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 60px;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #1b5e20;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.section-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #2e7d32, #4caf50);
+  border-radius: 2px;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #666;
   margin: 0;
 }
 
-.highlight-text {
-  display: block;
-  /* 同様にレスポンシブにフォントサイズ調整 */
-  font-size: min(2.5rem, 6vw);
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+.features-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 32px;
 }
 
-/* 小さい画面向けの微調整 */
-@media (max-width: 480px) {
-  .overlay-text {
-    top: 40%;
-  }
-  .overlay-text p {
-    font-size: 3.5vw;
-    line-height: 1.3;
-  }
-  .highlight-text {
-    font-size: 5.5vw;
-  }
+/* ================================================ */
+/* Feature Cards */
+/* ================================================ */
+.feature-card {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-.hero-image {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-  margin-bottom: 24px;
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2e7d32, #4caf50, #81c784);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.overview-content {
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature-card-wide {
+  grid-column: 1 / -1;
   max-width: 800px;
+  margin: 0 auto;
 }
 
-.overview-content h1 {
-  font-size: 32px;
+.feature-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 16px;
+  position: relative;
+}
+
+.feature-header h3 {
+  text-align: left;
+  margin-left: 10px;
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feature-card h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
   color: #1b5e20;
+  margin: 0;
+  flex-grow: 1;
 }
 
-.overview-content h2 {
-  font-size: 24px;
-  margin-top: 24px;
-  margin-bottom: 8px;
-  color: #2e7d32;
-}
-
-.overview-content p,
-.overview-content li {
-  font-size: 16px;
-  margin-bottom: 8px;
+.feature-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 16px;
   text-align: left;
 }
 
-.overview-content ul {
-  list-style: disc;
+.feature-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.feature-list li {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.feature-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+
+.feature-content-wide {
+  display: grid;
+  gap: 24px;
+}
+
+.notice-box {
+  background: #fff3e0;
+  border: 1px solid #ffcc02;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+}
+
+.notice-icon {
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.notice-content p {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: #e65100;
+}
+
+.notice-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.notice-content li {
+  position: relative;
   padding-left: 20px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #bf360c;
 }
 
-.back-button {
-  display: inline-block;
-  margin-top: 24px;
-  padding: 10px 20px;
-  background-color: #2e7d32;
+.notice-content li::before {
+  content: '⚠️';
+  position: absolute;
+  left: 0;
+  font-size: 0.8rem;
+}
+
+/* ================================================ */
+/* CTA Section */
+/* ================================================ */
+.cta-section {
+  background: linear-gradient(135deg, #2e7d32, #1b5e20);
   color: white;
+  padding: 80px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  animation: float 20s linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(-30px, -30px) rotate(360deg); }
+}
+
+.cta-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-content h2 {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.cta-content p {
+  font-size: 1.1rem;
+  margin-bottom: 32px;
+  opacity: 0.9;
+}
+
+.cta-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 32px;
+  background: white;
+  color: #2e7d32;
   text-decoration: none;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
-.back-button:hover {
-  background-color: #1b5e20;
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  background: #f8f9fa;
 }
 
+.qr-code-section {
+  text-align: center;
+}
 
-		/* フッター上部の区切り線 */
-		.footer-separator {
-			width: 100%;
-			height: 2px;
-			background: linear-gradient(to right, #e0e0e0, #c8e6c9, #e0e0e0); /* 両端がグレー、中央が薄い緑 */
-			margin-top: 32px;
-		}
+.qr-label {
+  color: white;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0px!important;
+}
 
-		/* フッター */
-		.footer {
-			background-color: #2e7d32;
-			color: darkolivegreen;
-			padding: 16px 24px;
-			text-align: center;
-			font-size: 14px;
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-		}
+.qr-code {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: white;
+  padding: 8px;
+}
+/* ================================================ */
+/* Responsive Design */
+/* ================================================ */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 40px 16px;
+  }
 
-		/* フッターのリンク */
-		.footer-links {
-			list-style: none;
-			padding: 0;
-			margin: 0;
-		}
+  .features-section {
+    padding: 60px 16px;
+  }
 
-		.footer-links li {
-			display: inline;
-			margin-right: 20px; /* 間隔を空ける */
-		}
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 
-		.footer-links a {
-			color: darkolivegreen;
-			font-weight:bold;
-			text-decoration: none;
-			font-size: 14px;
-		}
+  .feature-card {
+    padding: 24px;
+  }
 
-		.footer-links a:hover {
-			text-decoration: underline;
-		}
+  .feature-card-wide {
+    grid-column: 1;
+  }
 
-		/* コピーライト */
-		.footer-right {
-			font-size: 14px;
-		}
+  .cta-section {
+    padding: 60px 16px;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .feature-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .feature-card {
+    padding: 20px;
+  }
+
+  .hero-description {
+    padding: 20px;
+  }
+
+  .section-header {
+    margin-bottom: 40px;
+  }
+}
+
+/* ================================================ */
+/* Animation delays for staggered effect */
+/* ================================================ */
+.feature-card:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.feature-card:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+.feature-card:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.feature-card:nth-child(4) {
+  transition-delay: 0.4s;
+}
+
+.feature-card:nth-child(5) {
+  transition-delay: 0.5s;
+}
 </style>
