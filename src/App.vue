@@ -1,10 +1,8 @@
 <template>
   <v-app id="inspire">
-
     <v-main>
       <router-view />
     </v-main>
-    <v-footer class="pt-10"/>
     <template v-if="$route.path === '/'">
       <button v-if="showScrollButton" @click="scrollToTop" class="scroll-to-top">
         ▲

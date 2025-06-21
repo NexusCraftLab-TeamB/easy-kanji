@@ -95,16 +95,8 @@
       @close="closeRegisterForm"
     />
 
-	<!-- ✅ フッターの上にラインを追加 -->
-	<div class="footer-separator"></div>
-
-	<!-- ✅ 追加したフッター -->
-	<footer class="footer">
-		<ul class="footer-links">
-			<li><router-link to="/about">Easy Kanji について</router-link></li>
-		</ul>
-		<p class="footer-right">&copy; 2024-2025 Easy Kanjii. All Rights Reserved.</p>
-	</footer>
+	<!-- フッター -->
+	<AppFooter />
   </div>
 </template>
   
@@ -115,6 +107,7 @@
 	import ShopRegisterForm from '../components/forms/ShopRegisterForm.vue';
 	import RecentReviews from '../components/RecentReviews.vue';
 	import RecommendedShops from '../components/RecommendedShops.vue';
+	import AppFooter from '../components/layout/Footer.vue';
 	import { locations } from '@/constants/locations.js';
 	import { genres } from '@/constants/genres.js';
 	import { budgets } from '@/constants/budgets.js';
@@ -292,7 +285,8 @@
 			ShopSearchForm,
 			ShopRegisterForm,
 			RecentReviews,
-			RecommendedShops
+			RecommendedShops,
+			AppFooter
 		}
 	};
 </script>
@@ -727,6 +721,8 @@
 			margin-right: 0;
 			margin-bottom: 4px;
 		}
+
+
 	}
 
 	@media (max-width: 480px) {
@@ -759,54 +755,8 @@
 			box-sizing: border-box;
 		}
 	}
-		/* フッター上部の区切り線 */
-		.footer-separator {
-			width: 100%;
-			height: 2px;
-			background: linear-gradient(to right, #e0e0e0, #c8e6c9, #e0e0e0); /* 両端がグレー、中央が薄い緑 */
-			margin-top: 32px;
-		}
 
-		/* フッター */
-		.footer {
-			background-color: #2e7d32;
-			color: darkolivegreen;
-			padding: 16px 24px;
-			text-align: center;
-			font-size: 14px;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
 
-		/* フッターのリンク */
-		.footer-links {
-			list-style: none;
-			padding: 0;
-			margin: 0;
-		}
-
-		.footer-links li {
-			display: inline;
-			margin-right: 20px; /* 間隔を空ける */
-		}
-
-		.footer-links a {
-			color: darkolivegreen;
-			font-weight:bold;
-			text-decoration: none;
-			font-size: 14px;
-		}
-
-		.footer-links a:hover {
-			text-decoration: underline;
-		}
-
-		/* コピーライト */
-			.footer-right {
-			margin-left: auto;
-			font-size: 14px;
-		}
 
 		/* おすすめテキスト */
 		.recommendation-text {
